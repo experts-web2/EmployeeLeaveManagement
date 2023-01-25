@@ -32,11 +32,17 @@ namespace EmpLeave.Api.Controllers
           var Updated=  _leaveService.Update(leaveDto);
             return Ok(Updated);
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Deleteleave(int id)
         {
             _leaveService.Delete(id);
             return Ok("Deleted Succusfully"); 
+        }
+        [HttpGet("GetById/{Id}")]
+        public IActionResult GetById(int id)
+        {
+            var leaveDto = _leaveService.GetById(id);
+            return Ok(leaveDto);
         }
     }
 }

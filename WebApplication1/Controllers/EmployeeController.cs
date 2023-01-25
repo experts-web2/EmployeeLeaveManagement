@@ -34,11 +34,17 @@ namespace EmpLeave.Api.Controllers
             _employeeRepository.Update(employee);
             return Ok("Updated Succesfully");
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteEmployee(int id)
         {
             _employeeRepository.DeleteEmployee(id);
             return Ok("Deleted Succesfully");
+        }
+        [HttpGet("GetById/{Id}")]
+        public IActionResult GetById(int id)
+        {
+           var employeeDto= _employeeRepository.GetById(id);
+            return Ok(employeeDto);
         }
 
     }

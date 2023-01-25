@@ -1,11 +1,6 @@
 ﻿using DAL.Interface.GenericInterface;
 using DomainEntity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -35,14 +30,26 @@ namespace DAL.Repositories
             _DbContext.SaveChanges();
 
         }
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return _table.ToList();
+            return _table.AsQueryable();
         }
+
+        public T GetByID(int id)
+        {
+            var Findid = _table.FirstOrDefault(x => x.Id == id);
+            if (Findid != null)
+            {
+                return Findid;
+            }
+            return null;   
+        }
+
         public void update(T item)
         {
             _DbContext.Update(item);
             _DbContext.SaveChanges();
         }
+
     }
 }

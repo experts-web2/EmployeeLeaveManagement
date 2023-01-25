@@ -11,6 +11,8 @@ namespace ELM.Shared
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public List<string> Roles { get; set; } = new();
+
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }
@@ -20,5 +22,6 @@ namespace ELM.Shared
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
     }
 }

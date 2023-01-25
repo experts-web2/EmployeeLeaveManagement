@@ -9,10 +9,11 @@ namespace DAL.Interface.GenericInterface
 {
     public interface IGenericRepository<T> where T: BaseEntity
     {
-        IEnumerable<T> GetAll ();
+        IQueryable<T> GetAll ();
         T Add(T item);
         
         void deletebyid(int id);
         void update(T item);
+        T GetByID(int id);
     }
 }

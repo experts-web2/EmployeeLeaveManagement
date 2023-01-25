@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "DTOs\DTOs.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BL", "BL\BL.csproj", "{CDC0EBF3-4505-4072-B1A6-7545C7CA6F4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpLeave.Web", "EmpLeave.Web\EmpLeave.Web.csproj", "{4B9E50DC-13FA-4104-96B2-110B18C7DB0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELM.Web", "ELM.Web\ELM.Web.csproj", "{189FA484-FF64-4DCC-9F93-4FB9EEB230C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{CDC0EBF3-4505-4072-B1A6-7545C7CA6F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDC0EBF3-4505-4072-B1A6-7545C7CA6F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDC0EBF3-4505-4072-B1A6-7545C7CA6F4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B9E50DC-13FA-4104-96B2-110B18C7DB0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B9E50DC-13FA-4104-96B2-110B18C7DB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B9E50DC-13FA-4104-96B2-110B18C7DB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B9E50DC-13FA-4104-96B2-110B18C7DB0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{189FA484-FF64-4DCC-9F93-4FB9EEB230C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189FA484-FF64-4DCC-9F93-4FB9EEB230C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189FA484-FF64-4DCC-9F93-4FB9EEB230C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189FA484-FF64-4DCC-9F93-4FB9EEB230C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

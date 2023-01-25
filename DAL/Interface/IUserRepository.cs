@@ -1,5 +1,6 @@
 ﻿using DomainEntity.Models;
 using ELM.Shared;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace DAL.Interface
     { 
         Task AddUser(UserRegistrationModel userRegistrationModel);
         Task<bool> DeleteUser(string id);
+        List<IdentityRole> GetAllRoles();
         List<User> GetAllUser();
-        Task<string> SignIn(SignIn signIn);
+        Task<string> SignIn(LogIn signIn);
         Task SignOut();
         Task<bool> UpdateUser(User user);
     }

@@ -104,5 +104,42 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+        public EmployeeDto GetById(int id)
+        {
+          var FindEmployee= Db.Employees.Include(x=>x.Leaves).FirstOrDefault(x => x.Id == id);
+
+            EmployeeDto employeeDto = SetEmployeeDto(FindEmployee);
+            return employeeDto;
+        }
+        private static EmployeeDto SetEmployeeDto(Employee employee)
+        {
+            if (employee==null)
+            {
+                return null;
+            }
+            try
+            {
+                EmployeeDto employeeDto=new EmployeeDto()
+                {
+                    ID = employee.Id,
+                    FirstName = employee.FirstName,
+
+                    LastName = employee.LastName,
+                    Gender = employee.Gender,
+                    Email = employee.Email,
+                    DateOfBrith = employee.DateOfBrith,
+                    Address = employee.Address,
+                    leaves = employee.Leaves.ToList()
+                    
+                };
+                return employeeDto;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+           
+        }
     }
 }

@@ -35,7 +35,13 @@ namespace DAL.Repositories
         {
           return  _userManager.Users.ToList();
         }
+        public List<IdentityRole> GetAllRoles()
+        {
+            return _roleManager.Roles.ToList();
+        }
         public async Task AddUser(UserRegistrationModel registerDto)
+        
+        
         {
             try
             {
@@ -49,14 +55,19 @@ namespace DAL.Repositories
                 };
                 IdentityResult identityResult = await _userManager.CreateAsync(user, registerDto.Password);
                 if (!identityResult.Succeeded) throw new InvalidOperationException($"Error: {string.Join("\n", identityResult.Errors.Select(x => x.Description))}");
-
+                foreach (var role in registerDto.Roles)
+                {
+                    var result=await _userManager.AddToRoleAsync(user, role); 
+                    if(!result.Succeeded) throw 
+                            new InvalidOperationException($"Error: {string.Join("\n", result.Errors.Select(x => x.Description))}");
+                }
             }
             catch (Exception)
             {
                 throw;
             }
         }
-        public async Task<string> SignIn(SignIn signIn)
+        public async Task<string> SignIn(LogIn signIn)
         {
 
             var result = await _signInManager.PasswordSignInAsync(signIn.Email, signIn.Password, false, false);

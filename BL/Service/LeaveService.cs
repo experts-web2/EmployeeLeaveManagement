@@ -2,8 +2,10 @@
 using DAL.Interface.GenericInterface;
 using DomainEntity.Models;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,17 +67,46 @@ namespace BL.Service
             
         }
 
-        public LeaveDto Get(int id)
+        public LeaveDto GetById(int id)
         {
-            throw new NotImplementedException();
+            var GetId = _genericRepository.GetByID(id);
+            return SetLeaveDto(GetId);
         }
+        private static LeaveDto SetLeaveDto(Leave leave)
+        {
+            if (leave == null)
+            {
+                return null;
+            }
+            try
+            {
+                LeaveDto leaveDto = new LeaveDto()
+                {
+                    ID = leave.Id,
+                    StartTime = leave.StartTime,
 
+                    EndTime = leave.EndTime,
+                    Status = leave.Status,
+                    LeaveEnum = leave.leaveEnum,
+                   EmployeeId=leave.EmployeeId
+
+                };
+                return leaveDto;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
         public List<LeaveDto> GetAll()
         {
             try
             {
-                var Leaves = _genericRepository.GetAll();
+                var Leaves = _genericRepository.GetAll().Include(x=>x.Employee).ToList();
+                
                 List<LeaveDto> leaveDtos = ToDtos(Leaves);
+               
                 return leaveDtos;
             }
             catch (Exception)
@@ -98,8 +129,8 @@ namespace BL.Service
                     leaveDto.EndTime = leave.EndTime;
                     leaveDto.Status = leave.Status;
                     leaveDto.LeaveEnum = leave.leaveEnum;
-                    leaveDto.EmployeeId = leave.EmployeeId;
-                    
+                    leaveDto.EmployeeId=leave.EmployeeId;
+                    leaveDto.EmployeeName = leave.Employee.FirstName;
                     employeeDtos.Add(leaveDto);
                 }
                 return employeeDtos;

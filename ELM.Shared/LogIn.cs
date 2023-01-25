@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ELM.Shared
 {
-    public class SignIn
+    public class LogIn
     {
         [Required]
         [EmailAddress]

@@ -21,7 +21,6 @@ namespace DomainEntity.Models
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
         [Required]
-
         public DateTime DateOfBrith { get; set; }
         [Required]
         public string Address { get; set; }

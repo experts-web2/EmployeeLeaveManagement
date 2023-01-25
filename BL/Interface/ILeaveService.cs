@@ -12,7 +12,7 @@ namespace BL.Interface
     public interface ILeaveService
     {
         List<LeaveDto> GetAll();
-        LeaveDto Get(int id);
+        LeaveDto GetById(int id);
         LeaveDto Add(LeaveDto leave);
         void Delete(int id);
         LeaveDto Update(LeaveDto leave);

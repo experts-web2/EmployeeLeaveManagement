@@ -1,0 +1,100 @@
+﻿@page "/Listofleaves"
+@using EmpLeave.Web.Pages.Leaves_Pages;
+@inherits LeavesListBase
+<h3>LeavesList</h3>
+<div class="row">
+
+    <div class="col-md-6">
+        <a href='/AddLeave' class="btn btn-primary" role="button">
+            <i class="fas fa-user-plus"></i>
+            Add Leave
+        </a>
+    </div>
+</div>
+<br />
+@if (LeaveDtosList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+                <th>Leave Type</th>
+                <th>Employee</th>
+                
+                <th class="colspan-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var leave in LeaveDtosList)
+            {
+                <tr>
+                    <td>@leave.StartTime</td>
+                    <td>@leave.EndTime</td>
+                    <td>@leave.Status</td>
+                    <td>@leave.LeaveEnum</td>
+                    <td>@leave.EmployeeName.ToString()</td>
+                    <td>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                        @onclick="(() => DeleteConfirm(leave.ID))">
+                            Delete
+                        </button>
+                        <a href='leave/edit/@leave.ID' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal fade" id="deleteEmpModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Delete Employee</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Do you want to delete this Leave?</h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Start Time</td>
+                                <td>@SelectedLeave.StartTime</td>
+                            </tr>
+                            <tr>
+                                <td>End Time</td>
+                                <td>@SelectedLeave.EndTime</td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>@SelectedLeave.Status</td>
+                            </tr>
+                            <tr>
+                                <td>Date Of Birth</td>
+                                <td>@SelectedLeave.LeaveEnum</td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td>@SelectedLeave.EmployeeName</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" @onclick="(async () => await DeleteEmployee(SelectedLeave.ID))" data-bs-dismiss="modal">YES</button>
+                    <button class="btn btn-warning" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

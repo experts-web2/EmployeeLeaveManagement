@@ -9,6 +9,7 @@ namespace DAL.Interface
         void DeleteEmployee(int id);
 
         void Update(EmployeeDto employee);
+        EmployeeDto GetById(int id);
 
     }
 }

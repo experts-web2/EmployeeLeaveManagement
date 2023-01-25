@@ -1,13 +1,11 @@
 ﻿using DAL.Interface;
 using ELM.Shared;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmpLeave.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
     public class AccountController : ControllerBase
     {
         readonly IUserRepository _userRepository;
@@ -17,13 +15,19 @@ namespace EmpLeave.Api.Controllers
             _userRepository = userRepository;
         }
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+       // [Authorize(AuthenticationSchemes = "Bearer")]
         public IActionResult GetAllUsers()
         {
             var Users = _userRepository.GetAllUser();
             return Ok(Users);
         }
-        [HttpDelete]
+        [HttpGet("GeTAllRoles")]
+        public IActionResult GetAllRoles()
+        {
+            var roles = _userRepository.GetAllRoles();
+            return Ok(roles);
+        }
+        [HttpDelete("{Id}")]
         public IActionResult DeleteUser(string id)
         {
             var DeleteUserResponse = _userRepository.DeleteUser(id);
@@ -31,7 +35,6 @@ namespace EmpLeave.Api.Controllers
         }
         [HttpPost]
         [Route("Register")]
-
         public async Task<IActionResult> Register(UserRegistrationModel register)
         {
             try
@@ -46,7 +49,7 @@ namespace EmpLeave.Api.Controllers
         }
         [HttpPost]
         [Route("SignIn")]
-        public async Task<IActionResult> Login(SignIn signIn)
+        public async Task<IActionResult> Login(LogIn signIn)
         {
             try
             {
