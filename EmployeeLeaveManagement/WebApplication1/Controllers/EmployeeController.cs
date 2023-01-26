@@ -1,8 +1,11 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
+using DomainEntity.Pagination;
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -15,10 +18,20 @@ namespace EmpLeave.Api.Controllers
         {
             _employeeRepository = employeeRepository;
         }
-        [HttpGet]
-        public IActionResult GetAllEmployee()
+        [HttpPost("getall")]
+        public IActionResult GetAllEmployee(Pager pager)
         {
-           var allemployee= _employeeRepository.GetAllEmployee();
+           var allemployee= _employeeRepository.GetAllEmployee(pager);
+            var metadata = new
+            {
+                allemployee.TotalCount,
+                allemployee.PageSize,
+                allemployee.TotalPages,
+                allemployee.CurrentPage,
+                allemployee.HasPrevious,
+                allemployee.HasNext,
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(allemployee);
         }
         [HttpPost]

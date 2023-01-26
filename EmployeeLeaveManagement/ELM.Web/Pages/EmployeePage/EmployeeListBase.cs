@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -27,7 +28,9 @@ namespace EmpLeave.Web.Pages.EmployeePage
         }
         public async Task GetAll()
         {
-            EmployeeDtoList =await EmployeeService.GetAllEmployee();
+            Parameter parameter = new();
+            var EmployeeDto =await EmployeeService.GetAllEmployee(parameter);
+            EmployeeDtoList = EmployeeDto.DataList;
         }
         public void DeleteConfirm(int Id)
         {

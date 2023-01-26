@@ -1,5 +1,6 @@
 ﻿using DomainEntity.Models;
 using DTOs;
+using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using EmpLeave.Web.Services.ServiceRepo;
 using Microsoft.AspNetCore.Components;
@@ -23,7 +24,9 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public int? ID { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            EmployeeDtosList = await EmployeeService.GetAllEmployee();  
+            Parameter parameter = new();
+            var listEmployee= await EmployeeService.GetAllEmployee(parameter);
+            EmployeeDtosList = listEmployee.DataList;
         }
         protected override async Task OnParametersSetAsync()
         {

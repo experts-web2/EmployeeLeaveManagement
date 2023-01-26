@@ -1,15 +1,21 @@
-﻿using DTOs;
+﻿using DomainEntity.Pagination;
+using DTOs;
+using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
     public class EmployeeService : IEmployeeService
     {
         private HttpClient _httpService;
+        HttpClient httpclient = new HttpClient();
         private  string controllerRoute = "https://localhost:7150/api/employee";
         public EmployeeService(HttpClient httpClient)
         {
@@ -20,19 +26,32 @@ namespace EmpLeave.Web.Services.ServiceRepo
              await _httpService.PostAsJsonAsync(controllerRoute, employeeDto);
             
         }
-        public async Task<List<EmployeeDto>> GetAllEmployee()
+        public async Task<Response<EmployeeDto>> GetAllEmployee(Parameter parameter)
         {
-            List<EmployeeDto> respons = new();
+            //  List<EmployeeDto> respons = new();
+            Response<EmployeeDto> responseDto = new();
             try
             {
-                 respons = await _httpService.GetFromJsonAsync<List<EmployeeDto>>(controllerRoute);
+                string data = JsonConvert.SerializeObject(parameter);
+                StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await httpclient.PostAsync("Employee/getall", Content);
+                if (!response.IsSuccessStatusCode)
+                    return new Response<EmployeeDto>();
+
+                if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
+                {
+                    var metadata = keys.FirstOrDefault();
+                    responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
+                }
+                string result = await response.Content.ReadAsStringAsync();
+                responseDto.DataList = await _httpService.GetFromJsonAsync<List<EmployeeDto>>(controllerRoute);
 
             }
             catch (System.Exception)
             {
-                respons = null;
+                responseDto.DataList = null;
             }
-            return respons;
+            return new Response<EmployeeDto>();
         }
         public async Task UpdateCall(EmployeeDto employeeDto)
         {
