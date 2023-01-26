@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230126162133_createAttendence")]
+    partial class createAttendence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,48 +23,6 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Designation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IpAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("TimeIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Timeout")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("hostName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Attendences");
-                });
 
             modelBuilder.Entity("DomainEntity.Models.Employee", b =>
                 {
@@ -234,15 +194,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5deca622-ee14-4452-a84d-6869b4d230f6",
-                            ConcurrencyStamp = "e2e6260a-1d61-48fd-99c2-4ef9254cf15d",
+                            Id = "ef6e013c-5214-4bbe-80b8-ddfa3c934523",
+                            ConcurrencyStamp = "3e8b833f-4523-41aa-be13-6dea336c239b",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "f04dfa79-18f3-4fbc-b249-765ac924994d",
-                            ConcurrencyStamp = "9d98d88f-6d91-4ea6-88c9-440e3ffd9abe",
+                            Id = "6a864ad0-d763-473e-b262-0732267562e2",
+                            ConcurrencyStamp = "d99ef420-a07c-4ebd-b0c5-923bdfd80cad",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -354,17 +314,6 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
-                {
-                    b.HasOne("DomainEntity.Models.Employee", "Employee")
-                        .WithMany("Attendences")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("DomainEntity.Models.Leave", b =>
                 {
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
@@ -429,8 +378,6 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DomainEntity.Models.Employee", b =>
                 {
-                    b.Navigation("Attendences");
-
                     b.Navigation("Leaves");
                 });
 #pragma warning restore 612, 618
