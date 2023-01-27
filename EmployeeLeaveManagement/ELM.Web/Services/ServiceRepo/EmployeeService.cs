@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Pager = ELM.Web.Helper.Pager;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
@@ -16,10 +17,12 @@ namespace EmpLeave.Web.Services.ServiceRepo
     {
         private HttpClient _httpService;
         HttpClient httpclient = new HttpClient();
-        private  string controllerRoute = "https://localhost:7150/api/employee";
+        private  string controllerRoute = "https://localhost:7150/api/";
         public EmployeeService(HttpClient httpClient)
         {
             _httpService= httpClient;
+           httpclient.BaseAddress = new Uri("https://localhost:7150/api/");
+            httpclient.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
         public async Task PostCall(EmployeeDto employeeDto)
         {
@@ -44,8 +47,9 @@ namespace EmpLeave.Web.Services.ServiceRepo
                     responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
                 }
                 string result = await response.Content.ReadAsStringAsync();
-                responseDto.DataList = await _httpService.GetFromJsonAsync<List<EmployeeDto>>(controllerRoute);
-
+               // responseDto.DataList = await _httpService.GetFromJsonAsync<List<EmployeeDto>>(result);
+                responseDto.DataList =  JsonConvert.DeserializeObject<List<EmployeeDto>>(result);
+                return responseDto;
             }
             catch (System.Exception)
             {

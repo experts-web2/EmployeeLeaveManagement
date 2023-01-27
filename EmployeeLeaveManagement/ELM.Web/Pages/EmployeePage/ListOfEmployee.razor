@@ -149,4 +149,25 @@ else
         </div>
     </div>
 </div>
+<div>
+    @* <nav aria-label="Page navigation example">*@
+    <ul class="pagination">
+
+        <li class="page-item @(Paging.HasPrevious?"":"disabled")"><a class="page-link" @onclick="()=>GetAll(Paging.CurrentPage-1)">Previous</a></li>
+        @for (int i = 1; i <= Paging.TotalPages; i++)
+        {
+            if (i == Paging.CurrentPage)
+            {
+                <li class="page-item active"><a class="page-link " @onclick="()=>GetAll(i-1)" >@i</a></li>
+
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" @onclick="()=>GetAll(i-1)">@i</a></li>
+
+            }
+        }
+        <li class="page-item @(Paging.HasNext?"":"disabled")"><a class="page-link" @onclick="()=>GetAll(Paging.CurrentPage+1)">Next</a></li>
+    </ul>
+</div>
 
