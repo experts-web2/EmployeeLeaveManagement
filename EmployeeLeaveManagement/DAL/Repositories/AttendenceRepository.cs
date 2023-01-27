@@ -4,6 +4,7 @@ using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,19 +39,19 @@ namespace DAL.Repositories
             return false;
           
         }
-        private Attendence ToEntity(AttendenceDto attendenceDto)
+        public Attendence ToEntity(AttendenceDto attendenceDto)
         {
-            Attendence attendence = new()
+             Attendence attendence = new()
             {
 
                 TimeIn = attendenceDto.TimeIn,
                 Timeout = attendenceDto.Timeout,
-                Designation = attendenceDto.Designation,
                 EmployeeId = attendenceDto.EmployeeId,
                 Longitude = attendenceDto.Longitude,
-                Latitude=attendenceDto.Latitude,
-                IpAddress=attendenceDto.IpAddress,
-                hostName=attendenceDto.hostName
+                Latitude = attendenceDto.Latitude,
+                hostName = AddHostName(),
+                IpAddress=AddIpAddress()
+                
 
             };
             return attendence;
@@ -76,7 +77,6 @@ namespace DAL.Repositories
                     attendenceDto.IpAddress =attendence.IpAddress;
                     attendenceDto.Longitude = attendence.Longitude;
                     attendenceDto.Latitude = attendence.Latitude;
-                    attendenceDto.Designation = attendence.Designation;
                     attendenceDto.EmployeeId= attendence.EmployeeId;
 
                     attendenceDtos.Add(attendenceDto);
@@ -88,6 +88,19 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+        public string AddHostName()
+        {
+            string HostName = Dns.GetHostName();
+            return HostName;
+
+        }
+        public string AddIpAddress()
+        {
+            string HostName = Dns.GetHostName();
+            IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
+            return ipaddress[1].ToString() ;
+
         }
     }
 }

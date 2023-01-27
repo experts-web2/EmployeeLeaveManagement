@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230127144112_removeDesignationProp")]
+    partial class removeDesignationProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,15 +232,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6b1af69f-423c-4767-864b-cee3e603b4ed",
-                            ConcurrencyStamp = "b3053efe-3a8e-425e-b200-51a9efacf42d",
+                            Id = "7390b6e8-b65e-4787-8e53-b7f633e04966",
+                            ConcurrencyStamp = "75796cb2-145f-43bf-8a96-30622070ca7d",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "ee8ac410-edfc-40b0-9564-2a5e90dffc92",
-                            ConcurrencyStamp = "6043d164-27d0-41f3-af7c-d6c98ed4742e",
+                            Id = "c84d0ed4-806d-4620-bad5-13321e7cad38",
+                            ConcurrencyStamp = "59b090cd-da5d-4f57-861b-da431b5e9040",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
