@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace DomainEntity.Pagination
             TotalPages = (int)Math.Ceiling(count / (double)Pagesize);
             AddRange(items);
         }
-        public static PagedList<T> ToPagedList(List<T> source, int pagenumber, int pagesize)
+        public static PagedList<T> ToPagedList(IQueryable<T> source, int pagenumber, int pagesize)
         {
             var count = source.Count();
             var items = source.Skip((pagenumber - 1) * pagesize).Take(pagesize).ToList();

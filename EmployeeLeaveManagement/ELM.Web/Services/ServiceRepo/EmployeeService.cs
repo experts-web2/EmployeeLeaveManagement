@@ -16,28 +16,26 @@ namespace EmpLeave.Web.Services.ServiceRepo
     public class EmployeeService : IEmployeeService
     {
         private HttpClient _httpService;
-        HttpClient httpclient = new HttpClient();
-        private  string controllerRoute = "https://localhost:7150/api/";
+     
         public EmployeeService(HttpClient httpClient)
         {
             _httpService= httpClient;
-           httpclient.BaseAddress = new Uri("https://localhost:7150/api/");
-            httpclient.DefaultRequestHeaders.Add("Accept", "Application/json");
+            _httpService.BaseAddress = new Uri("https://localhost:7150/api/");
+            _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
         public async Task PostCall(EmployeeDto employeeDto)
         {
-             await _httpService.PostAsJsonAsync(controllerRoute, employeeDto);
+             await _httpService.PostAsJsonAsync(_httpService.BaseAddress, employeeDto);
             
         }
         public async Task<Response<EmployeeDto>> GetAllEmployee(Parameter parameter)
         {
-            //  List<EmployeeDto> respons = new();
             Response<EmployeeDto> responseDto = new();
             try
             {
                 string data = JsonConvert.SerializeObject(parameter);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await httpclient.PostAsync("Employee/getall", Content);
+                var response = await _httpService.PostAsync("Employee/getall", Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<EmployeeDto>();
 
@@ -47,11 +45,10 @@ namespace EmpLeave.Web.Services.ServiceRepo
                     responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
                 }
                 string result = await response.Content.ReadAsStringAsync();
-               // responseDto.DataList = await _httpService.GetFromJsonAsync<List<EmployeeDto>>(result);
                 responseDto.DataList =  JsonConvert.DeserializeObject<List<EmployeeDto>>(result);
                 return responseDto;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 responseDto.DataList = null;
             }
@@ -59,15 +56,15 @@ namespace EmpLeave.Web.Services.ServiceRepo
         }
         public async Task UpdateCall(EmployeeDto employeeDto)
         {
-            await _httpService.PutAsJsonAsync(controllerRoute, employeeDto);
+            await _httpService.PutAsJsonAsync(_httpService.BaseAddress, employeeDto);
         }
         public async Task DeleteCall(int id)
         {
-            await _httpService.DeleteAsync($"{controllerRoute}/{id}");
+            await _httpService.DeleteAsync($"{_httpService.BaseAddress}/{id}");
         }
         public async Task<EmployeeDto> GetByIdCall(int id)
         {
-          return  await _httpService.GetFromJsonAsync<EmployeeDto>(controllerRoute+"/GetById/"+id);
+          return  await _httpService.GetFromJsonAsync<EmployeeDto>(_httpService.BaseAddress + "/GetById/"+id);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BL.Interface;
+using DAL;
 using DAL.Interface.GenericInterface;
 using DomainEntity.Models;
+using DomainEntity.Pagination;
 using DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,10 +17,12 @@ namespace BL.Service
     public class LeaveService : ILeaveService
     {
         private readonly IGenericRepository<Leave> _genericRepository;
+        private readonly AppDbContext Db;
 
-        public LeaveService(IGenericRepository<Leave> genericRepository)
+        public LeaveService(IGenericRepository<Leave> genericRepository, AppDbContext db)
         {
             _genericRepository = genericRepository;
+            Db = db;
         }
         public LeaveDto Add(LeaveDto leaveDto)
         {
@@ -27,23 +31,23 @@ namespace BL.Service
                 return null;
             }
             try
-                {
-                    Leave leaveEntity = ToEntity(leaveDto);
-                    _genericRepository.Add(leaveEntity);
-                    return leaveDto;
-                }
-                catch (Exception)
-                {
+            {
+                Leave leaveEntity = ToEntity(leaveDto);
+                _genericRepository.Add(leaveEntity);
+                return leaveDto;
+            }
+            catch (Exception)
+            {
 
-                    throw;
-                }
+                throw;
+            }
         }
         private Leave ToEntity(LeaveDto leaveDto)
         {
             Leave leave = new()
             {
                 EmployeeId = leaveDto.EmployeeId,
-                Id=leaveDto.ID,
+                Id = leaveDto.ID,
                 StartTime = leaveDto.StartTime,
                 EndTime = leaveDto.EndTime,
                 Status = leaveDto.Status,
@@ -64,7 +68,7 @@ namespace BL.Service
 
                 throw;
             }
-            
+
         }
 
         public LeaveDto GetById(int id)
@@ -88,7 +92,7 @@ namespace BL.Service
                     EndTime = leave.EndTime,
                     Status = leave.Status,
                     LeaveEnum = leave.leaveEnum,
-                   EmployeeId=leave.EmployeeId
+                    EmployeeId = leave.EmployeeId
 
                 };
                 return leaveDto;
@@ -99,22 +103,26 @@ namespace BL.Service
             }
 
         }
-        public List<LeaveDto> GetAll()
+        public PagedList<LeaveDto> GetAll(Pager pager)
         {
             try
             {
-                var Leaves = _genericRepository.GetAll().Include(x=>x.Employee).ToList();
-                
-                List<LeaveDto> leaveDtos = ToDtos(Leaves);
-               
-                return leaveDtos;
+                IQueryable<Leave> allEmpLeaves = _genericRepository.GetAll().Include(x => x.Employee);
+                if (!string.IsNullOrEmpty(pager.search))
+                {
+                    allEmpLeaves = allEmpLeaves.Where(x => x.Employee.FirstName.Contains(pager.search.Trim()));
+                }
+                var paginatedList = PagedList<Leave>.ToPagedList(allEmpLeaves, pager.page, pager.PageSize);
+                var leaveDtos = ToDtos(paginatedList);
+                return new PagedList<LeaveDto>
+               (leaveDtos, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
+
             }
             catch (Exception)
             {
 
                 throw;
             }
-          
         }
         private List<LeaveDto> ToDtos(IEnumerable<Leave> leaves)
         {
@@ -129,7 +137,7 @@ namespace BL.Service
                     leaveDto.EndTime = leave.EndTime;
                     leaveDto.Status = leave.Status;
                     leaveDto.LeaveEnum = leave.leaveEnum;
-                    leaveDto.EmployeeId=leave.EmployeeId;
+                    leaveDto.EmployeeId = leave.EmployeeId;
                     leaveDto.EmployeeName = leave.Employee.FirstName;
                     employeeDtos.Add(leaveDto);
                 }
@@ -144,7 +152,7 @@ namespace BL.Service
 
         public LeaveDto Update(LeaveDto leave)
         {
-            if (leave==null)
+            if (leave == null)
             {
                 return null;
             }
@@ -158,7 +166,7 @@ namespace BL.Service
 
                 throw;
             }
-           
+
         }
 
     }

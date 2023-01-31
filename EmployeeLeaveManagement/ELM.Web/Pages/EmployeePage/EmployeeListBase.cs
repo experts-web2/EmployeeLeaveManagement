@@ -17,7 +17,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
     {
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
-        public List<EmployeeDto> EmployeeDtoList { get; set; } = new ();
+        public List<EmployeeDto> EmployeeDtoList { get; set; } = new();
         public EmployeeDto SelectedEmployee { get; set; } = new();
         public Pager Paging { get; set; } = new();
         public void SetEmployeeID(int id)
@@ -27,13 +27,13 @@ namespace EmpLeave.Web.Pages.EmployeePage
 
         protected override async Task OnInitializedAsync()
         {
-          await  GetAll();
+            await GetAll();
         }
-        public async Task GetAll(int currentPage=1)
+        public Parameter parameter = new();
+        public async Task GetAll(int currentPage = 1)
         {
-            Parameter parameter = new();
             parameter.page = currentPage;
-            var EmployeeDto =await EmployeeService.GetAllEmployee(parameter);
+            var EmployeeDto = await EmployeeService.GetAllEmployee(parameter);
             EmployeeDtoList = EmployeeDto.DataList;
             Paging = EmployeeDto.Pager;
             StateHasChanged();
@@ -46,8 +46,9 @@ namespace EmpLeave.Web.Pages.EmployeePage
         public async Task DeleteEmployee(int id)
         {
             await EmployeeService.DeleteCall(id);
-           await GetAll();
-            
+            await GetAll();
+
         }
+
     }
 }

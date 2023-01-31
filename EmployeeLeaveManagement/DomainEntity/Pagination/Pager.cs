@@ -9,7 +9,6 @@ namespace DomainEntity.Pagination
     public class Pager
     {
         public string search { get; set; } = String.Empty;
-        public int Age { get; set; }
 
         public int MaxPagesize = 40;
         public int page { get; set; } = 1;

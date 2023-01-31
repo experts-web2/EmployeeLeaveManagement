@@ -1,6 +1,8 @@
 ﻿using DomainEntity.Models;
 using DomainEntity.Pagination;
 using DTOs;
+using System;
+using System.Linq.Expressions;
 
 namespace DAL.Interface
 {

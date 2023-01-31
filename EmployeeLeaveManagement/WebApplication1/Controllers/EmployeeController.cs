@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -21,24 +22,31 @@ namespace EmpLeave.Api.Controllers
         [HttpPost("getall")]
         public IActionResult GetAllEmployee(Pager pager)
         {
-           var allemployee= _employeeRepository.GetAllEmployee(pager);
-            var metadata = new
+            try
             {
-                allemployee.TotalCount,
-                allemployee.PageSize,
-                allemployee.TotalPages,
-                allemployee.CurrentPage,
-                allemployee.HasPrevious,
-                allemployee.HasNext,
-            };
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-            return Ok(allemployee);
+                var allemployees = _employeeRepository.GetAllEmployee(pager);
+                var metadata = new
+                {
+                    allemployees.TotalCount,
+                    allemployees.PageSize,
+                    allemployees.TotalPages,
+                    allemployees.CurrentPage,
+                    allemployees.HasPrevious,
+                    allemployees.HasNext,
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(allemployees);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost]
         public IActionResult AddEmployee(EmployeeDto employeeDto)
         {
             _employeeRepository.AddEmployee(employeeDto);
-            return Ok("Added Succesfully"); 
+            return Ok("Added Succesfully");
         }
 
         [HttpPut]
@@ -56,7 +64,7 @@ namespace EmpLeave.Api.Controllers
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)
         {
-           var employeeDto= _employeeRepository.GetById(id);
+            var employeeDto = _employeeRepository.GetById(id);
             return Ok(employeeDto);
         }
 

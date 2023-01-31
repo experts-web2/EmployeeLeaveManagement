@@ -1,6 +1,9 @@
-﻿using DTOs;
+﻿using DomainEntity.Pagination;
+using DTOs;
+using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
+using Pager = ELM.Web.Helper.Pager;
 
 namespace EmpLeave.Web.Pages.Leaves_Pages
 {
@@ -10,7 +13,8 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public ILeaveService LeaveService { get; set; }
         public List<LeaveDto> LeaveDtosList { get; set; } = new();
         public LeaveDto SelectedLeave { get; set; } = new LeaveDto();
-       
+        public Pager Paging { get; set; } = new();
+
         public void SetLeaveID(int id)
         {
             SelectedLeave = LeaveDtosList.FirstOrDefault(x => x.ID == id);
@@ -20,9 +24,15 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         {
             await GetAll();
         }
-        public async Task GetAll()
+        public Parameter parameter = new();
+        public async Task GetAll(int currentPage = 1)
         {
-            LeaveDtosList = await LeaveService.GetAllLeaves();
+            parameter.page = currentPage;
+            var LeaveDto = await LeaveService.GetAllLeaves(parameter);
+            LeaveDtosList = LeaveDto.DataList;
+            Paging = LeaveDto.Pager;
+            StateHasChanged();
+
         }
         public void DeleteConfirm(int Id)
         {

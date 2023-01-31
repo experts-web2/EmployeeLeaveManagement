@@ -1,4 +1,5 @@
 ﻿
+using DomainEntity.Pagination;
 using DTOs;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using System;
@@ -11,7 +12,7 @@ namespace BL.Interface
 {
     public interface ILeaveService
     {
-        List<LeaveDto> GetAll();
+        PagedList<LeaveDto> GetAll(Pager pager);
         LeaveDto GetById(int id);
         LeaveDto Add(LeaveDto leave);
         void Delete(int id);
