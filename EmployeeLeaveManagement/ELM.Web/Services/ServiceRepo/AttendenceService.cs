@@ -7,26 +7,20 @@ namespace ELM.Web.Services.ServiceRepo
 
     {
         private HttpClient _httpService;
-        private string controllerRoute = "https://localhost:7150/api/attendenceapi";
+        private string controllerRoute = "https://localhost:7150/api/AttendenceApi";
         public AttendenceService(HttpClient httpService)
         {
             _httpService = httpService;
             
         }
-
-        public Task DeleteCall(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<AttendenceDto>> GetAttendences()
         {
          
-            List<AttendenceDto> respons = new();
+            List<AttendenceDto> response = new();
             try
             {
-                respons = await _httpService.GetFromJsonAsync<List<AttendenceDto>>(controllerRoute);
-                return respons;
+                response = await _httpService.GetFromJsonAsync<List<AttendenceDto>>(controllerRoute+ "/GetAllAttendences");
+                return response;
             }
             catch (Exception ex)
             {
@@ -35,20 +29,14 @@ namespace ELM.Web.Services.ServiceRepo
             return null;
             
         }
-
-        public Task<LeaveDto> GetByIdCall(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task PostCall(AttendenceDto attendenceDto)
         {
-            await _httpService.PostAsJsonAsync(controllerRoute, attendenceDto);
+            var x=await _httpService.PostAsJsonAsync(controllerRoute+ "/AddAttendence", attendenceDto);
+        }
+        public async Task DeleteCall(int id)
+        {
+            await _httpService.DeleteAsync($"{controllerRoute}/{id}");
         }
 
-        public Task UpdateCall(LeaveDto leaveDto)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

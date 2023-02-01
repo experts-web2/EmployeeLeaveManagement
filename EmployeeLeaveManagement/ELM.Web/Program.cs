@@ -1,4 +1,6 @@
 using ELM.Web.Data;
+using ELM.Web.Services.Interface;
+using ELM.Web.Services.ServiceRepo;
 using EmpLeave.Web.Services.Interface;
 using EmpLeave.Web.Services.ServiceRepo;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -17,6 +19,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStatePr
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
+builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddHttpClient("api", o =>
 {

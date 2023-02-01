@@ -12,6 +12,8 @@ namespace DomainEntity.Models
     public class Attendence : BaseEntity
     {
         [Required]
+        public DateTime Date { get; set; } 
+        [Required]
         public DateTime TimeIn { get; set; }
         [Required]
         public DateTime  Timeout{ get; set; }

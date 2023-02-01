@@ -6,8 +6,7 @@ namespace ELM.Web.Services.Interface
     {
         Task PostCall(AttendenceDto attendenceDto);
         Task<List<AttendenceDto>> GetAttendences();
-        Task UpdateCall(LeaveDto leaveDto);
         Task DeleteCall(int id);
-        Task<LeaveDto> GetByIdCall(int id);
+
     }
 }

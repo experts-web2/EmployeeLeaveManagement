@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221228105752_init")]
-    partial class init
+    [Migration("20230131154952_initation")]
+    partial class initation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,47 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("TimeIn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Timeout")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("hostName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Attendences");
+                });
 
             modelBuilder.Entity("DomainEntity.Models.Employee", b =>
                 {
@@ -194,15 +235,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "32b95a1a-ff12-432f-b250-453e2610e803",
-                            ConcurrencyStamp = "d2c61ce4-1168-41c0-95ce-c0def4204a8b",
+                            Id = "71543425-6ce3-401b-9d0a-06b2401bb6f5",
+                            ConcurrencyStamp = "c2d49373-db7f-4d09-8e76-60a65fbb2bac",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "4d47ad64-2770-43b6-bc8d-7158091de26e",
-                            ConcurrencyStamp = "5e7310d4-b79b-4166-a1b0-4df8df4f35fd",
+                            Id = "f1fe1c7f-3f79-4196-822c-a3140042e497",
+                            ConcurrencyStamp = "fca9cbea-1cbe-4dad-916e-e861d99cb37f",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -314,6 +355,17 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
+                {
+                    b.HasOne("DomainEntity.Models.Employee", "Employee")
+                        .WithMany("Attendences")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("DomainEntity.Models.Leave", b =>
                 {
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
@@ -378,6 +430,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DomainEntity.Models.Employee", b =>
                 {
+                    b.Navigation("Attendences");
+
                     b.Navigation("Leaves");
                 });
 #pragma warning restore 612, 618

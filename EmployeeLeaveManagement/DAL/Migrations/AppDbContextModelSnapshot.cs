@@ -30,6 +30,9 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
@@ -230,15 +233,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6b1af69f-423c-4767-864b-cee3e603b4ed",
-                            ConcurrencyStamp = "b3053efe-3a8e-425e-b200-51a9efacf42d",
+                            Id = "71543425-6ce3-401b-9d0a-06b2401bb6f5",
+                            ConcurrencyStamp = "c2d49373-db7f-4d09-8e76-60a65fbb2bac",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "ee8ac410-edfc-40b0-9564-2a5e90dffc92",
-                            ConcurrencyStamp = "6043d164-27d0-41f3-af7c-d6c98ed4742e",
+                            Id = "f1fe1c7f-3f79-4196-822c-a3140042e497",
+                            ConcurrencyStamp = "fca9cbea-1cbe-4dad-916e-e861d99cb37f",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

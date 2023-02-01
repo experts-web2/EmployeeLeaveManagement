@@ -43,7 +43,7 @@ namespace DAL.Repositories
         {
              Attendence attendence = new()
             {
-
+                 Date=attendenceDto.Date,
                 TimeIn = attendenceDto.TimeIn,
                 Timeout = attendenceDto.Timeout,
                 EmployeeId = attendenceDto.EmployeeId,
@@ -71,6 +71,7 @@ namespace DAL.Repositories
                 {
                     AttendenceDto attendenceDto = new AttendenceDto();
                     attendenceDto.ID= attendence.Id;
+                    attendenceDto.Date = attendence.Date;
                     attendenceDto.TimeIn = attendence.TimeIn;
                     attendenceDto.Timeout = attendence.Timeout;
                     attendenceDto.hostName = attendence.hostName;

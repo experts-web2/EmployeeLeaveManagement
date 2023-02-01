@@ -1,0 +1,49 @@
+﻿@page "/ListOfAttendence" 
+@using ELM.Web.Pages.Attendence_Page;
+@inherits AttendenceListBase
+<h3>List Of Attendence</h3>
+<div class="row">
+
+    <div class="col-md-6">
+        <a href='/AddAttendence' class="btn btn-primary" role="button">
+            <i class="fas fa-user-plus"></i>
+            Add Attendence
+        </a>
+    </div>
+</div>
+@if (AttendenceDtoList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+         <thead class="table-success">
+            <tr>
+                <th>TimeIn</th>
+                <th>TimeOut</th>
+                <th>Host Name</th>
+                <th>IpAddress</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Employee Name</th>
+                <th class="colspan-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var attendence in AttendenceDtoList)
+            {
+              <tr>
+                <td>@attendence.TimeIn</td>
+                <td>@attendence.Timeout</td>
+                <td>@attendence.hostName</td>
+                <td>@attendence.IpAddress</td>
+                <td>@attendence.Longitude</td>
+                <td>@attendence.Latitude</td>
+                <td>@attendence.EmployeeId</td>
+              </tr>
+            }
+          
+        </tbody>
+    </table>
+}
