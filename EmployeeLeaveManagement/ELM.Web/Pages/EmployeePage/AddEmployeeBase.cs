@@ -19,7 +19,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
             if (ID.HasValue)
             {
                 
-                EmployeeDto = await EmployeeService.GetByIdCall(ID.Value);
+                EmployeeDto = await EmployeeService.GetEmployeebyId(ID.Value);
             }
         }
 
@@ -27,7 +27,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
         {
             if (ID != 0)
             {
-                await EmployeeService.UpdateCall(EmployeeDto);
+                await EmployeeService.UpdateEmployee(EmployeeDto);
             }
             else
             {

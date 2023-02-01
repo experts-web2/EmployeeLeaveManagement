@@ -1,5 +1,6 @@
 ﻿using DomainEntity.Models;
 using DTOs;
+using ELM.Helper.SupportFiles;
 using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using EmpLeave.Web.Services.ServiceRepo;
@@ -17,6 +18,8 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public NavigationManager NavigationManager { get; set; }
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
+       // public Parameter parameter { get; set; }
+        public Pager Paging { get; set; }
         public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
        
         public LeaveDto LeaveDto { get; set; } = new();
@@ -24,9 +27,7 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public int? ID { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            Parameter parameter = new();
-            var listEmployee= await EmployeeService.GetAllEmployee(parameter);
-            EmployeeDtosList = listEmployee.DataList;
+            GetEmployees();
         }
         protected override async Task OnParametersSetAsync()
         {
@@ -53,6 +54,11 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public void Cancel()
         {
             NavigationManager.NavigateTo("Listofleaves");
+        }
+        public async Task GetEmployees()
+        {
+            Response<EmployeeDto> listEmployee = await  EmployeeService.GetAllEmployee(Paging);
+            EmployeeDtosList = listEmployee.DataList;
         }
     }
 }

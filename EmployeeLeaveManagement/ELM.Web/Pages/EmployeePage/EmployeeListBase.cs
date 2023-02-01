@@ -1,13 +1,9 @@
-﻿using DomainEntity.Pagination;
-using DTOs;
+﻿using DTOs;
 using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Pager = ELM.Web.Helper.Pager;
+using ELM.Helper.SupportFiles;
 
 
 namespace EmpLeave.Web.Pages.EmployeePage
@@ -29,11 +25,11 @@ namespace EmpLeave.Web.Pages.EmployeePage
         {
             await GetAll();
         }
-        public Parameter parameter = new();
         public async Task GetAll(int currentPage = 1)
+        
         {
-            parameter.page = currentPage;
-            var EmployeeDto = await EmployeeService.GetAllEmployee(parameter);
+            Paging.CurrentPage = currentPage;
+            var EmployeeDto = await EmployeeService.GetAllEmployee(Paging);
             EmployeeDtoList = EmployeeDto.DataList;
             Paging = EmployeeDto.Pager;
             StateHasChanged();
@@ -45,7 +41,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
 
         public async Task DeleteEmployee(int id)
         {
-            await EmployeeService.DeleteCall(id);
+            await EmployeeService.DeleteEmployeebyId(id);
             await GetAll();
 
         }

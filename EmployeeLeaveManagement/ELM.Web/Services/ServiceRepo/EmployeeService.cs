@@ -1,15 +1,9 @@
-﻿using DomainEntity.Pagination;
-using DTOs;
+﻿using DTOs;
 using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Pager = ELM.Web.Helper.Pager;
+using ELM.Helper.SupportFiles;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
@@ -28,12 +22,12 @@ namespace EmpLeave.Web.Services.ServiceRepo
              await _httpService.PostAsJsonAsync(_httpService.BaseAddress, employeeDto);
             
         }
-        public async Task<Response<EmployeeDto>> GetAllEmployee(Parameter parameter)
+        public async Task<Response<EmployeeDto>> GetAllEmployee(Pager paging)
         {
             Response<EmployeeDto> responseDto = new();
             try
             {
-                string data = JsonConvert.SerializeObject(parameter);
+                string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await _httpService.PostAsync("Employee/getall", Content);
                 if (!response.IsSuccessStatusCode)
@@ -54,15 +48,15 @@ namespace EmpLeave.Web.Services.ServiceRepo
             }
             return new Response<EmployeeDto>();
         }
-        public async Task UpdateCall(EmployeeDto employeeDto)
+        public async Task UpdateEmployee(EmployeeDto employeeDto)
         {
             await _httpService.PutAsJsonAsync(_httpService.BaseAddress, employeeDto);
         }
-        public async Task DeleteCall(int id)
+        public async Task DeleteEmployeebyId(int id)
         {
             await _httpService.DeleteAsync($"{_httpService.BaseAddress}/{id}");
         }
-        public async Task<EmployeeDto> GetByIdCall(int id)
+        public async Task<EmployeeDto> GetEmployeebyId(int id)
         {
           return  await _httpService.GetFromJsonAsync<EmployeeDto>(_httpService.BaseAddress + "/GetById/"+id);
         }

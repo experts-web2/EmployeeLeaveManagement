@@ -1,13 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DomainEntity.Pagination
+﻿namespace ELM.Helper.SupportFiles
 {
-   public class PagedList<T> : List<T>
+    public class PagedList<T> : List<T>
     {
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
@@ -28,8 +21,8 @@ namespace DomainEntity.Pagination
         }
         public static PagedList<T> ToPagedList(IQueryable<T> source, int pagenumber, int pagesize)
         {
-            var count = source.Count();
             var items = source.Skip((pagenumber - 1) * pagesize).Take(pagesize).ToList();
+            var count = source.Count();
             return new PagedList<T>(items, count, pagenumber, pagesize);
         }
     }

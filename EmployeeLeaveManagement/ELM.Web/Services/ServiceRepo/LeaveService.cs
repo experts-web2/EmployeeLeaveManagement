@@ -1,19 +1,16 @@
 ﻿using DTOs;
+using ELM.Helper.SupportFiles;
 using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
     public class LeaveService : ILeaveService
     {
         private HttpClient _httpService;
-    
+
         public LeaveService(HttpClient httpService)
         {
             _httpService = httpService;
@@ -24,12 +21,12 @@ namespace EmpLeave.Web.Services.ServiceRepo
         {
             await _httpService.DeleteAsync($"{_httpService.BaseAddress}/{id}");
         }
-        public async Task<Response<LeaveDto>> GetAllLeaves(Parameter parameter)
+        public async Task<Response<LeaveDto>> GetAllLeaves(Pager Paging)
         {
             Response<LeaveDto> responseDto = new();
             try
             {
-                string data = JsonConvert.SerializeObject(parameter);
+                string data = JsonConvert.SerializeObject(Paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await _httpService.PostAsync("Leave/getall", Content);
                 if (!response.IsSuccessStatusCode)
@@ -50,7 +47,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
             {
                 responseDto.DataList = null;
             }
-            return  new Response<LeaveDto>();
+            return new Response<LeaveDto>();
         }
 
         public async Task<LeaveDto> GetByIdCall(int id)
@@ -64,7 +61,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
 
         }
 
-        public  async Task UpdateCall(LeaveDto leaveDto)
+        public async Task UpdateCall(LeaveDto leaveDto)
         {
             await _httpService.PutAsJsonAsync(_httpService.BaseAddress, leaveDto);
         }
