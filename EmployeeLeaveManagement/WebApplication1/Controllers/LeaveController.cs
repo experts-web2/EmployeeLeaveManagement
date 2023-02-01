@@ -19,7 +19,7 @@ namespace EmpLeave.Api.Controllers
         [HttpPost]
         public IActionResult AddLeave(LeaveDto leaveDto)
         {
-           var response= _leaveService.Add(leaveDto);
+            var response = _leaveService.Add(leaveDto);
             return Ok(response);
         }
         [HttpPost("getall")]
@@ -48,14 +48,14 @@ namespace EmpLeave.Api.Controllers
         [HttpPut]
         public IActionResult UpdateLeave(LeaveDto leaveDto)
         {
-          var Updated=  _leaveService.Update(leaveDto);
+            var Updated = _leaveService.Update(leaveDto);
             return Ok(Updated);
         }
         [HttpDelete("{id}")]
         public IActionResult Deleteleave(int id)
         {
             _leaveService.Delete(id);
-            return Ok("Deleted Succusfully"); 
+            return Ok("Deleted Succusfully");
         }
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)

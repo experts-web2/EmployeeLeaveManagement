@@ -17,12 +17,10 @@ namespace BL.Service
     public class LeaveService : ILeaveService
     {
         private readonly IGenericRepository<Leave> _genericRepository;
-        private readonly AppDbContext Db;
 
-        public LeaveService(IGenericRepository<Leave> genericRepository, AppDbContext db)
+        public LeaveService(IGenericRepository<Leave> genericRepository)
         {
             _genericRepository = genericRepository;
-            Db = db;
         }
         public LeaveDto Add(LeaveDto leaveDto)
         {
