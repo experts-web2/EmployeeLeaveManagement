@@ -1,9 +1,8 @@
 ﻿using DTOs;
-using ELM.Web.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using ELM.Helper.SupportFiles;
+using ELM.Helper;
 
 
 namespace EmpLeave.Web.Pages.EmployeePage

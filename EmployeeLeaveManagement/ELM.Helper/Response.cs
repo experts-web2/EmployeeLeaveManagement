@@ -1,7 +1,6 @@
 ﻿
-using ELM.Helper.SupportFiles;
 
-namespace ELM.Web.Helper
+namespace ELM.Helper
 {
     public class Response<T>
     {

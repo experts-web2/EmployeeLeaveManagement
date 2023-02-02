@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ELM.Helper.SupportFiles
-{
+﻿
+namespace ELM.Helper;
     public class Pager
     {
         public string search { get; set; } = String.Empty;
@@ -29,4 +23,3 @@ namespace ELM.Helper.SupportFiles
             }
         }
     }
-}

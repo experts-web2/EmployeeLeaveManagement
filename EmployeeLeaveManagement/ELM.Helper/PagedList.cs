@@ -1,4 +1,4 @@
-﻿namespace ELM.Helper.SupportFiles
+﻿namespace ELM.Helper
 {
     public class PagedList<T> : List<T>
     {
