@@ -3,6 +3,7 @@ using EmpLeave.Web.Services.Interface;
 using System.Text;
 using Newtonsoft.Json;
 using ELM.Helper;
+using DomainEntity.Models;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
@@ -58,6 +59,14 @@ namespace EmpLeave.Web.Services.ServiceRepo
         public async Task<EmployeeDto> GetEmployeebyId(int id)
         {
           return  await _httpService.GetFromJsonAsync<EmployeeDto>(_httpService.BaseAddress + "/GetById/"+id);
+        }
+
+        public async Task<List<Employee>> GetAllEmployee()
+        {
+          return await _httpService.GetFromJsonAsync<List<Employee>>(_httpService.BaseAddress + "Employee/GetAllEmployees");
+            
+           
+
         }
     }
 }

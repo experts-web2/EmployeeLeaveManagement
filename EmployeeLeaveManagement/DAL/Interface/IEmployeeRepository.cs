@@ -1,4 +1,5 @@
 ﻿
+using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 
@@ -11,6 +12,6 @@ namespace DAL.Interface
         void DeleteEmployee(int id);
         void Update(EmployeeDto employee);
         EmployeeDto GetById(int id);
-
+        List<Employee> GetAllEmployees();
     }
 }

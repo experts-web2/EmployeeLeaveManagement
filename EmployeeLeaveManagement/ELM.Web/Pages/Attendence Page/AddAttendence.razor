@@ -45,9 +45,9 @@
         <label>EMPLOYEE NAME</label>
         <InputSelect class="form-control" @bind-Value="AttendenceDto.EmployeeId">
             <option selected disabled value="0">Employee Name List</option>
-            @foreach (var employee in EmployeeDtosList)
+            @foreach (var employee in EmployeesList)
             {
-                <option value="@employee.ID">@employee.FirstName</option>
+                <option value="@employee.Id">@employee.FirstName</option>
             }
         </InputSelect>
     </div>

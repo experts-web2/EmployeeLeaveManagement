@@ -146,5 +146,9 @@ namespace DAL.Repositories
             }
            
         }
+        public List<Employee> GetAllEmployees()
+        {
+          return  Db.Employees.ToList();
+        }
     }
 }
