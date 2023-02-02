@@ -7,26 +7,26 @@
     <div class="mb-3">
         <label for="Name" class="form-label">Date</label>
         <div class="col-md-4">
-            <InputDate class="form-control" @bind-Value="AttendenceDto.Date" />
+            <InputDate class="form-control" @bind-Value="AttendenceDto.AttendenceDate" />
         </div>
-        <ValidationMessage For="@(() => AttendenceDto.Date)" />
+        <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
     </div>
 
     <div class="mb-3">
         <label for="Name" class="form-label">TimeIn</label>
         <div class="col-md-4">
-              <InputDate Type="InputDateType.Time" class="form-control"  @bind-Value="AttendenceDto.TimeIn" />
+            <InputDate Type="InputDateType.Time" class="form-control" @bind-Value="AttendenceDto.TimeIn" />
         </div>
-       
+
     </div>
-   
+
     <div class="mb-3">
         <label for="Name" class="form-label">TimeOut</label>
         <div class="col-md-4">
-           <InputDate Type="InputDateType.Time" class="form-control" @bind-Value="AttendenceDto.Timeout" />
+            <InputDate Type="InputDateType.Time" class="form-control" @bind-Value="AttendenceDto.Timeout" />
         </div>
     </div>
-   
+
     <div class="mb-3">
         <label for="Name" class="form-label">Longitude</label>
         <div class="col-md-4">

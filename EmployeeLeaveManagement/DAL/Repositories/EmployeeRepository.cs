@@ -14,7 +14,6 @@ namespace DAL.Repositories
         {
             Db = db;
         }
-
         public void AddEmployee(EmployeeDto employee)
         {
             Employee employeeEntity = ToEntity(employee);
@@ -69,7 +68,6 @@ namespace DAL.Repositories
                 throw;
             }
         }
-
         public void DeleteEmployee(int id)
         {
             try
@@ -88,7 +86,6 @@ namespace DAL.Repositories
             }
           
         }
-
         public void Update(EmployeeDto employee)
         {
             if(employee != null)
@@ -104,7 +101,6 @@ namespace DAL.Repositories
                 throw;
             }
         }
-
         public EmployeeDto GetById(int id)
         {
           var FindEmployee= Db.Employees.Include(x=>x.Leaves).FirstOrDefault(x => x.Id == id);
@@ -124,7 +120,6 @@ namespace DAL.Repositories
                 {
                     ID = employee.Id,
                     FirstName = employee.FirstName,
-
                     LastName = employee.LastName,
                     Gender = employee.Gender,
                     Email = employee.Email,

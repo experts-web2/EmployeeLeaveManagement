@@ -17,7 +17,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
            
         }
 
-        public async Task DeleteCall(int id)
+        public async Task DeleteLeave(int id)
         {
             await _httpService.DeleteAsync($"{controllerRoute}/{id}");
         }
@@ -42,13 +42,13 @@ namespace EmpLeave.Web.Services.ServiceRepo
             return await _httpService.GetFromJsonAsync<LeaveDto>(controllerRoute + "/GetById/" + id);
         }
 
-        public async Task PostCall(LeaveDto leaveDto)
+        public async Task AddLeave(LeaveDto leaveDto)
         {
             await _httpService.PostAsJsonAsync<LeaveDto>(controllerRoute,leaveDto);
 
         }
 
-        public  async Task UpdateCall(LeaveDto leaveDto)
+        public  async Task EditLeave(LeaveDto leaveDto)
         {
             await _httpService.PutAsJsonAsync(controllerRoute, leaveDto);
         }

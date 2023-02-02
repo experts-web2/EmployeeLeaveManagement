@@ -26,7 +26,7 @@ namespace ELM.Web.Pages.Attendence_Page
         {
             if (!ID.HasValue)
             {
-                await AttendenceService.PostCall(AttendenceDto);
+                await AttendenceService.AddAttendence(AttendenceDto);
             }
             else
             {

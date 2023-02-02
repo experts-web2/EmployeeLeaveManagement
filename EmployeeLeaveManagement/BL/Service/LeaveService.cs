@@ -27,23 +27,22 @@ namespace BL.Service
                 return null;
             }
             try
-                {
-                    Leave leaveEntity = ToEntity(leaveDto);
-                    _genericRepository.Add(leaveEntity);
-                    return leaveDto;
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
+            {
+                Leave leaveEntity = ToEntity(leaveDto);
+                _genericRepository.Add(leaveEntity);
+                return leaveDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         private Leave ToEntity(LeaveDto leaveDto)
         {
             Leave leave = new()
             {
                 EmployeeId = leaveDto.EmployeeId,
-                Id=leaveDto.ID,
+                Id = leaveDto.ID,
                 StartTime = leaveDto.StartTime,
                 EndTime = leaveDto.EndTime,
                 Status = leaveDto.Status,
@@ -61,10 +60,9 @@ namespace BL.Service
             }
             catch (Exception)
             {
-
                 throw;
             }
-            
+
         }
 
         public LeaveDto GetById(int id)
@@ -88,7 +86,7 @@ namespace BL.Service
                     EndTime = leave.EndTime,
                     Status = leave.Status,
                     LeaveEnum = leave.leaveEnum,
-                   EmployeeId=leave.EmployeeId
+                    EmployeeId = leave.EmployeeId
 
                 };
                 return leaveDto;
@@ -97,16 +95,13 @@ namespace BL.Service
             {
                 return null;
             }
-
         }
         public List<LeaveDto> GetAll()
         {
             try
             {
-                var Leaves = _genericRepository.GetAll().Include(x=>x.Employee).ToList();
-                
+                var Leaves = _genericRepository.GetAll().Include(x => x.Employee).ToList();
                 List<LeaveDto> leaveDtos = ToDtos(Leaves);
-               
                 return leaveDtos;
             }
             catch (Exception)
@@ -114,7 +109,6 @@ namespace BL.Service
 
                 throw;
             }
-          
         }
         private List<LeaveDto> ToDtos(IEnumerable<Leave> leaves)
         {
@@ -129,7 +123,7 @@ namespace BL.Service
                     leaveDto.EndTime = leave.EndTime;
                     leaveDto.Status = leave.Status;
                     leaveDto.LeaveEnum = leave.leaveEnum;
-                    leaveDto.EmployeeId=leave.EmployeeId;
+                    leaveDto.EmployeeId = leave.EmployeeId;
                     leaveDto.EmployeeName = leave.Employee.FirstName;
                     employeeDtos.Add(leaveDto);
                 }
@@ -141,10 +135,9 @@ namespace BL.Service
                 throw;
             }
         }
-
         public LeaveDto Update(LeaveDto leave)
         {
-            if (leave==null)
+            if (leave == null)
             {
                 return null;
             }
@@ -158,8 +151,6 @@ namespace BL.Service
 
                 throw;
             }
-           
         }
-
     }
 }

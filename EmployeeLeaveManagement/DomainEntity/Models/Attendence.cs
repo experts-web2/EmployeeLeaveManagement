@@ -12,14 +12,13 @@ namespace DomainEntity.Models
     public class Attendence : BaseEntity
     {
         [Required]
-        public DateTime Date { get; set; } 
+        public DateTime AttendenceDate { get; set; }
         [Required]
         public DateTime TimeIn { get; set; }
         [Required]
-        public DateTime  Timeout{ get; set; }
+        public DateTime Timeout { get; set; }
         [Required]
-       
-        public string hostName { get; set; }
+        public string HostName { get; set; }
         [Required]
         public string IpAddress { get; set; }
         [Required]
@@ -30,7 +29,5 @@ namespace DomainEntity.Models
         [Required]
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
-
-
     }
 }

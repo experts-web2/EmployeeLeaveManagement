@@ -27,11 +27,11 @@ namespace EmpLeave.Web.Pages.EmployeePage
         {
             if (ID != 0)
             {
-                await EmployeeService.UpdateCall(EmployeeDto);
+                await EmployeeService.EditEmployee(EmployeeDto);
             }
             else
             {
-                await EmployeeService.PostCall(EmployeeDto);
+                await EmployeeService.AddEmployee(EmployeeDto);
             }
             Cancel();
         }

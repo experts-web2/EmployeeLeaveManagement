@@ -30,10 +30,9 @@ namespace ELM.Web.Pages.Attendence_Page
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == Id);
         }
-
         public async Task DeleteEmployee(int id)
         {
-            await AttendenceService.DeleteCall(id);
+            await AttendenceService.DeleteAttendence(id);
             await GetAll();
 
         }

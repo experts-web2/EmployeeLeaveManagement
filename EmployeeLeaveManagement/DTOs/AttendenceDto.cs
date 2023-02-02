@@ -13,19 +13,17 @@ namespace DTOs
 
 
         [Required]
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime AttendenceDate { get; set; } = DateTime.Now;
         [Required]
         public DateTime TimeIn { get; set; }
         [Required]
         public DateTime Timeout { get; set; }
-        public string hostName { get; set; } = String.Empty;
+        public string HostName { get; set; } = String.Empty;
         public string IpAddress { get; set; } = String.Empty;
         [Required]
         public double Longitude { get; set; }
         [Required]
         public double Latitude { get; set; }
         public int EmployeeId { get; set; }
-       
-       
     }
 }

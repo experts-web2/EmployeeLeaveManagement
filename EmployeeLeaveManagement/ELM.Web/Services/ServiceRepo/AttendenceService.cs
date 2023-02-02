@@ -29,11 +29,11 @@ namespace ELM.Web.Services.ServiceRepo
             return null;
             
         }
-        public async Task PostCall(AttendenceDto attendenceDto)
+        public async Task AddAttendence(AttendenceDto attendenceDto)
         {
             var x=await _httpService.PostAsJsonAsync(controllerRoute+ "/AddAttendence", attendenceDto);
         }
-        public async Task DeleteCall(int id)
+        public async Task DeleteAttendence(int id)
         {
             await _httpService.DeleteAsync($"{controllerRoute}/{id}");
         }

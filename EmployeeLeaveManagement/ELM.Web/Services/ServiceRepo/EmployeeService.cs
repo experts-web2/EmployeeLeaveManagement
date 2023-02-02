@@ -15,7 +15,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
         {
             _httpService= httpClient;
         }
-        public async Task PostCall(EmployeeDto employeeDto)
+        public async Task AddEmployee(EmployeeDto employeeDto)
         {
              await _httpService.PostAsJsonAsync(controllerRoute, employeeDto);
             
@@ -34,11 +34,11 @@ namespace EmpLeave.Web.Services.ServiceRepo
             }
             return respons;
         }
-        public async Task UpdateCall(EmployeeDto employeeDto)
+        public async Task EditEmployee(EmployeeDto employeeDto)
         {
             await _httpService.PutAsJsonAsync(controllerRoute, employeeDto);
         }
-        public async Task DeleteCall(int id)
+        public async Task DeleteEmployee(int id)
         {
             await _httpService.DeleteAsync($"{controllerRoute}/{id}");
         }

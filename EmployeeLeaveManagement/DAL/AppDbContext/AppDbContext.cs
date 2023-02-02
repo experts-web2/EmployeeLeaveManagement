@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DAL
 {
     public class AppDbContext : IdentityDbContext<User>
-    { 
+    {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
@@ -15,12 +15,11 @@ namespace DAL
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<Attendence> Attendences { get; set; }
-      
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
-
     }
 }

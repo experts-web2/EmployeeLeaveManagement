@@ -6,10 +6,10 @@ namespace EmpLeave.Web.Services.Interface
 {
     public interface IEmployeeService
     {
-        Task PostCall(EmployeeDto employeeDto);
+        Task AddEmployee(EmployeeDto employeeDto);
         Task<List<EmployeeDto>> GetAllEmployee();
-        Task UpdateCall(EmployeeDto employeeDto);
-        Task DeleteCall(int id);
+        Task EditEmployee(EmployeeDto employeeDto);
+        Task DeleteEmployee(int id);
         Task<EmployeeDto> GetByIdCall(int id);
 
     }

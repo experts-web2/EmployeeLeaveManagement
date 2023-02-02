@@ -19,7 +19,7 @@ namespace DAL.Repositories
         }
         public bool AddAttendence(AttendenceDto attendenceDto)
         {
-            if (attendenceDto !=null)
+            if (attendenceDto != null)
             {
                 try
                 {
@@ -33,25 +33,21 @@ namespace DAL.Repositories
 
                     throw;
                 }
-                
-                
             }
             return false;
-          
         }
         public Attendence ToEntity(AttendenceDto attendenceDto)
         {
-             Attendence attendence = new()
+            Attendence attendence = new()
             {
-                 Date=attendenceDto.Date,
+                AttendenceDate = attendenceDto.AttendenceDate,
                 TimeIn = attendenceDto.TimeIn,
                 Timeout = attendenceDto.Timeout,
                 EmployeeId = attendenceDto.EmployeeId,
                 Longitude = attendenceDto.Longitude,
                 Latitude = attendenceDto.Latitude,
-                hostName = AddHostName(),
-                IpAddress=AddIpAddress()
-                
+                HostName = AddHostName(),
+                IpAddress = AddIpAddress()
 
             };
             return attendence;
@@ -69,17 +65,19 @@ namespace DAL.Repositories
                 List<AttendenceDto> attendenceDtos = new List<AttendenceDto>();
                 foreach (var attendence in attendences)
                 {
-                    AttendenceDto attendenceDto = new AttendenceDto();
-                    attendenceDto.ID= attendence.Id;
-                    attendenceDto.Date = attendence.Date;
-                    attendenceDto.TimeIn = attendence.TimeIn;
-                    attendenceDto.Timeout = attendence.Timeout;
-                    attendenceDto.hostName = attendence.hostName;
-                    attendenceDto.IpAddress =attendence.IpAddress;
-                    attendenceDto.Longitude = attendence.Longitude;
-                    attendenceDto.Latitude = attendence.Latitude;
-                    attendenceDto.EmployeeId= attendence.EmployeeId;
+                    AttendenceDto attendenceDto = new()
+                    {
+                       ID = attendence.Id,
+                       AttendenceDate = attendence.AttendenceDate,
+                       TimeIn = attendence.TimeIn,
+                       Timeout = attendence.Timeout,
+                       HostName = attendence.HostName,
+                       IpAddress = attendence.IpAddress,
+                       Longitude = attendence.Longitude,
+                       Latitude = attendence.Latitude,
+                       EmployeeId = attendence.EmployeeId,
 
+                    };
                     attendenceDtos.Add(attendenceDto);
                 }
                 return attendenceDtos;
@@ -100,7 +98,7 @@ namespace DAL.Repositories
         {
             string HostName = Dns.GetHostName();
             IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
-            return ipaddress[1].ToString() ;
+            return ipaddress[1].ToString();
 
         }
     }
