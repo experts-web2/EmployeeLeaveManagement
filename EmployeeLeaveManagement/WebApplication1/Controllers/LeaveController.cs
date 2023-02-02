@@ -1,7 +1,8 @@
 ﻿using BL.Interface;
 using DTOs;
-using Microsoft.AspNetCore.Http;
+using ELM.Helper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -17,26 +18,43 @@ namespace EmpLeave.Api.Controllers
         [HttpPost]
         public IActionResult AddLeave(LeaveDto leaveDto)
         {
-           var response= _leaveService.Add(leaveDto);
+            var response = _leaveService.Add(leaveDto);
             return Ok(response);
         }
-        [HttpGet]
-        public IActionResult GelAllLeaves()
+        [HttpPost("getall")]
+        public IActionResult GelAllLeaves(Pager pager)
         {
-            var AllLeave = _leaveService.GetAll();
-            return Ok(AllLeave);
+            try
+            {
+                var AllLeave = _leaveService.GetAll(pager);
+                var metadata = new
+                {
+                    AllLeave.TotalCount,
+                    AllLeave.PageSize,
+                    AllLeave.TotalPages,
+                    AllLeave.CurrentPage,
+                    AllLeave.HasPrevious,
+                    AllLeave.HasNext,
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(AllLeave);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut]
         public IActionResult UpdateLeave(LeaveDto leaveDto)
         {
-          var Updated=  _leaveService.Update(leaveDto);
+            var Updated = _leaveService.Update(leaveDto);
             return Ok(Updated);
         }
         [HttpDelete("{id}")]
         public IActionResult Deleteleave(int id)
         {
             _leaveService.Delete(id);
-            return Ok("Deleted Succusfully"); 
+            return Ok("Deleted Succusfully");
         }
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)

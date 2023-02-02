@@ -1,8 +1,8 @@
 ﻿using DAL.Interface;
-using DomainEntity.Models;
 using DTOs;
-using Microsoft.AspNetCore.Http;
+using ELM.Helper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -15,17 +15,34 @@ namespace EmpLeave.Api.Controllers
         {
             _employeeRepository = employeeRepository;
         }
-        [HttpGet]
-        public IActionResult GetAllEmployee()
+        [HttpPost("getall")]
+        public IActionResult GetAllEmployee(Pager pager)
         {
-           var allemployee= _employeeRepository.GetAllEmployee();
-            return Ok(allemployee);
+            try
+            {
+                var allemployees = _employeeRepository.GetAllEmployee(pager);
+                var metadata = new
+                {
+                    allemployees.TotalCount,
+                    allemployees.PageSize,
+                    allemployees.TotalPages,
+                    allemployees.CurrentPage,
+                    allemployees.HasPrevious,
+                    allemployees.HasNext,
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(allemployees);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost]
         public IActionResult AddEmployee(EmployeeDto employeeDto)
         {
             _employeeRepository.AddEmployee(employeeDto);
-            return Ok("Added Succesfully"); 
+            return Ok("Added Succesfully");
         }
 
         [HttpPut]
@@ -43,7 +60,7 @@ namespace EmpLeave.Api.Controllers
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)
         {
-           var employeeDto= _employeeRepository.GetById(id);
+            var employeeDto = _employeeRepository.GetById(id);
             return Ok(employeeDto);
         }
 
