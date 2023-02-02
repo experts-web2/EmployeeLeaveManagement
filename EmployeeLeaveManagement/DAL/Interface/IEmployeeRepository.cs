@@ -1,10 +1,12 @@
-﻿using DTOs;
+﻿
+using DTOs;
+using ELM.Helper;
 
 namespace DAL.Interface
 {
     public interface IEmployeeRepository
     {
-        List<EmployeeDto> GetAllEmployee();
+        PagedList<EmployeeDto> GetAllEmployee(Pager pager);
         void AddEmployee(EmployeeDto employee);
         void DeleteEmployee(int id);
 

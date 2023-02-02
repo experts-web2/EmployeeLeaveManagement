@@ -1,13 +1,12 @@
 ﻿using DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ELM.Helper;
 
 namespace EmpLeave.Web.Services.Interface
 {
     public interface ILeaveService
     {
         Task PostCall(LeaveDto leaveDto);
-        Task<List<LeaveDto>> GetAllLeaves();
+        Task<Response<LeaveDto>> GetAllLeaves(Pager Paging);
         Task UpdateCall(LeaveDto leaveDto);
         Task DeleteCall(int id);
         Task<LeaveDto> GetByIdCall(int id);

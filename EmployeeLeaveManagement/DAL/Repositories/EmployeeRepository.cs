@@ -1,8 +1,8 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DAL.Repositories
 {
@@ -36,11 +36,21 @@ namespace DAL.Repositories
             };
             return employee;
         }
-        public List<EmployeeDto> GetAllEmployee()
+        public PagedList<EmployeeDto> GetAllEmployee(Pager pager)
         {
-            var employees = Db.Employees.Include(x => x.Leaves).ToList();
-            List<EmployeeDto> employeeDto=ToDtos(employees);
-            return employeeDto;
+            var employees = Db.Employees.Include(x => x.Leaves).AsQueryable();
+            if (!string.IsNullOrEmpty(pager.search))
+            {
+                employees = employees.
+                    Where(x => x.FirstName.Contains(pager.search.Trim()) ||
+                           x.LastName.Contains(pager.search.Trim()) ||
+                           x.Address.Contains(pager.search.Trim()) ||
+                           x.Email.Contains(pager.search.Trim()));
+            }
+            var paginatedList= PagedList<Employee>.ToPagedList(employees, pager.CurrentPage, pager.PageSize);
+            var employeesDto = ToDtos(paginatedList);          
+            return new PagedList<EmployeeDto>
+                (employeesDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
         }
         private List<EmployeeDto> ToDtos(List<Employee> employees)
         {

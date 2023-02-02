@@ -1,16 +1,15 @@
 ﻿using DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ELM.Helper;
 
 namespace EmpLeave.Web.Services.Interface
 {
     public interface IEmployeeService
     {
         Task PostCall(EmployeeDto employeeDto);
-        Task<List<EmployeeDto>> GetAllEmployee();
-        Task UpdateCall(EmployeeDto employeeDto);
-        Task DeleteCall(int id);
-        Task<EmployeeDto> GetByIdCall(int id);
+        Task<Response<EmployeeDto>> GetAllEmployee(Pager paging);
+        Task UpdateEmployee(EmployeeDto employeeDto);
+        Task DeleteEmployeebyId(int id);
+        Task<EmployeeDto> GetEmployeebyId(int id);
 
     }
 }

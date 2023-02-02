@@ -1,56 +1,68 @@
 ﻿using DTOs;
+using ELM.Helper;
 using EmpLeave.Web.Services.Interface;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
     public class LeaveService : ILeaveService
     {
         private HttpClient _httpService;
-        private string controllerRoute = "https://localhost:7150/api/leave";
+
         public LeaveService(HttpClient httpService)
         {
             _httpService = httpService;
-           
+            _httpService.BaseAddress = new Uri("https://localhost:7150/api/");
+            _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
-
         public async Task DeleteCall(int id)
         {
-            await _httpService.DeleteAsync($"{controllerRoute}/{id}");
+            await _httpService.DeleteAsync($"{_httpService.BaseAddress}/{id}");
         }
-
-        public async Task<List<LeaveDto>> GetAllLeaves()
+        public async Task<Response<LeaveDto>> GetAllLeaves(Pager Paging)
         {
-            List<LeaveDto> respons = new();
+            Response<LeaveDto> responseDto = new();
             try
             {
-                respons = await _httpService.GetFromJsonAsync<List<LeaveDto>>(controllerRoute);
+                string data = JsonConvert.SerializeObject(Paging);
+                StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await _httpService.PostAsync("Leave/getall", Content);
+                if (!response.IsSuccessStatusCode)
+                    return new Response<LeaveDto>();
+
+                if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
+                {
+                    var metadata = keys.FirstOrDefault();
+                    responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
+                }
+                string result = await response.Content.ReadAsStringAsync();
+                responseDto.DataList = JsonConvert.DeserializeObject<List<LeaveDto>>(result);
+                return responseDto;
+                // respons = await _httpService.GetFromJsonAsync<List<LeaveDto>>(_httpService.BaseAddress);
 
             }
             catch (System.Exception)
             {
-                respons = null;
+                responseDto.DataList = null;
             }
-            return respons;
+            return new Response<LeaveDto>();
         }
 
         public async Task<LeaveDto> GetByIdCall(int id)
         {
-            return await _httpService.GetFromJsonAsync<LeaveDto>(controllerRoute + "/GetById/" + id);
+            return await _httpService.GetFromJsonAsync<LeaveDto>(_httpService.BaseAddress + "/GetById/" + id);
         }
 
         public async Task PostCall(LeaveDto leaveDto)
         {
-            await _httpService.PostAsJsonAsync<LeaveDto>(controllerRoute,leaveDto);
+            await _httpService.PostAsJsonAsync<LeaveDto>(_httpService.BaseAddress, leaveDto);
 
         }
 
-        public  async Task UpdateCall(LeaveDto leaveDto)
+        public async Task UpdateCall(LeaveDto leaveDto)
         {
-            await _httpService.PutAsJsonAsync(controllerRoute, leaveDto);
+            await _httpService.PutAsJsonAsync(_httpService.BaseAddress, leaveDto);
         }
     }
 }
