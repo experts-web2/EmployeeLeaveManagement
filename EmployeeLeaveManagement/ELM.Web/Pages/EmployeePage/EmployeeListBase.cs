@@ -2,9 +2,8 @@
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ELM.Helper;
+
 
 namespace EmpLeave.Web.Pages.EmployeePage
 {
@@ -13,9 +12,9 @@ namespace EmpLeave.Web.Pages.EmployeePage
     {
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
-
-        public List<EmployeeDto> EmployeeDtoList { get; set; } = new ();
+        public List<EmployeeDto> EmployeeDtoList { get; set; } = new();
         public EmployeeDto SelectedEmployee { get; set; } = new();
+        public Pager Paging { get; set; } = new();
         public void SetEmployeeID(int id)
         {
             SelectedEmployee = EmployeeDtoList.FirstOrDefault(x => x.ID == id);
@@ -23,11 +22,16 @@ namespace EmpLeave.Web.Pages.EmployeePage
 
         protected override async Task OnInitializedAsync()
         {
-          await  GetAll();
+            await GetAll();
         }
-        public async Task GetAll()
+        public async Task GetAll(int currentPage = 1)
+        
         {
-            EmployeeDtoList =await EmployeeService.GetAllEmployee();
+            Paging.CurrentPage = currentPage;
+            var EmployeeDto = await EmployeeService.GetAllEmployee(Paging);
+            EmployeeDtoList = EmployeeDto.DataList;
+            Paging = EmployeeDto.Pager;
+            StateHasChanged();
         }
         public void DeleteConfirm(int Id)
         {
@@ -36,9 +40,10 @@ namespace EmpLeave.Web.Pages.EmployeePage
 
         public async Task DeleteEmployee(int id)
         {
-            await EmployeeService.DeleteEmployee(id);
-           await GetAll();
-            
+            await EmployeeService.DeleteEmployeebyId(id);
+            await GetAll();
+
         }
+
     }
 }

@@ -1,0 +1,30 @@
+﻿
+<div>
+    <ul class="pagination">
+        <li class="page-item @(HasPrevious?"":"disabled")"><a class="page-link btn" @onclick="()=>PageChange_Click(CurrentPage-1)">Previous</a></li>
+        @for (int i = 1; i <= TotalPages; i++)
+        {
+            int pageNumber = i;
+            <li class="page-item @(i==CurrentPage? "active": "")"><a class="page-link btn" @onclick="()=>PageChange_Click(pageNumber)">@i</a></li>
+        }
+        <li class="page-item @(HasNext?"":"disabled")"><a class="page-link btn" @onclick="()=>PageChange_Click(CurrentPage+1)">Next</a></li>
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public bool HasPrevious { get; set; }
+    [Parameter]
+    public bool HasNext { get; set; }
+    [Parameter]
+    public int CurrentPage { get; set; }
+    [Parameter]
+    public int TotalPages { get; set; }
+    [Parameter]
+    public EventCallback<int> ChangePage { get; set; }
+
+    public async Task  PageChange_Click(int pageNumber)
+    {
+        await  ChangePage.InvokeAsync(pageNumber);
+    }
+}

@@ -2,13 +2,8 @@
 using DAL.Interface.GenericInterface;
 using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Service
 {
@@ -27,15 +22,16 @@ namespace BL.Service
                 return null;
             }
             try
-            {
-                Leave leaveEntity = ToEntity(leaveDto);
-                _genericRepository.Add(leaveEntity);
-                return leaveDto;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                {
+                    Leave leaveEntity = ToEntity(leaveDto);
+                    _genericRepository.Add(leaveEntity);
+                    return leaveDto;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
         }
         private Leave ToEntity(LeaveDto leaveDto)
         {
@@ -96,13 +92,24 @@ namespace BL.Service
                 return null;
             }
         }
-        public List<LeaveDto> GetAll()
+        public PagedList<LeaveDto> GetAll(Pager pager)
         {
             try
             {
-                var Leaves = _genericRepository.GetAll().Include(x => x.Employee).ToList();
-                List<LeaveDto> leaveDtos = ToDtos(Leaves);
-                return leaveDtos;
+                IQueryable<Leave> allEmpLeaves = _genericRepository.GetAll().Include(x => x.Employee);
+                if (!string.IsNullOrEmpty(pager.search))
+                {
+                    allEmpLeaves = allEmpLeaves.
+                        Where(x => x.Employee.FirstName.Contains(pager.search.Trim()) ||
+                              x.Employee.LastName.Contains(pager.search.Trim()) ||
+                              x.Employee.Email.Contains(pager.search.Trim()) ||
+                              x.Employee.Address.Contains(pager.search.Trim()));
+                }
+                var paginatedList = PagedList<Leave>.ToPagedList(allEmpLeaves, pager.CurrentPage, pager.PageSize);
+                var leaveDtos = ToDtos(paginatedList);
+                return new PagedList<LeaveDto>
+               (leaveDtos, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
+
             }
             catch (Exception)
             {
