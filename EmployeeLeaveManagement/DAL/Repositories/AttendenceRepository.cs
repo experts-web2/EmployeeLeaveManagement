@@ -1,6 +1,7 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace DAL.Repositories
         }
         public List<AttendenceDto> GetAllAttendences()
         {
-            List<Attendence> attendences = _dbContext.Attendences.ToList();
+            var attendences = _dbContext.Attendences.Include(x=>x.Employee).ToList();
             List<AttendenceDto> AttendenceDto = ToDtos(attendences);
             return AttendenceDto;
         }
@@ -67,15 +68,16 @@ namespace DAL.Repositories
                 {
                     AttendenceDto attendenceDto = new()
                     {
-                       ID = attendence.Id,
-                       AttendenceDate = attendence.AttendenceDate,
-                       TimeIn = attendence.TimeIn,
-                       Timeout = attendence.Timeout,
-                       HostName = attendence.HostName,
-                       IpAddress = attendence.IpAddress,
-                       Longitude = attendence.Longitude,
-                       Latitude = attendence.Latitude,
-                       EmployeeId = attendence.EmployeeId,
+                        ID = attendence.Id,
+                        AttendenceDate = attendence.AttendenceDate,
+                        TimeIn = attendence.TimeIn,
+                        Timeout = attendence.Timeout,
+                        HostName = attendence.HostName,
+                        IpAddress = attendence.IpAddress,
+                        Longitude = attendence.Longitude,
+                        Latitude = attendence.Latitude,
+                        FirstName = attendence.Employee.FirstName,
+                        LastName = attendence.Employee.LastName,
 
                     };
                     attendenceDtos.Add(attendenceDto);

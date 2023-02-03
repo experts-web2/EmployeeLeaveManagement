@@ -29,17 +29,14 @@ namespace ELM.Web.Pages.Attendence_Page
             if (!ID.HasValue)
             {
                 await AttendenceService.AddAttendence(AttendenceDto);
+
             }
-            else
-            {
-                Cancel();
-            }
-       
+            Cancel();
         }
 
         public void Cancel()
         {
-            NavigationManager.NavigateTo("/ListofAttendence");
+            NavigationManager.NavigateTo("/ListOfAttendence");
         }
     }
 }

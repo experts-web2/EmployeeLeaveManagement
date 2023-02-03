@@ -31,7 +31,7 @@ namespace ELM.Web.Services.ServiceRepo
         }
         public async Task AddAttendence(AttendenceDto attendenceDto)
         {
-            var x=await _httpService.PostAsJsonAsync(controllerRoute+ "/AddAttendence", attendenceDto);
+            var response =await _httpService.PostAsJsonAsync(controllerRoute+ "/AddAttendence", attendenceDto);
         }
         public async Task DeleteAttendence(int id)
         {

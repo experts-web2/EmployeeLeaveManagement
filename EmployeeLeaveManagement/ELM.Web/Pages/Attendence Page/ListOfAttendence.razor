@@ -5,7 +5,7 @@
 <div class="row">
 
     <div class="col-md-6">
-        <a href='/AddAttendence' class="btn btn-primary" role="button">
+        <a href='/Add_Attendence' class="btn btn-primary" role="button">
             <i class="fas fa-user-plus"></i>
             Add Attendence
         </a>
@@ -20,6 +20,7 @@ else
     <table class="table table-striped align-middle table-bordered">
          <thead class="table-success">
             <tr>
+                <th>Attendence Date</th>
                 <th>TimeIn</th>
                 <th>TimeOut</th>
                 <th>Host Name</th>
@@ -27,20 +28,20 @@ else
                 <th>Longitude</th>
                 <th>Latitude</th>
                 <th>Employee Name</th>
-                <th class="colspan-2">Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach(var attendence in AttendenceDtoList)
             {
               <tr>
-                <td>@attendence.TimeIn</td>
-                <td>@attendence.Timeout</td>
+                <td>@attendence.AttendenceDate.ToString("dd/MM/yyyy")</td>
+                <td>@attendence.TimeIn?.ToString("hh:mm tt")</td>
+                <td>@attendence.Timeout?.ToString("hh:mm tt")</td>
                 <td>@attendence.HostName</td>
                 <td>@attendence.IpAddress</td>
                 <td>@attendence.Longitude</td>
                 <td>@attendence.Latitude</td>
-                <td>@attendence.EmployeeId</td>
+                <td>@attendence.FirstName  @attendence.LastName</td>
               </tr>
             }
           

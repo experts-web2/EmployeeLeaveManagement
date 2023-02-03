@@ -15,10 +15,14 @@ namespace EmpLeave.Api.Controllers
             attendenceRepository= _attendenceRepository;
         }
         [HttpPost("AddAttendence")]
-        public IActionResult AddAttendence(AttendenceDto attendenceDto)
+        public IActionResult AddAttendence([FromBody]AttendenceDto attendenceDto)
         {
-            var response=attendenceRepository.AddAttendence(attendenceDto);
-            return Ok(response);
+            if (ModelState.IsValid)
+            {
+                var response = attendenceRepository.AddAttendence(attendenceDto);
+                return Ok(response);
+            }
+            else return BadRequest();
         }
         [HttpGet("GetAllAttendences")]
         public IActionResult GetAllAttendences()

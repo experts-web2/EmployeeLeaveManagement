@@ -14,9 +14,9 @@ namespace DomainEntity.Models
         [Required]
         public DateTime AttendenceDate { get; set; }
         [Required]
-        public DateTime TimeIn { get; set; }
+        public DateTime? TimeIn { get; set; }
         [Required]
-        public DateTime Timeout { get; set; }
+        public DateTime? Timeout { get; set; }
         [Required]
         public string HostName { get; set; }
         [Required]
