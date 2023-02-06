@@ -19,7 +19,7 @@ namespace EmpLeave.Web.Pages.AuthPage.UserList
         }
         public async Task GetAll()
         {
-            UserList = await RegisterService.GetAllUserCall();
+            UserList = await RegisterService.GetAllUser();
         }
         public void SetUser(string id)
         {

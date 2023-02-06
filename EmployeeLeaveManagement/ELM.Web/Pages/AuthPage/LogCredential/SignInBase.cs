@@ -1,10 +1,6 @@
 ﻿using ELM.Shared;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.JSInterop;
-using System.Threading.Tasks;
 
 namespace EmpLeave.Web.Pages.AuthPage.LogCredential
 {
@@ -14,28 +10,30 @@ namespace EmpLeave.Web.Pages.AuthPage.LogCredential
         private IRegisterService RegisterService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-        public LogIn LogIn { get; set; } = new();
-        [CascadingParameter]
-        Task<AuthenticationState> authenticationStateTask { get; set; }
-        [Inject]
-        IJSRuntime? JsRuntime { get; set; }
-
+        public LogIn LogIn { get; set; } = new(); 
+        //[CascadingParameter]
+        //Task<AuthenticationState> authenticationStateTask { get; set; }
+        //[Inject]
+        //IJSRuntime? JsRuntime { get; set; }
         //private bool ShowErrors;
         //private string Error = "";
-        protected override async Task OnInitializedAsync()
-        {
-            var user = (await authenticationStateTask).User;
-            if (user.Identity.IsAuthenticated) await JsRuntime.InvokeVoidAsync("history.back");
-        }
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    var user = (await authenticationStateTask).User;
+        //    if (user.Identity.IsAuthenticated) await JsRuntime.InvokeVoidAsync("history.back");
+        //}
 
-        public void SignIn()
+        public async void SignIn()
         {
-          var response=  RegisterService.SignInCall(LogIn);
-            if (response.IsCompleted)
+            var response=await  RegisterService.SignIn(LogIn);
+            if (response)
             {
-                NavigationManager.NavigateTo("addemployee");
+                NavigationManager.NavigateTo("/addemployee");
             }
-            NavigationManager.NavigateTo("login");
+            else
+            {
+                NavigationManager.NavigateTo("/login",true);
+            }
         
         }
         public void Cancel()

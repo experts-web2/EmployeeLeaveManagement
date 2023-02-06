@@ -6,12 +6,12 @@ namespace EmpLeave.Web.Services.Interface
 {
     public interface IRegisterService
     {
-        Task AddUserCall(UserRegistrationModel userRegistrationModel);
-        Task DeleteUserCall(string id);
-        Task<List<User>> GetAllUserCall();
+        Task RegisterEmployee(UserRegistrationModel userRegistrationModel);
+        Task DeleteUserbyId(string id);
+        Task<List<User>> GetAllUser();
         Task SignOut();
-        Task UpdateUserCall(User user);
+        Task UpdateUser(User user);
         Task<List<IdentityRole>> GetAllRoles();
-        Task<bool> SignInCall(LogIn login);
+        Task<bool> SignIn(LogIn login);
     }
 }

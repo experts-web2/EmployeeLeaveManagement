@@ -5,6 +5,7 @@ using EmpLeave.Web.Services.Interface;
 using EmpLeave.Web.Services.ServiceRepo;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,14 +30,11 @@ namespace EmpLeave.Web.Pages.AuthPage
         {
             RegisterModel.Roles = ((string[])e.Value).ToList();
         }
-        protected async Task SaveEmployee()
+        protected async Task RegisterEmployee()
         {
-           
-            await RegisterService.AddUserCall(RegisterModel);
-           
-            Cancel();
-        }
+            await RegisterService.RegisterEmployee(RegisterModel);
 
+        }
         public void Cancel()
         {
             NavigationManager.NavigateTo("/addemployee");

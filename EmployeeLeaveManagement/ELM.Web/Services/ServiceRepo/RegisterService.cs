@@ -3,10 +3,7 @@ using DomainEntity.Models;
 using ELM.Shared;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
@@ -18,17 +15,17 @@ namespace EmpLeave.Web.Services.ServiceRepo
         {
             _httpService = httpClient;
         }
-        public async Task AddUserCall(UserRegistrationModel userRegistrationModel)
+        public async Task RegisterEmployee(UserRegistrationModel userRegistrationModel)
         {
             await _httpService.PostAsJsonAsync(controllerRoute+"/register", userRegistrationModel);
         }
 
-        public async Task DeleteUserCall(string id)
+        public async Task DeleteUserbyId(string id)
         {
             await _httpService.DeleteAsync($"{controllerRoute}/{id}");
         }
 
-        public async Task<List<User>> GetAllUserCall()
+        public async Task<List<User>> GetAllUser()
         {
             List<User> respons = new();
             try
@@ -36,21 +33,30 @@ namespace EmpLeave.Web.Services.ServiceRepo
                 respons = await _httpService.GetFromJsonAsync<List<User>>(controllerRoute);
 
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 respons = null;
             }
             return respons;
         }
 
-        public async Task<bool> SignInCall(LogIn login)
+        public async Task<bool> SignIn(LogIn login)
         {
-           var massage= await _httpService.PostAsJsonAsync(controllerRoute+ "/SignIn", login);
-            if (massage.IsSuccessStatusCode)
+            try
             {
-                return true;
+                var massage = await _httpService.PostAsJsonAsync(controllerRoute + "/SignIn", login);
+                if (massage.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+
+                throw;
+            }         
+          
         }
 
         public async Task SignOut()
@@ -58,7 +64,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
             await _httpService.GetFromJsonAsync<User>($"{controllerRoute}/logout");
         }
 
-        public async Task UpdateUserCall(User user)
+        public async Task UpdateUser(User user)
         {
             await _httpService.PutAsJsonAsync(controllerRoute, user);
         }

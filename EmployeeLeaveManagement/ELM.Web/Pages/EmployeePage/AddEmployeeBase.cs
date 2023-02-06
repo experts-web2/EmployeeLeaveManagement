@@ -1,7 +1,6 @@
 ﻿using DTOs;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
 
 namespace EmpLeave.Web.Pages.EmployeePage
 {

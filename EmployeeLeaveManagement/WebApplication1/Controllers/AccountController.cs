@@ -54,21 +54,22 @@ namespace EmpLeave.Api.Controllers
             try
             {
                 var tokenRecive = await _userRepository.SignIn(signIn);
-                Response.Cookies.Append("jwt", tokenRecive, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Expires = DateTime.UtcNow.AddDays(1),
-                    IsEssential = true,
-                    SameSite = SameSiteMode.None,
-                    Secure = true,
-                });
-                return Ok("Successfuly Loggedin");
+                if (tokenRecive == null) return NotFound();
+                //Response.Cookies.Append("jwt", tokenRecive, new CookieOptions
+                //{
+                //    HttpOnly = true,
+                //    Expires = DateTime.UtcNow.AddDays(1),
+                //    IsEssential = true,
+                //    SameSite = SameSiteMode.None,
+                //    Secure = true,
+                //});
+                return Ok(tokenRecive);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
+            
         }
         [HttpGet("Logout")]
         public async Task<IActionResult> Logout()

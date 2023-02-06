@@ -2,16 +2,11 @@
 using DomainEntity.Models;
 using ELM.Shared;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -40,7 +35,7 @@ namespace DAL.Repositories
             return _roleManager.Roles.ToList();
         }
         public async Task AddUser(UserRegistrationModel registerDto)
-        
+       
         
         {
             try
@@ -51,8 +46,8 @@ namespace DAL.Repositories
                     Email = registerDto.Email,
                     FirstName = registerDto.FirstName,
                     LastName = registerDto.LastName
-
                 };
+
                 IdentityResult identityResult = await _userManager.CreateAsync(user, registerDto.Password);
                 if (!identityResult.Succeeded) throw new InvalidOperationException($"Error: {string.Join("\n", identityResult.Errors.Select(x => x.Description))}");
                 foreach (var role in registerDto.Roles)
@@ -72,10 +67,7 @@ namespace DAL.Repositories
 
             var result = await _signInManager.PasswordSignInAsync(signIn.Email, signIn.Password, false, false);
             if (!result.Succeeded)
-            {
-                throw new InvalidOperationException();
-
-            }
+                return null;
 
             var authClaims = new List<Claim>
             {
@@ -85,9 +77,8 @@ namespace DAL.Repositories
 
             };
             var authSignInKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
-            var Token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken
+            var Token = new JwtSecurityToken
             (
-
                     issuer: _configuration["JWT:ValidIssuer"],
                     audience: _configuration["JWT:ValidAudience"],
                     expires: DateTime.Now.AddMinutes(20),
@@ -104,7 +95,7 @@ namespace DAL.Repositories
         } 
         public async Task<bool> DeleteUser(string id)
         {
-          var result= await _userManager.DeleteAsync(new User { Id=id});
+          var result= await _userManager.DeleteAsync(new User {Id=id});
             if (result.Succeeded) return true;
             return false;
         }

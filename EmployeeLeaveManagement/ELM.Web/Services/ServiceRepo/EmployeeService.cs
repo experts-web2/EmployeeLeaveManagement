@@ -13,7 +13,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
         public EmployeeService(HttpClient httpClient)
         {
             _httpService= httpClient;
-            _httpService.BaseAddress = new Uri("https://localhost:7150/api/");
+            _httpService.BaseAddress = new Uri("https://localhost:7150/api/Employee/");
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
         public async Task PostCall(EmployeeDto employeeDto)
@@ -28,7 +28,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
             {
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await _httpService.PostAsync("Employee/getall", Content);
+                var response = await _httpService.PostAsync("getall", Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<EmployeeDto>();
 
@@ -57,7 +57,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
         }
         public async Task<EmployeeDto> GetEmployeebyId(int id)
         {
-          return  await _httpService.GetFromJsonAsync<EmployeeDto>(_httpService.BaseAddress + "/GetById/"+id);
+          return  await _httpService.GetFromJsonAsync<EmployeeDto>($"{_httpService.BaseAddress}/GetById/{id}");
         }
     }
 }

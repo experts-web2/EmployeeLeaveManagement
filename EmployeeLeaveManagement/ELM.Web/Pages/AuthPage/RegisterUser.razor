@@ -3,7 +3,7 @@
 @inherits RegisterUserBase
 <h3>RegisterUser</h3>
 
-<EditForm Model="@RegisterModel" OnValidSubmit="SaveEmployee">
+<EditForm Model="@RegisterModel" OnValidSubmit="RegisterEmployee">
     <DataAnnotationsValidator />
     <div class="mb-3">
         <label for="Name" class="form-label">First Name</label>
@@ -13,7 +13,7 @@
         <ValidationMessage For="@(() => RegisterModel.FirstName)" />
     </div>
     <div class="mb-3">
-        <label for="Address" class="form-label">Last Name</label>
+        <label for="LastName" class="form-label">Last Name</label>
         <div class="col-md-4">
             <InputText class="form-control" @bind-Value="RegisterModel.LastName" />
         </div>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="City" class="form-label">Email</label>
+        <label for="Email" class="form-label">Email</label>
         <div class="col-md-4">
             <InputText class="form-control" type="email" @bind-Value="RegisterModel.Email" />
         </div>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="Email" class="form-label">PassWord</label>
+        <label for="Password" class="form-label">PassWord</label>
         <div class="col-md-4">
             <InputText class="form-control"  @bind-Value="RegisterModel.Password" />
         </div>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="Phone" class="form-label">Cofirm PassWord</label>
+        <label for="ConfirmPassword" class="form-label">Cofirm PassWord</label>
         <div class="col-md-4">
             <InputText class="form-control"  @bind-Value="RegisterModel.ConfirmPassword" />
         </div>
