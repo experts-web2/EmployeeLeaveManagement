@@ -11,7 +11,6 @@ namespace DAL.Interface.GenericInterface
     {
         IQueryable<T> GetAll ();
         T Add(T item);
-        
         void deletebyid(int id);
         void update(T item);
         T GetByID(int id);

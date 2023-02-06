@@ -37,11 +37,11 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         {
             if (ID.HasValue)
             {
-                await LeaveService.UpdateCall(LeaveDto);
+                await LeaveService.EditLeave(LeaveDto);
             }
             else
             {
-                await LeaveService.PostCall(LeaveDto);
+                await LeaveService.AddLeave(LeaveDto);
             }
             Cancel();
         }

@@ -1,0 +1,18 @@
+﻿@page "/Locations"
+@using ELM.Web.Pages.GeoLocation
+@inherits GeoLocationBase
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+<button @onclick=@GetLocationAsync>Get Location</button>
+
+@if (geoCoordinates is not null)
+{
+    <div>
+        Latitude : @geoCoordinates.Latitude <br />
+        Longitude : @geoCoordinates.Longitude<br />
+        Accuracy : @geoCoordinates.Accuracy
+    </div>
+}
+<button @onclick=@GetLocationAsync >Show my location</button><br />
+<p id="status"></p>
+<a id="map-link" target="_blank"></a>

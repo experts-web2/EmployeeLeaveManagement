@@ -11,5 +11,7 @@ namespace DAL.Interface
     {
         List<AttendenceDto> GetAllAttendences();
         bool  AddAttendence(AttendenceDto attendenceDto);
+        void DeleteAttendence(int id);
+        AttendenceDto GetById(int id);
     }
 }

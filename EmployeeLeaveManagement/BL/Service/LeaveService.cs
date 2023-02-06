@@ -22,16 +22,16 @@ namespace BL.Service
                 return null;
             }
             try
-            {
-                Leave leaveEntity = ToEntity(leaveDto);
-                _genericRepository.Add(leaveEntity);
-                return leaveDto;
-            }
-            catch (Exception)
-            {
+                {
+                    Leave leaveEntity = ToEntity(leaveDto);
+                    _genericRepository.Add(leaveEntity);
+                    return leaveDto;
+                }
+                catch (Exception)
+                {
 
-                throw;
-            }
+                    throw;
+                }
         }
         private Leave ToEntity(LeaveDto leaveDto)
         {
@@ -56,7 +56,6 @@ namespace BL.Service
             }
             catch (Exception)
             {
-
                 throw;
             }
 
@@ -92,7 +91,6 @@ namespace BL.Service
             {
                 return null;
             }
-
         }
         public PagedList<LeaveDto> GetAll(Pager pager)
         {
@@ -144,7 +142,6 @@ namespace BL.Service
                 throw;
             }
         }
-
         public LeaveDto Update(LeaveDto leave)
         {
             if (leave == null)
@@ -161,8 +158,6 @@ namespace BL.Service
 
                 throw;
             }
-
         }
-
     }
 }

@@ -1,9 +1,11 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +20,7 @@ namespace DAL.Repositories
         }
         public bool AddAttendence(AttendenceDto attendenceDto)
         {
-            if (attendenceDto !=null)
+            if (attendenceDto != null)
             {
                 try
                 {
@@ -32,32 +34,28 @@ namespace DAL.Repositories
 
                     throw;
                 }
-                
-                
             }
             return false;
-          
         }
-        private Attendence ToEntity(AttendenceDto attendenceDto)
+        public Attendence ToEntity(AttendenceDto attendenceDto)
         {
             Attendence attendence = new()
             {
-
+                AttendenceDate = attendenceDto.AttendenceDate,
                 TimeIn = attendenceDto.TimeIn,
                 Timeout = attendenceDto.Timeout,
-                Designation = attendenceDto.Designation,
                 EmployeeId = attendenceDto.EmployeeId,
                 Longitude = attendenceDto.Longitude,
-                Latitude=attendenceDto.Latitude,
-                IpAddress=attendenceDto.IpAddress,
-                hostName=attendenceDto.hostName
+                Latitude = attendenceDto.Latitude,
+                HostName = AddHostName(),
+                IpAddress = AddIpAddress()
 
             };
             return attendence;
         }
         public List<AttendenceDto> GetAllAttendences()
         {
-            List<Attendence> attendences = _dbContext.Attendences.ToList();
+            var attendences = _dbContext.Attendences.Include(x=>x.Employee).ToList();
             List<AttendenceDto> AttendenceDto = ToDtos(attendences);
             return AttendenceDto;
         }
@@ -68,17 +66,20 @@ namespace DAL.Repositories
                 List<AttendenceDto> attendenceDtos = new List<AttendenceDto>();
                 foreach (var attendence in attendences)
                 {
-                    AttendenceDto attendenceDto = new AttendenceDto();
-                    attendenceDto.ID= attendence.Id;
-                    attendenceDto.TimeIn = attendence.TimeIn;
-                    attendenceDto.Timeout = attendence.Timeout;
-                    attendenceDto.hostName = attendence.hostName;
-                    attendenceDto.IpAddress =attendence.IpAddress;
-                    attendenceDto.Longitude = attendence.Longitude;
-                    attendenceDto.Latitude = attendence.Latitude;
-                    attendenceDto.Designation = attendence.Designation;
-                    attendenceDto.EmployeeId= attendence.EmployeeId;
+                    AttendenceDto attendenceDto = new()
+                    {
+                        ID = attendence.Id,
+                        AttendenceDate = attendence.AttendenceDate,
+                        TimeIn = attendence.TimeIn,
+                        Timeout = attendence.Timeout,
+                        HostName = attendence.HostName,
+                        IpAddress = attendence.IpAddress,
+                        Longitude = attendence.Longitude,
+                        Latitude = attendence.Latitude,
+                        FirstName = attendence.Employee.FirstName,
+                        LastName = attendence.Employee.LastName,
 
+                    };
                     attendenceDtos.Add(attendenceDto);
                 }
                 return attendenceDtos;
@@ -87,6 +88,70 @@ namespace DAL.Repositories
             {
 
                 throw;
+            }
+        }
+        public void DeleteAttendence(int id)
+        {
+            try
+            {
+                var Deleted = _dbContext.Attendences.FirstOrDefault(x => x.Id == id);
+                if (Deleted != null)
+                {
+                    _dbContext.Remove(Deleted);
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public string AddHostName()
+        {
+            string HostName = Dns.GetHostName();
+            return HostName;
+
+        }
+        public string AddIpAddress()
+        {
+            string HostName = Dns.GetHostName();
+            IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
+            return ipaddress[1].ToString();
+
+        }
+
+        public AttendenceDto GetById(int id)
+        {
+            var FindAttendence = _dbContext.Attendences.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
+            AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
+            return attendenceDto;
+        }
+        private static AttendenceDto SetAttendenceDto(Attendence attendence)
+        {
+            if (attendence == null)
+            {
+                return null;
+            }
+            try
+            {
+               AttendenceDto employeeDto = new()
+                {
+                    ID = attendence.Id,
+                    AttendenceDate = attendence.AttendenceDate,
+                    TimeIn = attendence.TimeIn,
+                    Timeout = attendence.Timeout,
+                    HostName = attendence.HostName,
+                    IpAddress = attendence.IpAddress,
+                    Longitude = attendence.Longitude,
+                   EmployeeId=attendence.Id
+
+                };
+                return employeeDto;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

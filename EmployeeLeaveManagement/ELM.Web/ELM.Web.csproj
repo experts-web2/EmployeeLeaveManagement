@@ -18,4 +18,16 @@
     <ProjectReference Include="..\ELM.Shared\ELM.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\GeoLocation\GeoLocation.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\GeoLocation\GeoLocation.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\GeoLocation\GeoLocation.razor" />
+  </ItemGroup>
+
 </Project>

@@ -21,8 +21,6 @@ namespace DAL.Repositories
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
-        
-
         public UserRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
             SignInManager<User> signInManager, IConfiguration configuration)
         {
@@ -33,15 +31,13 @@ namespace DAL.Repositories
         }
         public List<User> GetAllUser()
         {
-          return  _userManager.Users.ToList();
+            return _userManager.Users.ToList();
         }
         public List<IdentityRole> GetAllRoles()
         {
             return _roleManager.Roles.ToList();
         }
         public async Task AddUser(UserRegistrationModel registerDto)
-        
-        
         {
             try
             {
@@ -57,8 +53,8 @@ namespace DAL.Repositories
                 if (!identityResult.Succeeded) throw new InvalidOperationException($"Error: {string.Join("\n", identityResult.Errors.Select(x => x.Description))}");
                 foreach (var role in registerDto.Roles)
                 {
-                    var result=await _userManager.AddToRoleAsync(user, role); 
-                    if(!result.Succeeded) throw 
+                    var result = await _userManager.AddToRoleAsync(user, role);
+                    if (!result.Succeeded) throw
                             new InvalidOperationException($"Error: {string.Join("\n", result.Errors.Select(x => x.Description))}");
                 }
             }
@@ -87,24 +83,22 @@ namespace DAL.Repositories
             var authSignInKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
             var Token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken
             (
-
                     issuer: _configuration["JWT:ValidIssuer"],
                     audience: _configuration["JWT:ValidAudience"],
                     expires: DateTime.Now.AddMinutes(20),
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSignInKey, SecurityAlgorithms.HmacSha256Signature)
             );
+
             return new JwtSecurityTokenHandler().WriteToken(Token);
-
         }
-       public async Task SignOut()
+        public async Task SignOut()
         {
-
             await _signInManager.SignOutAsync();
-        } 
+        }
         public async Task<bool> DeleteUser(string id)
         {
-          var result= await _userManager.DeleteAsync(new User { Id=id});
+            var result = await _userManager.DeleteAsync(new User { Id = id });
             if (result.Succeeded) return true;
             return false;
         }
@@ -115,6 +109,5 @@ namespace DAL.Repositories
             if (result.Succeeded) return true;
             return false;
         }
-
     }
 }

@@ -9,12 +9,10 @@ namespace DTOs
         [Required]
         public string FirstName { get; set; } = String.Empty;
         [Required]
-
         public string LastName { get; set; } = String.Empty;
         [EmailAddress]
         public string Email { get; set; } = String.Empty;
         [Required]
-
         public DateTime DateOfBrith { get; set; }
         [Required]
         public string Address { get; set; }

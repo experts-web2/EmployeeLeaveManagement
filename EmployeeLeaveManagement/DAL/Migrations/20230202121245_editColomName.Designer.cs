@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230126162727_AttendenceTable")]
-    partial class AttendenceTable
+    [Migration("20230202121245_editColomName")]
+    partial class editColomName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,9 +32,8 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Designation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("AttendenceDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -236,15 +235,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5deca622-ee14-4452-a84d-6869b4d230f6",
-                            ConcurrencyStamp = "e2e6260a-1d61-48fd-99c2-4ef9254cf15d",
+                            Id = "c3ad2ca0-1392-46c1-a8b3-4d89a2c48715",
+                            ConcurrencyStamp = "1f78c135-007c-4346-ad7e-b496940087e0",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "f04dfa79-18f3-4fbc-b249-765ac924994d",
-                            ConcurrencyStamp = "9d98d88f-6d91-4ea6-88c9-440e3ffd9abe",
+                            Id = "a69f76ae-e9d4-4db5-a867-0584f93f31e4",
+                            ConcurrencyStamp = "1a5fab46-3b2a-44a8-bb3f-5eeba5eeaa89",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

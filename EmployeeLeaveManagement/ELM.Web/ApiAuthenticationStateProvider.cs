@@ -38,7 +38,6 @@ namespace RetailStoreManagement
             }
            
         }
-
         public void MarkUserAsAuthenticated(string token)
         {
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
