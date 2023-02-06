@@ -25,6 +25,7 @@ namespace DAL.Repositories
         {
             Employee employee = new Employee()
             {
+                Id=employeeDto.ID,
                 FirstName = employeeDto.FirstName,
                 LastName = employeeDto.LastName,
                 Address = employeeDto.Address,

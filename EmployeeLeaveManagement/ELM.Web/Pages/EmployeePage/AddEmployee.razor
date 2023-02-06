@@ -1,9 +1,9 @@
 ﻿@page "/AddEmployee"
-@page "/edit/{ID:int}"
+@page "/edit/{ID}"
 @using DomainEntity.Enum
 @using EmpLeave.Web.Pages.EmployeePage;
 @inherits AddEmployeeBase
-<h3>AddEmployee</h3>
+<h3>Add Employee</h3>
 
 <EditForm Model="@EmployeeDto" OnValidSubmit="SaveEmployee">
     <DataAnnotationsValidator />

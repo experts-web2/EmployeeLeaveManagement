@@ -38,5 +38,16 @@ namespace ELM.Web.Services.ServiceRepo
             await _httpService.DeleteAsync($"{controllerRoute}/{id}");
         }
 
+        public async Task UpdateAttendence(AttendenceDto attendenceDto)
+        {
+            await _httpService.PutAsJsonAsync(controllerRoute, attendenceDto);
+        }
+
+        public async Task<AttendenceDto> GetByID(int value)
+        {
+            return await _httpService.GetFromJsonAsync<AttendenceDto>($"{controllerRoute}/GetById/{value}");
+        }
+
+       
     }
 }

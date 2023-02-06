@@ -7,6 +7,7 @@ namespace ELM.Web.Services.Interface
         Task AddAttendence(AttendenceDto attendenceDto);
         Task<List<AttendenceDto>> GetAttendences();
         Task DeleteAttendence(int id);
-
+        Task UpdateAttendence(AttendenceDto attendenceDto);
+        Task<AttendenceDto> GetByID(int value);
     }
 }

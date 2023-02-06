@@ -15,7 +15,7 @@ namespace DomainEntity.Models
         [Required]
         public DateTime DateOfBrith { get; set; }
         [Required]
-        public string Address { get; set; } = String.Empty;
+        public string Address { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public ICollection<Leave> Leaves { get; set; }
         public ICollection<Attendence> Attendences { get; set; }

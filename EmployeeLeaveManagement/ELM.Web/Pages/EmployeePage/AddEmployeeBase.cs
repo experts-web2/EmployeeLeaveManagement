@@ -25,7 +25,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
 
         protected async Task SaveEmployee()
         {
-            if (ID != 0)
+            if (ID.HasValue)
             {
                 await EmployeeService.UpdateEmployee(EmployeeDto);
             }

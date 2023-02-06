@@ -12,7 +12,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public IAttendenceService AttendenceService { get; set; }
 
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();
-        public AttendenceDto SelectedAttendence { get; set; } = new();
+        public AttendenceDto SelectedAttendence { get; set; }
         public void SetAttendenceId(int id)
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == id);
@@ -30,7 +30,7 @@ namespace ELM.Web.Pages.Attendence_Page
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == Id);
         }
-        public async Task DeleteEmployee(int id)
+        public async Task DeleteAttendence(int id)
         {
             await AttendenceService.DeleteAttendence(id);
             await GetAll();

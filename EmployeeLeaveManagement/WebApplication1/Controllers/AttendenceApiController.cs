@@ -30,5 +30,17 @@ namespace EmpLeave.Api.Controllers
             var response = attendenceRepository.GetAllAttendences();
             return Ok(response);
         }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAttendence(int id)
+        {
+            attendenceRepository.DeleteAttendence(id);
+            return Ok("Deleted Succesfully");
+        }
+        [HttpGet("GetById/{Id}")]
+        public IActionResult GetById(int id)
+        {
+            var attendenceDto = attendenceRepository.GetById(id);
+            return Ok(attendenceDto);
+        }
     }
 }

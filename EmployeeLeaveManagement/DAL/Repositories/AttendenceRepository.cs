@@ -90,6 +90,23 @@ namespace DAL.Repositories
                 throw;
             }
         }
+        public void DeleteAttendence(int id)
+        {
+            try
+            {
+                var Deleted = _dbContext.Attendences.FirstOrDefault(x => x.Id == id);
+                if (Deleted != null)
+                {
+                    _dbContext.Remove(Deleted);
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public string AddHostName()
         {
             string HostName = Dns.GetHostName();
@@ -102,6 +119,40 @@ namespace DAL.Repositories
             IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
             return ipaddress[1].ToString();
 
+        }
+
+        public AttendenceDto GetById(int id)
+        {
+            var FindAttendence = _dbContext.Attendences.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
+            AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
+            return attendenceDto;
+        }
+        private static AttendenceDto SetAttendenceDto(Attendence attendence)
+        {
+            if (attendence == null)
+            {
+                return null;
+            }
+            try
+            {
+               AttendenceDto employeeDto = new()
+                {
+                    ID = attendence.Id,
+                    AttendenceDate = attendence.AttendenceDate,
+                    TimeIn = attendence.TimeIn,
+                    Timeout = attendence.Timeout,
+                    HostName = attendence.HostName,
+                    IpAddress = attendence.IpAddress,
+                    Longitude = attendence.Longitude,
+                   EmployeeId=attendence.Id
+
+                };
+                return employeeDto;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

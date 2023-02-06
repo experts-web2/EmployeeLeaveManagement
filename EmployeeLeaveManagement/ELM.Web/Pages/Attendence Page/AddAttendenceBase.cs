@@ -23,14 +23,18 @@ namespace ELM.Web.Pages.Attendence_Page
         protected override async Task OnInitializedAsync()
         {
             EmployeesList = await  EmployeeService.GetAllEmployee();
+            if (ID.HasValue)
+            {
+                AttendenceDto =await  AttendenceService.GetByID(ID.Value);
+            }
         }
         protected async Task SaveAttendence()
         {
             if (!ID.HasValue)
             {
                 await AttendenceService.AddAttendence(AttendenceDto);
-
             }
+
             Cancel();
         }
 

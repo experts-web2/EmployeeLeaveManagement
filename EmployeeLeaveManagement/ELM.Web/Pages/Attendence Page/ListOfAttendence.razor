@@ -28,6 +28,7 @@ else
                 <th>Longitude</th>
                 <th>Latitude</th>
                 <th>Employee Name</th>
+                <th class="colspan-2">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +43,22 @@ else
                 <td>@attendence.Longitude</td>
                 <td>@attendence.Latitude</td>
                 <td>@attendence.FirstName  @attendence.LastName</td>
+                 <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" @onclick="()=>SetAttendenceId(attendence.ID)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Details
+                        </button>
+
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                        @onclick="(() => DeleteConfirm(attendence.ID))">
+                            Delete
+                        </button>
+                        <a href='/edit/@attendence.ID' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                    </td>
               </tr>
             }
           
