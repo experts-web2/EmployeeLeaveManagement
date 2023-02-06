@@ -11,8 +11,5 @@ namespace DAL.Interface
     {
         List<LeaveDto> GetAllLeave();
         void Addleave(LeaveDto leaveDto);
-        //Employee DeleteEmployee(int id);
-
-        //void Update(EmployeeDto employee);
     }
 }

@@ -24,7 +24,7 @@ namespace DAL.Repositories
         public void deletebyid(int id)
         {
             var DeletedObj = _table.FirstOrDefault(x => x.Id == id);
-            if (DeletedObj == null) 
+            if (DeletedObj == null)
                 return;
             _table.Remove(DeletedObj);
             _DbContext.SaveChanges();
@@ -42,14 +42,12 @@ namespace DAL.Repositories
             {
                 return Findid;
             }
-            return null;   
+            return null;
         }
-
         public void update(T item)
         {
             _DbContext.Update(item);
             _DbContext.SaveChanges();
         }
-
     }
 }

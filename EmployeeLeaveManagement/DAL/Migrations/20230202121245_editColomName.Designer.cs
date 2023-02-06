@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230202121245_editColomName")]
+    partial class editColomName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,10 +38,6 @@ namespace DAL.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("HostName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -50,13 +48,15 @@ namespace DAL.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("TimeIn")
-                        .IsRequired()
+                    b.Property<DateTime>("TimeIn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Timeout")
-                        .IsRequired()
+                    b.Property<DateTime>("Timeout")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("hostName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -235,15 +235,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ffca8de7-b71a-48e9-ac70-fb18abc32196",
-                            ConcurrencyStamp = "7901a4f8-6677-42a2-88f0-33166e4ae0c7",
+                            Id = "c3ad2ca0-1392-46c1-a8b3-4d89a2c48715",
+                            ConcurrencyStamp = "1f78c135-007c-4346-ad7e-b496940087e0",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "84a42e75-21ff-4e95-b1f6-0218cceefd6e",
-                            ConcurrencyStamp = "fab73fe2-5f96-4abd-8b94-f686aef07686",
+                            Id = "a69f76ae-e9d4-4db5-a867-0584f93f31e4",
+                            ConcurrencyStamp = "1a5fab46-3b2a-44a8-bb3f-5eeba5eeaa89",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

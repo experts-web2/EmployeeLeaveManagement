@@ -3,6 +3,7 @@ using EmpLeave.Web.Services.Interface;
 using System.Text;
 using Newtonsoft.Json;
 using ELM.Helper;
+using DomainEntity.Models;
 
 namespace EmpLeave.Web.Services.ServiceRepo
 {
@@ -13,10 +14,10 @@ namespace EmpLeave.Web.Services.ServiceRepo
         public EmployeeService(HttpClient httpClient)
         {
             _httpService= httpClient;
-            _httpService.BaseAddress = new Uri("https://localhost:7150/api/Employee/");
+            _httpService.BaseAddress = new Uri("https://localhost:7150/api/employee");
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
-        public async Task PostCall(EmployeeDto employeeDto)
+        public async Task AddEmployee(EmployeeDto employeeDto)
         {
              await _httpService.PostAsJsonAsync(_httpService.BaseAddress, employeeDto);
             
@@ -58,6 +59,14 @@ namespace EmpLeave.Web.Services.ServiceRepo
         public async Task<EmployeeDto> GetEmployeebyId(int id)
         {
           return  await _httpService.GetFromJsonAsync<EmployeeDto>($"{_httpService.BaseAddress}/GetById/{id}");
+        }
+
+        public async Task<List<Employee>> GetAllEmployee()
+        {
+          return await _httpService.GetFromJsonAsync<List<Employee>>($"{_httpService.BaseAddress}/GetAllEmployees");
+            
+           
+
         }
     }
 }

@@ -1,0 +1,98 @@
+﻿@page "/Add_Attendence"
+@page "/edit/{ID:int}"
+@inherits AddAttendenceBase
+<h3>Add Attendence</h3>
+
+<EditForm Model="AttendenceDto" OnValidSubmit="SaveAttendence">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="Name" class="form-label">Date</label>
+        <div class="col-md-4">
+            <InputDate class="form-control" @bind-Value="AttendenceDto.AttendenceDate" />
+        </div>
+        <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
+    </div>
+
+    <div class="mb-0">
+        <div class="row">
+            <div class="col-md-2">
+                 <label for="Name" class="form-label">TimeIn</label>
+            </div>
+            <div class="col-md-2">
+               <label for="Name" class="form-label">Time out</label>
+            </div>
+        </div>
+    </div>
+    <div class="mb-2">
+        <div class="row">    
+            <div class="col-md-2">
+                <InputDate Type="InputDateType.Time" class="form-control autocomplete = off" @bind-Value="AttendenceDto.TimeIn" />
+                <ValidationMessage For="@(() => AttendenceDto.TimeIn)" />
+            </div> 
+            <div class="col-md-2">
+                <InputDate Type="InputDateType.Time" class="form-control" @bind-Value="AttendenceDto.Timeout" />
+                <ValidationMessage For="@(() => AttendenceDto.Timeout)" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mb-0">
+        <div class="row">
+            <div class="col-md-2">
+                 <label for="Name" class="form-label">Longitude</label>
+            </div>
+            <div class="col-md-2">
+               <label for="Name" class="form-label">Latitude</label>
+            </div>
+        </div>
+    </div>
+    <div class="mb-2">
+        <div class="row">    
+            <div class="col-md-2">
+                <InputNumber class="form-control" @bind-Value="AttendenceDto.Longitude" />
+                <ValidationMessage For="@(() => AttendenceDto.Longitude)" />
+            </div> 
+            <div class="col-md-2">
+               <InputNumber class="form-control" @bind-Value="AttendenceDto.Latitude" />
+               <ValidationMessage For="@(() => AttendenceDto.Latitude)" />
+            </div>
+        </div>
+    </div>
+
+@*
+    <div class="mb-3">
+        <label for="Name" class="form-label">Longitude</label>
+        <div class="row">
+            <div class="col-md-2">
+                <InputNumber class="form-control" @bind-Value="AttendenceDto.Longitude" />
+            </div>
+            <div class="col-md2">
+                <InputNumber class="form-control" @bind-Value="AttendenceDto.Latitude" />
+            </div>
+        </div>
+    </div>*@
+    @*<div class="mb-3">
+    <label for="Name" class="form-label">Latitude</label>
+    <div class="col-md-4">
+    <InputNumber class="form-control" @bind-Value="AttendenceDto.Latitude" />
+    </div>
+    <ValidationMessage For="@(() => AttendenceDto.Latitude)" />
+    </div>*@
+    <div class="mb-3">
+        <label class="mb-2" >Employee Name</label>
+        <div class="col-md-4">
+            <InputSelect class="form-control" @bind-Value="AttendenceDto.EmployeeId">
+                <option selected disabled value="0">Employee Name List</option>
+                @foreach (var employee in EmployeesList)
+                {
+                    <option value="@employee.Id">@employee.FirstName</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>

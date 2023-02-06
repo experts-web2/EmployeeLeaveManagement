@@ -63,6 +63,12 @@ namespace EmpLeave.Api.Controllers
             var employeeDto = _employeeRepository.GetById(id);
             return Ok(employeeDto);
         }
+        [HttpGet("GetAllEmployees")]
+        public IActionResult GetAll()
+        {
+           var ListOfEmployees= _employeeRepository.GetAllEmployees();
+            return Ok(ListOfEmployees);
+        }
 
     }
 }

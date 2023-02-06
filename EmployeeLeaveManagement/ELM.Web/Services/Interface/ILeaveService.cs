@@ -5,10 +5,10 @@ namespace EmpLeave.Web.Services.Interface
 {
     public interface ILeaveService
     {
-        Task PostCall(LeaveDto leaveDto);
-        Task<Response<LeaveDto>> GetAllLeaves(Pager Paging);
-        Task UpdateCall(LeaveDto leaveDto);
-        Task DeleteCall(int id);
+        Task AddLeave(LeaveDto leaveDto);
+        Task<Response<LeaveDto>> GetAllLeaves(Pager paging);
+        Task EditLeave(LeaveDto leaveDto);
+        Task DeleteLeave(int id);
         Task<LeaveDto> GetByIdCall(int id);
     }
 }

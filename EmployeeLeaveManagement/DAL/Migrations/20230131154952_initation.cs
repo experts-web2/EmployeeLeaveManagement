@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class init : Migration
+    public partial class initation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -176,6 +176,32 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Attendences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeIn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Timeout = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    hostName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attendences_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Leaves",
                 columns: table => new
                 {
@@ -201,12 +227,12 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "32b95a1a-ff12-432f-b250-453e2610e803", "d2c61ce4-1168-41c0-95ce-c0def4204a8b", "Employee", "EMPLOYEE" });
+                values: new object[] { "71543425-6ce3-401b-9d0a-06b2401bb6f5", "c2d49373-db7f-4d09-8e76-60a65fbb2bac", "Employee", "EMPLOYEE" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "4d47ad64-2770-43b6-bc8d-7158091de26e", "5e7310d4-b79b-4166-a1b0-4df8df4f35fd", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "f1fe1c7f-3f79-4196-822c-a3140042e497", "fca9cbea-1cbe-4dad-916e-e861d99cb37f", "Administrator", "ADMINISTRATOR" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -248,6 +274,11 @@ namespace DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Attendences_EmployeeId",
+                table: "Attendences",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Leaves_EmployeeId",
                 table: "Leaves",
                 column: "EmployeeId");
@@ -269,6 +300,9 @@ namespace DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Attendences");
 
             migrationBuilder.DropTable(
                 name: "Leaves");

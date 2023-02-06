@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230131154952_initation")]
+    partial class initation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,15 +32,11 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("AttendenceDate")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("HostName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
@@ -50,13 +48,15 @@ namespace DAL.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("TimeIn")
-                        .IsRequired()
+                    b.Property<DateTime>("TimeIn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Timeout")
-                        .IsRequired()
+                    b.Property<DateTime>("Timeout")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("hostName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -235,15 +235,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ffca8de7-b71a-48e9-ac70-fb18abc32196",
-                            ConcurrencyStamp = "7901a4f8-6677-42a2-88f0-33166e4ae0c7",
+                            Id = "71543425-6ce3-401b-9d0a-06b2401bb6f5",
+                            ConcurrencyStamp = "c2d49373-db7f-4d09-8e76-60a65fbb2bac",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "84a42e75-21ff-4e95-b1f6-0218cceefd6e",
-                            ConcurrencyStamp = "fab73fe2-5f96-4abd-8b94-f686aef07686",
+                            Id = "f1fe1c7f-3f79-4196-822c-a3140042e497",
+                            ConcurrencyStamp = "fca9cbea-1cbe-4dad-916e-e861d99cb37f",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

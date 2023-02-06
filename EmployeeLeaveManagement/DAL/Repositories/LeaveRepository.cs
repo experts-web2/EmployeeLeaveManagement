@@ -20,7 +20,7 @@ namespace DAL.Repositories
         public void Addleave(LeaveDto leaveDto)
         {
             Leave leaveEntity = ToEntity(leaveDto);
-           _dbContext.Leaves.Add(leaveEntity);
+            _dbContext.Leaves.Add(leaveEntity);
             _dbContext.SaveChanges();
         }
         private Leave ToEntity(LeaveDto leaveDto)
@@ -34,7 +34,7 @@ namespace DAL.Repositories
                 Id = leaveDto.ID,
                 leaveEnum = leaveDto.LeaveEnum
 
-             };
+            };
             return leave;
         }
 
@@ -42,6 +42,5 @@ namespace DAL.Repositories
         {
             throw new NotImplementedException();
         }
-       
     }
 }

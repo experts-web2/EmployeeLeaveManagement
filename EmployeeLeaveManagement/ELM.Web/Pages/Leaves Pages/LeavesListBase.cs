@@ -38,7 +38,7 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
 
         public async Task DeleteEmployee(int id)
         {
-            await LeaveService.DeleteCall(id);
+            await LeaveService.DeleteLeave(id);
             await GetAll();
 
         }
