@@ -42,12 +42,9 @@ namespace ELM.Web.Services.ServiceRepo
         {
             await _httpService.PutAsJsonAsync(controllerRoute, attendenceDto);
         }
-
         public async Task<AttendenceDto> GetByID(int value)
         {
             return await _httpService.GetFromJsonAsync<AttendenceDto>($"{controllerRoute}/GetById/{value}");
-        }
-
-       
+        }     
     }
 }
