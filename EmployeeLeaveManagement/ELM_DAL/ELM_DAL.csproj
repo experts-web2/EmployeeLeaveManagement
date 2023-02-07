@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\DomainEntity\DomainEntity.csproj" />
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\ELM.Helper\ELM.Helper.csproj" />
+    <ProjectReference Include="..\ELM.Shared\ELM.Shared.csproj" />
+    <ProjectReference Include="..\WebApplication1\EmpLeave.Api.csproj" />
+  </ItemGroup>
+
+</Project>
