@@ -41,6 +41,7 @@ namespace DAL.Repositories
         {
             Attendence attendence = new()
             {
+                Id=attendenceDto.ID,
                 AttendenceDate = attendenceDto.AttendenceDate,
                 TimeIn = attendenceDto.TimeIn,
                 Timeout = attendenceDto.Timeout,
@@ -49,7 +50,6 @@ namespace DAL.Repositories
                 Latitude = attendenceDto.Latitude,
                 HostName = AddHostName(),
                 IpAddress = AddIpAddress()
-
             };
             return attendence;
         }
@@ -153,6 +153,22 @@ namespace DAL.Repositories
             {
                 return null;
             }
+        }
+
+        public void Update(AttendenceDto attendenceDto)
+        {
+            if (attendenceDto != null)
+                try
+                {
+                    var Updated = ToEntity(attendenceDto);
+                    _dbContext.Update(Updated);
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
         }
     }
 }

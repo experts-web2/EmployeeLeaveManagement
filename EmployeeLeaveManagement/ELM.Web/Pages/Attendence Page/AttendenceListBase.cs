@@ -12,7 +12,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public IAttendenceService AttendenceService { get; set; }
 
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();
-        public AttendenceDto SelectedAttendence { get; set; }
+        public AttendenceDto SelectedAttendence { get; set; } =new();
         public void SetAttendenceId(int id)
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == id);

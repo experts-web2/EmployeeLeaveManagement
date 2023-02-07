@@ -42,5 +42,11 @@ namespace EmpLeave.Api.Controllers
             var attendenceDto = attendenceRepository.GetById(id);
             return Ok(attendenceDto);
         }
+        [HttpPut]
+        public IActionResult UpdateAttendence(AttendenceDto attendenceDto)
+        {
+            attendenceRepository.Update(attendenceDto);
+            return Ok("Update Successfull");
+        }
     }
 }
