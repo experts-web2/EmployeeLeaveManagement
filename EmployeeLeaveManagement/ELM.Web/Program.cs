@@ -21,6 +21,7 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
+builder.Services.AddScoped<ISalaryHistory, SalaryHistoryService>();
 builder.Services.AddHttpClient("api", o =>
 {
     o.BaseAddress = new Uri("https://localhost:7150/api/");

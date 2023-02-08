@@ -24,5 +24,37 @@ namespace EmpLeave.Api.Controllers
             }
            return BadRequest();
         }
+        [HttpGet("GetSalaries")]
+        public IActionResult GetSalaries()
+        {
+            var response = repositroy.GetSalaries();
+            if (response != null)
+             return Ok(response);
+            return BadRequest();
+        }
+        [HttpGet("GetById/{Id}")]
+        public IActionResult GerSalary(int id)
+        {
+            var response = repositroy.GetSalary(id);
+            if (response != null)
+                return Ok(response);
+            return BadRequest();
+        }
+        [HttpPut("EditSalary")]
+        public IActionResult EditSalary(SalaryHistoryDto salaryDto)
+        {
+            if(salaryDto!=null)
+            {
+                repositroy.EditSalary(salaryDto);
+                return Ok("Updated successfull");
+            }
+            return BadRequest();
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteSalary(int id)
+        {
+            repositroy.DeleteSalary(id);
+            return Ok("Deleted Successfull");
+        }
     }
 }

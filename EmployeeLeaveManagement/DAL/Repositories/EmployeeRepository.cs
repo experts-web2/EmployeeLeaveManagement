@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+   public class EmployeeRepository : IEmployeeRepository
     {
         private readonly AppDbContext Db;
 

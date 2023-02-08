@@ -13,6 +13,7 @@ namespace DTOs
         [Required]
         public double NewSalary { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime IncrementDate { get; set; }
         [Required]
         public int EmployeeId { get; set; }
