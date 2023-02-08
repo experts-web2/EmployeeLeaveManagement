@@ -16,6 +16,7 @@
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
     <ProjectReference Include="..\ELM.Helper\ELM.Helper.csproj" />
     <ProjectReference Include="..\ELM.Shared\ELM.Shared.csproj" />
+    <ProjectReference Include="..\ELM_DAL\ELM_DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
