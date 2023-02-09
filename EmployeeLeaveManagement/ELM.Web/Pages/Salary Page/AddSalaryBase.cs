@@ -35,7 +35,6 @@ namespace ELM.Web.Pages.Salary_Page
 
             Cancel();
         }
-
         public void Cancel()
         {
             NavigationManager.NavigateTo("/ListOfSalaries");
