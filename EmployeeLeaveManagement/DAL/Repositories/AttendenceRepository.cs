@@ -154,7 +154,6 @@ namespace DAL.Repositories
                 return null;
             }
         }
-
         public void Update(AttendenceDto attendenceDto)
         {
             if (attendenceDto != null)
@@ -166,7 +165,6 @@ namespace DAL.Repositories
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
         }
