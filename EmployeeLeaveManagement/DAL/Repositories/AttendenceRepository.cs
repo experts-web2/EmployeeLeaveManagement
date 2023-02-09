@@ -90,7 +90,7 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        public void DeleteAttendence(int id)
+        public bool DeleteAttendence(int id)
         {
             try
             {
@@ -99,13 +99,15 @@ namespace DAL.Repositories
                 {
                     _dbContext.Remove(Deleted);
                     _dbContext.SaveChanges();
+                    return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
+            return false;
         }
         public string AddHostName()
         {
@@ -154,7 +156,7 @@ namespace DAL.Repositories
                 return null;
             }
         }
-        public void Update(AttendenceDto attendenceDto)
+        public bool Update(AttendenceDto attendenceDto)
         {
             if (attendenceDto != null)
                 try
@@ -162,11 +164,13 @@ namespace DAL.Repositories
                     var Updated = ToEntity(attendenceDto);
                     _dbContext.Update(Updated);
                     _dbContext.SaveChanges();
+                    return true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
+                    throw ex;
                 }
+            return false;
         }
     }
 }

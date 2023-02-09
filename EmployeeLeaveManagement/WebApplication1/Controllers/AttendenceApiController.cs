@@ -20,32 +20,42 @@ namespace EmpLeave.Api.Controllers
             if (ModelState.IsValid)
             {
                 var response = attendenceRepository.AddAttendence(attendenceDto);
-                return Ok(response);
+                return Ok("Added Successfull");
             }
-            else return BadRequest();
+            else return BadRequest("Unable to Add");
         }
         [HttpGet("GetAllAttendences")]
         public IActionResult GetAllAttendences()
         {
             var response = attendenceRepository.GetAllAttendences();
-            return Ok(response);
+            if (response != null)
+                return Ok(response);
+            else
+                return BadRequest("Unable to Add");
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteAttendence(int id)
         {
-            attendenceRepository.DeleteAttendence(id);
+            bool response =attendenceRepository.DeleteAttendence(id);
+            if (response=false)
+                return BadRequest("Unable to Delete");
             return Ok("Deleted Succesfully");
         }
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)
         {
             var attendenceDto = attendenceRepository.GetById(id);
-            return Ok(attendenceDto);
+            if (attendenceDto != null)
+                return Ok(attendenceDto);
+            else
+                return BadRequest("Unable to get Attendence");
         }
         [HttpPut]
         public IActionResult UpdateAttendence(AttendenceDto attendenceDto)
         {
-            attendenceRepository.Update(attendenceDto);
+            bool response =attendenceRepository.Update(attendenceDto);
+            if (response = false)
+                return BadRequest("Unable to Update Attendence");
             return Ok("Update Successfull");
         }
     }
