@@ -1,6 +1,6 @@
 ﻿@page "/ListOfSalaries" 
-@using ELM.Web.Pages.Salary_Page;
-@inherits SalaryListBase
+@using ELM.Web.Pages.Salary_Page
+@inherits ListOfSalariesBase
 <h3>List Of Salaries</h3>
 <div class="row">
     <div class="col-md-6">
@@ -30,21 +30,14 @@ else
             {
               <tr>
                 <td>@salary.NewSalary</td>
-                <td>@salary.IncrementDate.ToString("dd/mm/yy")</td>
+                <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
                 <td>@salary.FirstName  @salary.LastName</td>
-                 <td>
-                        <!-- Button trigger modal -->
-                        <button type="button" @onclick="()=>SetSalaryId(salary.ID)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Details
-                        </button>
-
-                    </td>
                     <td>
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
                         @onclick="(() => DeleteConfirm(salary.ID))">
                             Delete
                         </button>
-                        <a href='/edit/Salary/@salary.ID' class="btn btn-outline-dark" role="button">
+                          <a href='/edit/salary/@salary.ID' class="btn btn-outline-dark" role="button">
                             Edit
                         </a>
                     </td>
@@ -52,8 +45,6 @@ else
             }
         </tbody>
     </table>
-
-
     <div class="modal fade" id="deleteSalaryModel" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -95,7 +95,6 @@ namespace DAL.Repositories
 
                 throw;
             }
-          
         }
         public void Update(EmployeeDto employee)
         {

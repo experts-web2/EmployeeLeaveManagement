@@ -16,7 +16,7 @@ namespace DomainEntity.Models
         [DataType(DataType.Date)]
         public DateTime IncrementDate { get; set; }
         [ForeignKey(nameof(Employee))]
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
        
 

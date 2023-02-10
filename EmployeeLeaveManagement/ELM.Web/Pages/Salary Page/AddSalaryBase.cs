@@ -18,7 +18,7 @@ namespace ELM.Web.Pages.Salary_Page
         public int? ID { get; set; }
         public List<Employee> EmployeesList { get; set; } = new();
         public SalaryHistoryDto SalaryHistoryDto { get; set; } = new();
-         protected override async Task OnInitializedAsync()
+         protected override async Task OnParametersSetAsync()
         {
             EmployeesList = await  EmployeeService.GetAllEmployee();
             if (ID.HasValue)
@@ -28,16 +28,21 @@ namespace ELM.Web.Pages.Salary_Page
         }
         protected async Task SaveSalary()
         {
+
             if (!ID.HasValue)
             {
+                if(SalaryHistoryDto.NewSalary>0)
                 await SalaryHistoryService.AddSalary(SalaryHistoryDto);
             }
-
+            else
+            {
+                await SalaryHistoryService.UpdateSalary(SalaryHistoryDto);
+            }
             Cancel();
         }
-        public void Cancel()
+        protected void Cancel()
         {
-            NavigationManager.NavigateTo("/ListOfSalaries");
+            NavigationManager.NavigateTo("ListOfSalaries");
         }
     }
 }

@@ -47,7 +47,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var salary = dbContext.SalaryHistories.Where(x => x.Id == id).Include(s => s.Employee).FirstOrDefault();
+                var salary = dbContext.SalaryHistories.Include(s => s.Employee).FirstOrDefault(x => x.Id == id);
                 SalaryHistoryDto salaryDto = SetSalaryToDto(salary);
                 return salaryDto;
             }
@@ -106,6 +106,7 @@ namespace DAL.Repositories
             {
                 SalaryHistoryDto salaryDto = new()
                 {
+                    ID=salary.Id,
                     NewSalary = salary.NewSalary,
                     IncrementDate = salary.IncrementDate,
                     FirstName = salary.Employee.FirstName,
@@ -119,10 +120,12 @@ namespace DAL.Repositories
         {
             SalaryHistoryDto salaryDto = new()
             {
+                ID=salary.Id,
                 NewSalary = salary.NewSalary,
                 IncrementDate = salary.IncrementDate,
                 FirstName = salary.Employee.FirstName,
-                LastName = salary.Employee.LastName
+                LastName = salary.Employee.LastName,
+                EmployeeId=salary.EmployeeId
             };
             return salaryDto;
         }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace ELM.Web.Pages.Salary_Page
 {
-    public class SalaryListBase :ComponentBase
+    public class ListOfSalariesBase :ComponentBase
     {
 
         [Inject]
