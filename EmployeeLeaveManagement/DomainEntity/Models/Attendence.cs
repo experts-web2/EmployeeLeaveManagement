@@ -26,8 +26,7 @@ namespace DomainEntity.Models
         [Required]
         public double Latitude { get; set; }
         [ForeignKey("Employee")]
-        [Required]
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
     }
 }

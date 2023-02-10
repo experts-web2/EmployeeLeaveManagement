@@ -18,6 +18,7 @@ namespace DTOs
         public string Address { get; set; }
         public Gender Gender { get; set; }
         public List<Leave> leaves { get; set; } = new();
+       
 
     }
 }
