@@ -13,8 +13,8 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public NavigationManager NavigationManager { get; set; }
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
-       // public Parameter parameter { get; set; }
-        public Pager Paging { get; set; }
+        // public Parameter parameter { get; set; }
+        public Pager Paging { get; set; } = new();
         public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
        
         public LeaveDto LeaveDto { get; set; } = new();
@@ -22,7 +22,7 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public int? ID { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            GetEmployees();
+           await GetEmployees();
         }
         protected override async Task OnParametersSetAsync()
         {

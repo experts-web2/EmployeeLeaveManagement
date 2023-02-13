@@ -19,13 +19,11 @@ namespace EmpLeave.Web.Pages.EmployeePage
         {
             SelectedEmployee = EmployeeDtoList.FirstOrDefault(x => x.ID == id);
         }
-
         protected override async Task OnInitializedAsync()
         {
             await GetAll();
         }
         public async Task GetAll(int currentPage = 1)
-        
         {
             Paging.CurrentPage = currentPage;
             var EmployeeDto = await EmployeeService.GetAllEmployee(Paging);
@@ -37,13 +35,10 @@ namespace EmpLeave.Web.Pages.EmployeePage
         {
             SelectedEmployee = EmployeeDtoList.FirstOrDefault(x => x.ID == Id);
         }
-
         public async Task DeleteEmployee(int id)
         {
             await EmployeeService.DeleteEmployeebyId(id);
             await GetAll();
-
         }
-
     }
 }
