@@ -9,8 +9,10 @@ namespace ELM.Web.Pages.Salary_Page
 
         [Inject]
         public ISalaryHistory SalaryService { get; set; }
+
         public List<SalaryHistoryDto> SalaryDtoList { get; set; } = new();
         public SalaryHistoryDto SelectedSalary { get; set; }=new();
+
         public void SetSalaryId(int id)
         {
             SelectedSalary = SalaryDtoList.FirstOrDefault(x => x.ID == id);

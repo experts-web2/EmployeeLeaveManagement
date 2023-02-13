@@ -17,6 +17,7 @@ namespace DTOs
         [Required]
         public string Address { get; set; }
         public Gender Gender { get; set; }
+        public double CurrentSalary { get; set; }
         public List<Leave> leaves { get; set; } = new();
 
     }

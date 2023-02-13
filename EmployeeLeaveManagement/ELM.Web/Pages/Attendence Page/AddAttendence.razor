@@ -66,13 +66,13 @@
                 <option selected disabled value="0">Employee Name List</option>
                 @foreach (var employee in EmployeesList)
                 {
-                    <option value="@employee.Id">@employee.FirstName</option>
+                    <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
                 }
             </InputSelect>
         </div>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Save</button>
-        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+        <button type="button" class="btn btn-light" @onclick="Cancel">Cancel</button>
     </div>
 </EditForm>

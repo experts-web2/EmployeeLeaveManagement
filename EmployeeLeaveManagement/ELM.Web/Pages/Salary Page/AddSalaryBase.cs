@@ -14,10 +14,12 @@ namespace ELM.Web.Pages.Salary_Page
         public IEmployeeService EmployeeService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+
         [Parameter]
         public int? ID { get; set; }
         public List<Employee> EmployeesList { get; set; } = new();
         public SalaryHistoryDto SalaryHistoryDto { get; set; } = new();
+
          protected override async Task OnParametersSetAsync()
         {
             EmployeesList = await  EmployeeService.GetAllEmployee();
@@ -36,6 +38,7 @@ namespace ELM.Web.Pages.Salary_Page
             }
             else
             {
+                if(SalaryHistoryDto.NewSalary>0)
                 await SalaryHistoryService.UpdateSalary(SalaryHistoryDto);
             }
             Cancel();
