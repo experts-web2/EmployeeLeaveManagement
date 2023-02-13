@@ -1,4 +1,5 @@
-﻿using DAL.Interface;
+﻿using Cronos;
+using DAL.Interface;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,9 +29,9 @@ namespace EmpLeave.Api.Controllers
         [HttpGet("GetAllAbsentEmployee")]
         public ActionResult GetAllAbsentEmployee()
         {
-            
-            RecurringJob.AddOrUpdate("myrecurringjob", ()=> _jobService.GetAbsentEmployee(),
-                                  Cron.Daily);
+            CronExpression expression = CronExpression.Parse("0 0 * * MON-FRI");
+
+            RecurringJob.AddOrUpdate("myrecurringjob", () => _jobService.GetAbsentEmployee(),"0 0 * * MON-FRI");
             return Ok(_jobService.GetAbsentEmployee());
         }
 
