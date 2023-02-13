@@ -13,7 +13,8 @@ namespace DAL.Repositories
             _dbContext = dbContext;
         }
         public List<AttendenceDto> GetAllAttendences()
-        {
+        {  
+            //Get All Employees Attendence
             var attendences = _dbContext.Attendences.Include(x => x.Employee).ToList();
             List<AttendenceDto> AttendenceDto = ToDtos(attendences);
             return AttendenceDto;
@@ -52,18 +53,18 @@ namespace DAL.Repositories
         }
         public List<Employee> GetAbsentEmployee()
         {
-
-            var AbsentEmployee = (from emp in _dbContext.Employees
-                                 join a in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now.Date)) on emp.Id equals a.EmployeeId
+            //Querry For getting Employees Whose are Absent
+            var AbsentEmployee = (from Employees in _dbContext.Employees
+                                 join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now.Date)) on Employees.Id equals Attendences.EmployeeId
                                  into employeeAtendence
                                  from attendence in employeeAtendence.DefaultIfEmpty()
                                  where attendence == null
                                  
-                                 select emp).ToList();
+                                 select Employees).ToList();
             return AbsentEmployee;
+
         }
-
-
+  
     }
 }
 

@@ -2,6 +2,7 @@
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace EmpLeave.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -10,6 +11,7 @@ namespace EmpLeave.Api.Controllers
     {
         private readonly IJobService _jobService;
         private readonly IBackgroundJobClient _backgroundJobClient;
+
         public JobTestController(IJobService jobService, IBackgroundJobClient backgroundJobClient)
         {
             _jobService = jobService;
@@ -17,17 +19,19 @@ namespace EmpLeave.Api.Controllers
         }
 
         [HttpGet]
-        public  ActionResult GetAttendanceJob()
+        public ActionResult GetAttendanceJob()
         {
-          var AllAttendnce = _backgroundJobClient.Enqueue(() => _jobService.GetAllAttendences());
+            var AllAttendnce = _backgroundJobClient.Enqueue(() => _jobService.GetAllAttendences());
             return Ok(AllAttendnce);
         }
 
         [HttpGet("GetAllAbsentEmployee")]
         public ActionResult GetAllAbsentEmployee()
         {
-            var Employees = _jobService.GetAbsentEmployee();
-            return Ok(Employees);
+            
+            RecurringJob.AddOrUpdate("myrecurringjob", ()=> _jobService.GetAbsentEmployee(),
+                                  Cron.Daily);
+            return Ok(_jobService.GetAbsentEmployee());
         }
 
     }
