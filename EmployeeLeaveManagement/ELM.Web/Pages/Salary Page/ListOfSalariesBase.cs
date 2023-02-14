@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using ELM.Helper;
 using ELM.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 
@@ -12,6 +13,7 @@ namespace ELM.Web.Pages.Salary_Page
 
         public List<SalaryHistoryDto> SalaryDtoList { get; set; } = new();
         public SalaryHistoryDto SelectedSalary { get; set; }=new();
+        public Pager Paging { get; set; } = new();
 
         public void SetSalaryId(int id)
         {
@@ -21,9 +23,13 @@ namespace ELM.Web.Pages.Salary_Page
         {
             await GetAll();
         }
-        public async Task GetAll()
+        public async Task GetAll(int currentPage=1)
         {
-           SalaryDtoList = await SalaryService.GetSalaries();
+            Paging.CurrentPage = currentPage;
+           var SalaryDto = await SalaryService.GetSalaries(Paging);
+            SalaryDtoList = SalaryDto.DataList;
+            Paging = SalaryDto.Pager;
+            StateHasChanged();
         }
         public void DeleteConfirm(int Id)
         {

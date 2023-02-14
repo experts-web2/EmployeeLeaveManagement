@@ -1,6 +1,7 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -53,11 +54,13 @@ namespace DAL.Repositories
             };
             return attendence;
         }
-        public List<AttendenceDto> GetAllAttendences()
+        public PagedList<AttendenceDto> GetAllAttendences(Pager paging)
         {
-            var attendences = _dbContext.Attendences.Include(x=>x.Employee).ToList();
-            List<AttendenceDto> AttendenceDto = ToDtos(attendences);
-            return AttendenceDto;
+            var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
+            var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
+            var attendenceDto = ToDtos(paginatedList);
+            return new PagedList<AttendenceDto>
+                (attendenceDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
         }
         private List<AttendenceDto> ToDtos(List<Attendence> attendences)
         {

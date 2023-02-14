@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using ELM.Helper;
 using ELM.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
@@ -13,6 +14,8 @@ namespace ELM.Web.Pages.Attendence_Page
 
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();
         public AttendenceDto SelectedAttendence { get; set; } =new();
+        public Pager Paging { get; set; } = new();
+
         public void SetAttendenceId(int id)
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == id);
@@ -22,9 +25,13 @@ namespace ELM.Web.Pages.Attendence_Page
         {
             await GetAll();
         }
-        public async Task GetAll()
+        public async Task GetAll(int currentPage=1)
         {
-            AttendenceDtoList = await AttendenceService.GetAttendences();
+            Paging.CurrentPage = currentPage;
+            var attendenceDto = await AttendenceService.GetAttendences(Paging);
+            AttendenceDtoList = attendenceDto.DataList;
+            Paging = attendenceDto.Pager;
+            StateHasChanged();
         }
         public void DeleteConfirm(int Id)
         {

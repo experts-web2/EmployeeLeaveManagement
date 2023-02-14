@@ -3,7 +3,12 @@
 @inherits AttendenceListBase
 <h3>List Of Attendence</h3>
 <div class="row">
-
+    <div class="input-group mb-3">
+        <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
+            <InputText class="form-control" @bind-Value="Paging.search" />
+            <button>Search</button>
+        </EditForm>
+    </div>
     <div class="col-md-6">
         <a href='/Add_Attendence' class="btn btn-primary" role="button">
             <i class="fas fa-user-plus"></i>
@@ -11,6 +16,7 @@
         </a>
     </div>
 </div>
+<br />
 @if (AttendenceDtoList == null)
 {
     <p><em>Loading...</em></p>
@@ -99,3 +105,8 @@ else
         </div>
     </div>
 }
+<Pagination ChangePage="GetAll"
+            CurrentPage="Paging.CurrentPage"
+            HasNext="Paging.HasNext"
+            HasPrevious="Paging.HasPrevious"
+            TotalPages="Paging.TotalPages" />

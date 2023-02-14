@@ -1,6 +1,7 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -30,13 +31,15 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        public List<SalaryHistoryDto> GetSalaries()
+        public PagedList<SalaryHistoryDto> GetSalaries(Pager pager)
         {
             try
             {
-                var salaries = dbContext.SalaryHistories.Include(x => x.Employee).ToList();
-                List<SalaryHistoryDto> salariesDto = ToDto(salaries);
-                return salariesDto;
+                var salaries = dbContext.SalaryHistories.Include(x => x.Employee).AsQueryable();
+                var paginatedList = PagedList<SalaryHistory>.ToPagedList(salaries, pager.CurrentPage, pager.PageSize);
+                var SalariesDto = ToDto(paginatedList);
+                return new PagedList<SalaryHistoryDto>
+                    (SalariesDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
             }
             catch (Exception)
             {

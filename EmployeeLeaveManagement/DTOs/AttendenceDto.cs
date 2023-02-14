@@ -28,7 +28,7 @@ namespace DTOs
         public double Longitude { get; set; }
         [Required]
         public double Latitude { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
        

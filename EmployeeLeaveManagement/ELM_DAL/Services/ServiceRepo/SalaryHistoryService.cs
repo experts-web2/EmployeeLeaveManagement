@@ -1,7 +1,10 @@
 ﻿using DTOs;
+using ELM.Helper;
 using ELM.Web.Services.Interface;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace ELM.Web.Services.ServiceRepo
 {
@@ -19,9 +22,31 @@ namespace ELM.Web.Services.ServiceRepo
             var response= await _httpService.PostAsJsonAsync($"{Apiroute()}SalaryHistory/AddSalary", salaryHistoryDto);
         }
 
-        public async Task<List<SalaryHistoryDto>> GetSalaries()
+        public async Task<Response<SalaryHistoryDto>> GetSalaries(Pager paging)
         {
-            return await _httpService.GetFromJsonAsync<List<SalaryHistoryDto>>($"{Apiroute()}SalaryHistory/GetSalaries");
+            Response<SalaryHistoryDto> responseDto = new();
+            try
+            {
+                string data = JsonConvert.SerializeObject(paging);
+                StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await _httpService.PostAsync($"{Apiroute()}SalaryHistory/getSalaries", Content);
+                if (!response.IsSuccessStatusCode)
+                    return new Response<SalaryHistoryDto>();
+                if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
+                {
+                    var metadata = keys.FirstOrDefault();
+                    responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
+                }
+                string result = await response.Content.ReadAsStringAsync();
+                responseDto.DataList = JsonConvert.DeserializeObject<List<SalaryHistoryDto>>(result);
+                return responseDto;
+            }
+            catch (Exception)
+            {
+
+                responseDto.DataList = null;
+            }
+            return new Response<SalaryHistoryDto>();
         }
 
         public async Task<SalaryHistoryDto> GetSalaryById(int id)
