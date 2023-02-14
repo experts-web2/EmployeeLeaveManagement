@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+   public class EmployeeRepository : IEmployeeRepository
     {
         private readonly AppDbContext Db;
 
@@ -31,7 +31,8 @@ namespace DAL.Repositories
                 Address = employeeDto.Address,
                 DateOfBrith = employeeDto.DateOfBrith,
                 Gender = employeeDto.Gender,
-                Email = employeeDto.Email
+                Email = employeeDto.Email,
+                CurrentSalary=employeeDto.CurrentSalary
 
             };
             return employee;
@@ -67,6 +68,7 @@ namespace DAL.Repositories
                     employeeDto.DateOfBrith = employee.DateOfBrith;
                     employeeDto.Email = employee.Email;
                     employeeDto.Gender = employee.Gender;
+                    employeeDto.CurrentSalary=employee.CurrentSalary;
                     employeeDto.leaves = employee.Leaves.ToList();
                    
                     employeeDtos.Add(employeeDto);
@@ -95,7 +97,6 @@ namespace DAL.Repositories
 
                 throw;
             }
-          
         }
         public void Update(EmployeeDto employee)
         {

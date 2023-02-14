@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();
 builder.Services.AddScoped<IAttendenceRepository, AttendenceRepository>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();

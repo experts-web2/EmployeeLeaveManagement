@@ -42,9 +42,9 @@ else
                 <td>@attendence.IpAddress</td>
                 <td>@attendence.Longitude</td>
                 <td>@attendence.Latitude</td>
-                <td>@attendence.FirstName  @attendence.LastName</td
+                <td>@attendence.FirstName  @attendence.LastName</td>
                     <td>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalary"
                         @onclick="(() => DeleteConfirm(attendence.ID))">
                             Delete
                         </button>
@@ -57,7 +57,7 @@ else
           
         </tbody>
     </table>
-     <div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false">
+     <div class="modal fade" id="deleteSalary" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

@@ -45,6 +45,13 @@
         </div>
         <ValidationMessage For="@(() => EmployeeDto.DateOfBrith)" />
     </div>
+    <div class="mb-3">
+        <label for="Salary" class="form-label">Current Salary</label>
+        <div class="col-md-4">
+            <InputNumber class="form-control" @bind-Value="EmployeeDto.CurrentSalary" />
+        </div>
+        <ValidationMessage For="@(() => EmployeeDto.Address)" />
+    </div>
      <InputSelect class="form-control-sm" @bind-Value="EmployeeDto.Gender">
         <option selected disabled value="-1">Gender</option>
         @foreach (var gender in Enum.GetValues(typeof(Gender)))
@@ -54,7 +61,7 @@
     </InputSelect>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Save</button>
-        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+        <button type="button" class="btn btn-light" @onclick="Cancel">Cancel</button>
     </div>
 </EditForm>
 

@@ -145,8 +145,10 @@ namespace DAL.Repositories
                     Timeout = attendence.Timeout,
                     HostName = attendence.HostName,
                     IpAddress = attendence.IpAddress,
+                    FirstName=attendence.Employee.FirstName,
+                    LastName=attendence.Employee.LastName,
                     Longitude = attendence.Longitude,
-                   EmployeeId=attendence.Id
+                   EmployeeId=attendence.EmployeeId
 
                 };
                 return employeeDto;

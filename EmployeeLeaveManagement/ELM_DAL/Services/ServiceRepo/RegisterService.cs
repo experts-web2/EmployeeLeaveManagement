@@ -64,8 +64,10 @@ namespace EmpLeave.Web.Services.ServiceRepo
         }
         private string Apiroute()
         {
-            var ApiRoute = _configuration["Api:Apiroute"];
-            return ApiRoute;
+            var apiRoute = _configuration["Api:Apiroute"];
+            if (apiRoute == null)
+                return "https://localhost:7150/api/";
+            return apiRoute;
         }
     }
 }
