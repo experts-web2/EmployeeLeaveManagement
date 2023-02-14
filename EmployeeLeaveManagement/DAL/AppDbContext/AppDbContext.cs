@@ -16,10 +16,6 @@ namespace DAL
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<Attendence> Attendences { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        }
+       
     }
 }
