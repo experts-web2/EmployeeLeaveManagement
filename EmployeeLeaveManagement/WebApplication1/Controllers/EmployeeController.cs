@@ -1,6 +1,7 @@
 ﻿using DAL.Interface;
 using DTOs;
 using ELM.Helper;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -11,9 +12,13 @@ namespace EmpLeave.Api.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        private readonly IJobService _jobService;
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        public EmployeeController(IEmployeeRepository employeeRepository, IJobService jobService, IBackgroundJobClient backgroundJobClient)
         {
             _employeeRepository = employeeRepository;
+            _jobService = jobService;
+            _backgroundJobClient = backgroundJobClient;
         }
         [HttpPost("getall")]
         public IActionResult GetAllEmployee(Pager pager)
@@ -68,6 +73,18 @@ namespace EmpLeave.Api.Controllers
         {
            var ListOfEmployees= _employeeRepository.GetAllEmployees();
             return Ok(ListOfEmployees);
+        }
+        [HttpGet("GetAllAbsentEmployee")]
+        public ActionResult GetAllAbsentEmployee()
+        {
+            RecurringJob.AddOrUpdate("myrecurringjob", () => _jobService.GetAbsentEmployee(), "0 0 * * MON-FRI");
+            return Ok(_jobService.GetAbsentEmployee());
+        }
+        [HttpGet("GetAllAttendance")]
+        public ActionResult GetAttendanceJob()
+        {
+            var AllAttendnce = _backgroundJobClient.Enqueue(() => _jobService.GetAllAttendences());
+            return Ok(AllAttendnce);
         }
 
     }

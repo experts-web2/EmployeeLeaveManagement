@@ -14,6 +14,7 @@ namespace DAL.Repositories
         {
             Db = db;
         }
+        
         public void AddEmployee(EmployeeDto employee)
         {
             Employee employeeEntity = ToEntity(employee);

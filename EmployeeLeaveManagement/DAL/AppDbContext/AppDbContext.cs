@@ -17,10 +17,6 @@ namespace DAL
         public DbSet<Attendence> Attendences { get; set; }
         public DbSet<SalaryHistory>SalaryHistories { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        }
+       
     }
 }
