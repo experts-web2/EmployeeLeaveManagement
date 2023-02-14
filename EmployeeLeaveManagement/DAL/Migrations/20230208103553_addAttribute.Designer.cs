@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230208103553_addAttribute")]
+    partial class addAttribute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,8 +35,7 @@ namespace DAL.Migrations
                     b.Property<DateTime>("AttendenceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("EmployeeId")
-                        .IsRequired()
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<string>("HostName")
@@ -142,8 +143,7 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("EmployeeId")
-                        .IsRequired()
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("IncrementDate")
@@ -264,15 +264,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "289b616a-b9ab-4b45-86d1-89ae3ceaba78",
-                            ConcurrencyStamp = "5de9a3c0-0bfc-475f-ba33-d3f2c393b7fc",
+                            Id = "8c352997-0b46-4683-b587-94dd2e149bee",
+                            ConcurrencyStamp = "b70a883e-0ccf-49c1-9558-a03ce5bd8f23",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "a0f0485e-fc51-41fb-a98a-ce3186c4c5b8",
-                            ConcurrencyStamp = "e3e7cf29-1a84-47de-ad37-6f152b1512e7",
+                            Id = "2d3db6aa-000b-4d0e-b419-f8ad403adc00",
+                            ConcurrencyStamp = "67b3c19f-45f9-47fb-af6a-fe93bf2bec3c",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

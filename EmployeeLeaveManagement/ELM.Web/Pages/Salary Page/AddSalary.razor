@@ -1,0 +1,37 @@
+﻿@page "/Add_Salary"
+@page "/edit/salary/{ID:int}"
+@inherits AddSalaryBase
+<h3>Add Salary</h3>
+<EditForm Model="@SalaryHistoryDto" OnValidSubmit="SaveSalary">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="Name" class="form-label">New Salary</label>
+        <div class="col-md-4">
+            <InputNumber class="form-control" @bind-Value="SalaryHistoryDto.NewSalary"/>
+        </div>
+        <ValidationMessage For="@(() => SalaryHistoryDto.NewSalary)" />
+    </div>
+    <div class="mb-3">
+        <label for="Name" class="form-label">Increment Date</label>
+        <div class="col-md-4">
+            <InputDate class="form-control" @bind-Value="SalaryHistoryDto.IncrementDate" />
+        </div>
+        <ValidationMessage For="@(() => SalaryHistoryDto.IncrementDate)" />
+    </div>
+    <div class="mb-3">
+        <label class="mb-2" >Employee Name</label>
+        <div class="col-md-4">
+            <InputSelect class="form-control" @bind-Value="SalaryHistoryDto.EmployeeId">
+                <option selected disabled value="0">Employee Name List</option>
+                @foreach (var employee in EmployeesList)
+                {
+                  <option value="@employee.Id">@employee.FirstName</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-light" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm> 

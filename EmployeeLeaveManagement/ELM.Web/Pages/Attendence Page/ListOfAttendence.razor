@@ -42,9 +42,9 @@ else
                 <td>@attendence.IpAddress</td>
                 <td>@attendence.Longitude</td>
                 <td>@attendence.Latitude</td>
-                <td>@attendence.FirstName  @attendence.LastName</td
+                <td>@attendence.FirstName  @attendence.LastName</td>
                     <td>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalary"
                         @onclick="(() => DeleteConfirm(attendence.ID))">
                             Delete
                         </button>
@@ -57,4 +57,45 @@ else
           
         </tbody>
     </table>
+     <div class="modal fade" id="deleteSalary" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Delete Attendence</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Do you want to delete this Attendence?</h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Time In</td>
+                                <td>@SelectedAttendence.TimeIn</td>
+                            </tr>
+                            <tr>
+                                <td>Time Out</td>
+                                <td>@SelectedAttendence.Timeout</td>
+                            </tr>
+                            <tr>
+                                <td>Host Name</td>
+                                <td>@SelectedAttendence.HostName</td>
+                            </tr>
+                            <tr>
+                                <td>IpAddress</td>
+                                <td>@SelectedAttendence.IpAddress</td>
+                            </tr>
+                            <tr>
+                                <td>Attendence Date</td>
+                                <td>@SelectedAttendence.AttendenceDate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" @onclick="(async () => await DeleteAttendence(SelectedAttendence.ID))" data-bs-dismiss="modal">YES</button>
+                    <button class="btn btn-warning" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }

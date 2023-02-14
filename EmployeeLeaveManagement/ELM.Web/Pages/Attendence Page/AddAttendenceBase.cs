@@ -34,6 +34,8 @@ namespace ELM.Web.Pages.Attendence_Page
             {
                 await AttendenceService.AddAttendence(AttendenceDto);
             }
+            else
+                await AttendenceService.UpdateAttendence(AttendenceDto);
 
             Cancel();
         }

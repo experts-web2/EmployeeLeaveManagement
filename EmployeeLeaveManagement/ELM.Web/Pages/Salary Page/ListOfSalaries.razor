@@ -1,0 +1,83 @@
+﻿@page "/ListOfSalaries" 
+@using ELM.Web.Pages.Salary_Page
+@inherits ListOfSalariesBase
+<h3>List Of Salaries</h3>
+<div class="row">
+    <div class="col-md-6">
+        <a href='/Add_Salary' class="btn btn-primary" role="button">
+            <i class="fas fa-user-plus"></i>
+            Add Salary
+        </a>
+    </div>
+</div>
+@if (SalaryDtoList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+         <thead class="table-success">
+            <tr>
+                <th>New Salary</th>
+                <th>Increment Date</th>
+                <th>Employee Name</th>
+                <th class="colspan-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var salary in SalaryDtoList)
+            {
+              <tr>
+                <td>@salary.NewSalary</td>
+                <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
+                <td>@salary.FirstName  @salary.LastName</td>
+                    <td>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
+                        @onclick="(() => DeleteConfirm(salary.ID))">
+                            Delete
+                        </button>
+                          <a href='/edit/salary/@salary.ID' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                    </td>
+              </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal fade" id="deleteSalaryModel" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Delete Salary</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Do you want to delete this Salary?</h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>New Salary</td>
+                                <td>@SelectedSalary.NewSalary</td>
+                            </tr>
+                            <tr>
+                                <td>IncrementDate</td>
+                                <td>@SelectedSalary.IncrementDate</td>
+                            </tr>
+                            <tr>
+                                <td>Employee Name</td>
+                                <td>@SelectedSalary.FirstName</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" @onclick="(async () => await DeleteSalary(SelectedSalary.ID))" data-bs-dismiss="modal">YES</button>
+                    <button class="btn btn-warning" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
