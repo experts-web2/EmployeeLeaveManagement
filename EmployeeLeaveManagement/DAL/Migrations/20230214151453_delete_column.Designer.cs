@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230208103553_addAttribute")]
-    partial class addAttribute
+    [Migration("20230214151453_delete_column")]
+    partial class delete_column
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,31 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("DomainEntity.Models.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("AlertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AlertType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Alerts");
+                });
 
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
                 {
@@ -35,7 +60,8 @@ namespace DAL.Migrations
                     b.Property<DateTime>("AttendenceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int?>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("HostName")
@@ -143,7 +169,8 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int?>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("IncrementDate")
@@ -264,15 +291,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8c352997-0b46-4683-b587-94dd2e149bee",
-                            ConcurrencyStamp = "b70a883e-0ccf-49c1-9558-a03ce5bd8f23",
+                            Id = "7909b04f-8d7f-4e9f-b1e7-e1b444b1216c",
+                            ConcurrencyStamp = "d764f662-048f-4ad5-9526-e70df93f096b",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "2d3db6aa-000b-4d0e-b419-f8ad403adc00",
-                            ConcurrencyStamp = "67b3c19f-45f9-47fb-af6a-fe93bf2bec3c",
+                            Id = "0d182f80-3677-4277-9961-5843186228b2",
+                            ConcurrencyStamp = "0ac2fee1-ecfc-4d88-9b59-d94c6f0fcc33",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -382,6 +409,15 @@ namespace DAL.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("DomainEntity.Models.Alert", b =>
+                {
+                    b.HasOne("DomainEntity.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>

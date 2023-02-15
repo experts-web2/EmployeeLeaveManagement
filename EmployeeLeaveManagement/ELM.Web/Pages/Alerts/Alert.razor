@@ -1,0 +1,32 @@
+﻿@page "/Alert"
+@inherits AlertBase
+
+<h3>Alert</h3>
+@if (Alerts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>AlertDate</th>
+                <th>AlertType</th>
+                <th>Employee Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var alert in Alerts)
+            {
+                <tr>
+                    
+                    <td>@alert.AlertDate</td>
+                    <td>@alert.AlertType</td>
+                    <td>@alert.EmployeeId</td>
+                
+                </tr>
+            }
+        </tbody>
+</table>
+}
