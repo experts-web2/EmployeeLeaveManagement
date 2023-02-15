@@ -1,6 +1,8 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
+using ELM.Helper;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace DAL.Repositories
@@ -18,10 +20,62 @@ namespace DAL.Repositories
             RecurringJob.AddOrUpdate("AlertRecurringJob", () => AddAbsentEmployeeAlert(), "0 0 * * MON-FRI");
 
         }
-
         public List<Alert> GetAlerts()
         {
-           return _dbContext.Alerts.Where(X=>X.AlertDate.Date==DateTime.Now.Date).ToList();
+            return _dbContext.Alerts.Where(X => X.AlertDate.Date == DateTime.Now.Date).ToList();
+        }
+
+        public PagedList<Alert> GetAllAlert(Pager pager)
+        {
+            var Alerts = _dbContext.Alerts.Include(x=>x.Employee).AsQueryable();
+            if(!string.IsNullOrEmpty(pager.search) && pager.StartDate != null && pager.EndDate != null)
+            {
+                Alerts = Alerts.
+                    Where(x => (x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.search.Trim())) &&
+                            x.AlertDate.Date >= pager.StartDate.Value.Date &&
+                             x.AlertDate.Date <= pager.EndDate.Value.Date);
+
+            }
+           else if(!string.IsNullOrEmpty(pager.search) && pager.StartDate != null)
+            {
+                Alerts = Alerts.
+                    Where(x => (x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.search.Trim())) &&
+                            x.AlertDate.Date >= pager.StartDate.Value.Date);
+            }
+           else if(!string.IsNullOrEmpty(pager.search)  && pager.EndDate != null)
+            {
+                Alerts = Alerts.
+                    Where(x => (x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.search.Trim())) &&
+                             x.AlertDate.Date <= pager.EndDate.Value.Date);
+            }
+           else if(pager.StartDate != null && pager.EndDate != null)
+            {
+                Alerts = Alerts.
+                 Where(x => x.AlertDate.Date >= pager.StartDate.Value.Date &&
+                          x.AlertDate.Date <= pager.EndDate.Value.Date);
+            }
+
+           else if (!string.IsNullOrEmpty(pager.search))
+            {
+                Alerts = Alerts.
+                    Where(x => x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.search.Trim()));             
+            }
+           else if(pager.StartDate != null)
+            {
+                Alerts = Alerts.Where(x => x.AlertDate.Date >= pager.StartDate.Value.Date);
+            }
+          else if (pager.EndDate != null)
+            {
+                Alerts = Alerts.Where(x => x.AlertDate.Date <= pager.EndDate.Value.Date);
+            }
+
+            var paginatedList = PagedList<Alert>.ToPagedList(Alerts, pager.CurrentPage, pager.PageSize);
+            return new PagedList<Alert>
+                (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
            
         }
 

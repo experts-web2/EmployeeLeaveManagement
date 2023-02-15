@@ -1,8 +1,8 @@
 ﻿using DAL.Interface;
-using DomainEntity.Models;
+using ELM.Helper;
 using Hangfire;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -15,11 +15,28 @@ namespace EmpLeave.Api.Controllers
         {
             _alertRepository = alertRepository; 
         }
-        [HttpGet]
-        public ActionResult GetAlert()
+        [HttpPost]
+        public ActionResult GetAlert(Pager pager)
         {
-          List<Alert> Alerts= _alertRepository.GetAlerts();
-            return Ok(Alerts);
+            try
+            {
+                var Alerts = _alertRepository.GetAllAlert(pager);
+                var metadata = new
+                {
+                    Alerts.TotalCount,
+                    Alerts.PageSize,
+                    Alerts.TotalPages,
+                    Alerts.CurrentPage,
+                    Alerts.HasPrevious,
+                    Alerts.HasNext,
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(Alerts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet("getAbsent")]
         public ActionResult GetAllAbsentEmployee()

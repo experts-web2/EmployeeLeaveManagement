@@ -1,5 +1,6 @@
 ﻿using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace ELM_DAL.Services.Interface
 {
     public interface IAlertService
     {
-        public Task<List<Alert>> GetAlerts();
+        public Task<Response<Alert>> GetAlerts(Pager Paging);
     }
 }

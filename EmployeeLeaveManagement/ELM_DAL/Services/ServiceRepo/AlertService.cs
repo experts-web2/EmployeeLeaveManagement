@@ -1,7 +1,9 @@
 ﻿using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using ELM_DAL.Services.Interface;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,18 +23,30 @@ namespace ELM_DAL.Services.ServiceRepo
             _configuration = configuration;
         }
 
-        public async Task<List<Alert>> GetAlerts()
+        public async Task<Response<Alert>> GetAlerts(Pager paging)
         {
-            List<Alert> response = new();
+            Response<Alert> responseDto = new();
             try
             {
-                response = await _httpService.GetFromJsonAsync<List<Alert>>($"{Apiroute()}Alert");
-                return response;
+                string data = JsonConvert.SerializeObject(paging);
+                StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await _httpService.PostAsync($"{Apiroute()}Alert", Content);
+                if (!response.IsSuccessStatusCode)
+                    return new Response<Alert>();
+                if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
+                {
+                    var metadata = keys.FirstOrDefault();
+                    responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
+                }
+                string result = await response.Content.ReadAsStringAsync();
+                responseDto.DataList = JsonConvert.DeserializeObject<List<Alert>>(result);
+                return responseDto;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                responseDto.DataList = null;
             }
+            return new Response<Alert>();
         }
         private string Apiroute()
         {
