@@ -1,7 +1,9 @@
 ﻿using DAL.Interface;
 using DTOs;
+using ELM.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -24,14 +26,23 @@ namespace EmpLeave.Api.Controllers
             }
             else return BadRequest("Unable to Add");
         }
-        [HttpGet("GetAllAttendences")]
-        public IActionResult GetAllAttendences()
+        [HttpPost("GetAllAttendences")]
+        public IActionResult GetAllAttendences(Pager paging)
         {
-            var response = attendenceRepository.GetAllAttendences();
-            if (response != null)
-                return Ok(response);
-            else
-                return BadRequest("Unable to Add");
+            var allAttendences = attendenceRepository.GetAllAttendences(paging);
+            var metadata = new
+            {
+                allAttendences.TotalCount,
+                allAttendences.PageSize,
+                allAttendences.TotalPages,
+                allAttendences.CurrentPage,
+                allAttendences.HasPrevious,
+                allAttendences.HasNext,
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            if (allAttendences != null)
+                return Ok(allAttendences);
+            return BadRequest();
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteAttendence(int id)

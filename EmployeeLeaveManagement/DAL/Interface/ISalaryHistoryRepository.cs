@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using ELM.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace DAL.Interface
     public interface ISalaryHistoryRepository
     {
         public void AddSalary(SalaryHistoryDto salaryDto);
-        public List<SalaryHistoryDto> GetSalaries();
+        public PagedList<SalaryHistoryDto> GetSalaries(Pager pager);
         public SalaryHistoryDto GetSalary(int id);
         public void EditSalary(SalaryHistoryDto salarDto);
         public void DeleteSalary(int id);

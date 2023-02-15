@@ -1,7 +1,9 @@
 ﻿using DAL.Interface;
 using DTOs;
+using ELM.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -24,12 +26,23 @@ namespace EmpLeave.Api.Controllers
             }
            return BadRequest();
         }
-        [HttpGet("GetSalaries")]
-        public IActionResult GetSalaries()
+        [HttpPost("GetSalaries")]
+        public IActionResult GetSalaries(Pager pager)
         {
-            var response = repositroy.GetSalaries();
-            if (response != null)
-             return Ok(response);
+
+            var allSalaries = repositroy.GetSalaries(pager);
+            var metadata = new
+            {
+                allSalaries.TotalCount,
+                allSalaries.PageSize,
+                allSalaries.TotalPages,
+                allSalaries.CurrentPage,
+                allSalaries.HasPrevious,
+                allSalaries.HasNext,
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            if (allSalaries != null)
+             return Ok(allSalaries);
             return BadRequest();
         }
         [HttpGet("GetById/{Id}")]

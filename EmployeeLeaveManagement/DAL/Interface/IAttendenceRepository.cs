@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using ELM.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace DAL.Interface
 {
     public interface IAttendenceRepository
     {
-        List<AttendenceDto> GetAllAttendences();
+        PagedList<AttendenceDto> GetAllAttendences(Pager paging);
         bool  AddAttendence(AttendenceDto attendenceDto);
         bool DeleteAttendence(int id);
         AttendenceDto GetById(int id);

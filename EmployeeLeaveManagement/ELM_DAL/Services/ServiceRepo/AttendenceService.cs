@@ -1,7 +1,10 @@
 ﻿using DTOs;
+using ELM.Helper;
 using ELM.Web.Services.Interface;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace ELM.Web.Services.ServiceRepo
 {
@@ -15,19 +18,31 @@ namespace ELM.Web.Services.ServiceRepo
             _httpService = httpService;
             _configuration = configuration;
         }
-        public async Task<List<AttendenceDto>> GetAttendences()
+        public async Task<Response<AttendenceDto>> GetAttendences(Pager paging)
         {
-            List<AttendenceDto> response = new();
+            Response<AttendenceDto> responseDto = new();
             try
             {
-                response = await _httpService.GetFromJsonAsync<List<AttendenceDto>>($"{Apiroute()}AttendenceApi/GetAllAttendences");
-                return response;
+
+                string data = JsonConvert.SerializeObject(paging);
+                StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
+                var response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
+                if (!response.IsSuccessStatusCode)
+                    return new Response<AttendenceDto>();
+                if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
+                {
+                    var metadata = keys.FirstOrDefault();
+                    responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
+                }
+                string result = await response.Content.ReadAsStringAsync();
+                responseDto.DataList = JsonConvert.DeserializeObject<List<AttendenceDto>>(result);
+                return responseDto;
             }
             catch (Exception ex)
             {
-                throw;
+                responseDto.DataList = null;
             }
-            return null;
+            return new Response<AttendenceDto>();
         }
         public async Task AddAttendence(AttendenceDto attendenceDto)
         {

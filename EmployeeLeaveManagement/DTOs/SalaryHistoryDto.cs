@@ -14,7 +14,7 @@ namespace DTOs
         public double NewSalary { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        public DateTime IncrementDate { get; set; }
+        public DateTime IncrementDate { get; set; } = DateTime.Now;
         public int? EmployeeId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
