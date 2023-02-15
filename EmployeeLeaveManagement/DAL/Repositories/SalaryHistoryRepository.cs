@@ -36,6 +36,22 @@ namespace DAL.Repositories
             try
             {
                 var salaries = dbContext.SalaryHistories.Include(x => x.Employee).AsQueryable();
+                if (pager.StartingDate is not null && pager.CurrentDate != DateTime.MinValue && pager.EmployeeId > 0)
+                {
+                    salaries = salaries.Where(x => x.IncrementDate >= pager.StartingDate &&
+                    x.IncrementDate <= pager.CurrentDate &&
+                    x.EmployeeId == pager.EmployeeId);
+                }
+                else if (pager.EmployeeId > 0)
+                {
+                    salaries = salaries.Where(x => x.EmployeeId == pager.EmployeeId);
+                }
+                else if (pager.StartingDate is not null && pager.CurrentDate != DateTime.MinValue)
+                {
+                    salaries = salaries.Where(x => x.IncrementDate >= pager.StartingDate && x.IncrementDate <= pager.CurrentDate);
+                }
+                else
+                    salaries = salaries.Where(x => x.IncrementDate <= pager.CurrentDate);
                 var paginatedList = PagedList<SalaryHistory>.ToPagedList(salaries, pager.CurrentPage, pager.PageSize);
                 var SalariesDto = ToDto(paginatedList);
                 return new PagedList<SalaryHistoryDto>

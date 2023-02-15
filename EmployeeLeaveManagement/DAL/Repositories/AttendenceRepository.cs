@@ -57,6 +57,24 @@ namespace DAL.Repositories
         public PagedList<AttendenceDto> GetAllAttendences(Pager paging)
         {
             var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
+            if (paging.StartingDate is not null && paging.CurrentDate != DateTime.MinValue && paging.EmployeeId > 0)
+            {
+                attendences = attendences.
+                    Where(x => x.AttendenceDate >= paging.StartingDate
+                    && x.AttendenceDate <= paging.CurrentDate
+                    && x.EmployeeId == paging.EmployeeId);
+            }
+            else if (paging.StartingDate is not null && paging.CurrentDate != DateTime.MinValue)
+            {
+                attendences = attendences.Where(x => x.AttendenceDate <= paging.CurrentDate && x.AttendenceDate >= paging.StartingDate);
+            }
+            else if (paging.EmployeeId > 0)
+            {
+                attendences = attendences.Where(x => x.EmployeeId == paging.EmployeeId);
+            }
+            else
+                attendences = attendences.Where(x => x.AttendenceDate <= paging.CurrentDate);
+           
             var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
             var attendenceDto = ToDtos(paginatedList);
             return new PagedList<AttendenceDto>

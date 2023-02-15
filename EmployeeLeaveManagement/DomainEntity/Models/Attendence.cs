@@ -10,7 +10,6 @@ namespace DomainEntity.Models
         public DateTime AttendenceDate { get; set; }
         [Required]
         public DateTime? TimeIn { get; set; }
-        [Required]
         public DateTime? Timeout { get; set; }
         [Required]
         public string HostName { get; set; }

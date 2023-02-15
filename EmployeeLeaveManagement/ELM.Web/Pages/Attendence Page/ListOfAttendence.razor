@@ -3,18 +3,50 @@
 @inherits AttendenceListBase
 <h3>List Of Attendence</h3>
 <div class="row">
-    <div class="input-group mb-3">
-        <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
-            <InputText class="form-control" @bind-Value="Paging.search" />
+  <div class="input-group mb-3">
+    <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
+       <div class="mb-1">
+          <div class="row">
+             <div class="col-md-6">
+                 <label for="Name" class="form-label">Starting Date</label>
+             </div>
+            <div class="col-md-6">
+               <label for="Name" class="form-label">Current Date</label>
+            </div>
+          </div>
+       </div>
+       <div class="mb-2">
+          <div class="row">    
+              <div class="col-md-6">
+                    <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="Paging.StartingDate" />
+              </div> 
+              <div class="col-md-6">
+                    <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="Paging.CurrentDate" />
+              </div>
+          </div>
+       </div>
+       <div class="mb-3">
+                <label class="mb-2">Employee Name</label>
+                <div class="col-md-10">
+                    <InputSelect class="form-control" @bind-Value="Paging.EmployeeId">
+                        <option selected disabled value="0">Employee Name List</option>
+                        @foreach (var employee in EmployeesList)
+                        {
+                            <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                        }
+                    </InputSelect>
+                </div>
+       </div>
+            <br />
             <button>Search</button>
-        </EditForm>
+    </EditForm>
     </div>
     <div class="col-md-6">
         <a href='/Add_Attendence' class="btn btn-primary" role="button">
             <i class="fas fa-user-plus"></i>
             Add Attendence
         </a>
-    </div>
+  </div>
 </div>
 <br />
 @if (AttendenceDtoList == null)

@@ -28,10 +28,10 @@ builder.Services.AddCors(policy =>
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("HangFire")));
 builder.Services.AddHangfire(x =>
 {
-    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DBConnection"));
+    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFire"));
 });
 builder.Services.AddHangfireServer();
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
