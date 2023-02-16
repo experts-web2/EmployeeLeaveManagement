@@ -36,22 +36,22 @@ namespace DAL.Repositories
             try
             {
                 var salaries = dbContext.SalaryHistories.Include(x => x.Employee).AsQueryable();
-                if (pager.StartingDate is not null && pager.CurrentDate != DateTime.MinValue && pager.EmployeeId > 0)
+                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue && pager.EmployeeId > 0)
                 {
-                    salaries = salaries.Where(x => x.IncrementDate >= pager.StartingDate &&
-                    x.IncrementDate <= pager.CurrentDate &&
+                    salaries = salaries.Where(x => x.IncrementDate >= pager.StartDate &&
+                    x.IncrementDate <= pager.EndDate &&
                     x.EmployeeId == pager.EmployeeId);
                 }
                 else if (pager.EmployeeId > 0)
                 {
                     salaries = salaries.Where(x => x.EmployeeId == pager.EmployeeId);
                 }
-                else if (pager.StartingDate is not null && pager.CurrentDate != DateTime.MinValue)
+                else if (pager.StartDate?.Date !=DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue)
                 {
-                    salaries = salaries.Where(x => x.IncrementDate >= pager.StartingDate && x.IncrementDate <= pager.CurrentDate);
+                    salaries = salaries.Where(x => x.IncrementDate >= pager.StartDate && x.IncrementDate <= pager.EndDate);
                 }
                 else
-                    salaries = salaries.Where(x => x.IncrementDate <= pager.CurrentDate);
+                    salaries = salaries.Where(x => x.IncrementDate <= pager.EndDate);
                 var paginatedList = PagedList<SalaryHistory>.ToPagedList(salaries, pager.CurrentPage, pager.PageSize);
                 var SalariesDto = ToDto(paginatedList);
                 return new PagedList<SalaryHistoryDto>

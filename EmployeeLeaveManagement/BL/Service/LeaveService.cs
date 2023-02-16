@@ -97,13 +97,13 @@ namespace BL.Service
             try
             {
                 IQueryable<Leave> allEmpLeaves = _genericRepository.GetAll().Include(x => x.Employee);
-                if (!string.IsNullOrEmpty(pager.search))
+                if (!string.IsNullOrEmpty(pager.Search))
                 {
                     allEmpLeaves = allEmpLeaves.
-                        Where(x => x.Employee.FirstName.Contains(pager.search.Trim()) ||
-                              x.Employee.LastName.Contains(pager.search.Trim()) ||
-                              x.Employee.Email.Contains(pager.search.Trim()) ||
-                              x.Employee.Address.Contains(pager.search.Trim()));
+                        Where(x => x.Employee.FirstName.Contains(pager.Search.Trim()) ||
+                              x.Employee.LastName.Contains(pager.Search.Trim()) ||
+                              x.Employee.Email.Contains(pager.Search.Trim()) ||
+                              x.Employee.Address.Contains(pager.Search.Trim()));
                 }
                 var paginatedList = PagedList<Leave>.ToPagedList(allEmpLeaves, pager.CurrentPage, pager.PageSize);
                 var leaveDtos = ToDtos(paginatedList);

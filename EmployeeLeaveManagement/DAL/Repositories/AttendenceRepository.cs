@@ -57,23 +57,23 @@ namespace DAL.Repositories
         public PagedList<AttendenceDto> GetAllAttendences(Pager paging)
         {
             var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
-            if (paging.StartingDate is not null && paging.CurrentDate != DateTime.MinValue && paging.EmployeeId > 0)
+            if (paging.StartDate?.Date != DateTime.Now.Date && paging.EndDate.Date != DateTime.MinValue && paging.EmployeeId > 0)
             {
                 attendences = attendences.
-                    Where(x => x.AttendenceDate >= paging.StartingDate
-                    && x.AttendenceDate <= paging.CurrentDate
+                    Where(x => x.AttendenceDate >= paging.StartDate
+                    && x.AttendenceDate <= paging.EndDate
                     && x.EmployeeId == paging.EmployeeId);
             }
-            else if (paging.StartingDate is not null && paging.CurrentDate != DateTime.MinValue)
+            else if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate.Date != DateTime.MinValue)
             {
-                attendences = attendences.Where(x => x.AttendenceDate <= paging.CurrentDate && x.AttendenceDate >= paging.StartingDate);
+                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate && x.AttendenceDate >= paging.StartDate);
             }
             else if (paging.EmployeeId > 0)
             {
                 attendences = attendences.Where(x => x.EmployeeId == paging.EmployeeId);
             }
             else
-                attendences = attendences.Where(x => x.AttendenceDate <= paging.CurrentDate);
+                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate);
            
             var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
             var attendenceDto = ToDtos(paginatedList);
