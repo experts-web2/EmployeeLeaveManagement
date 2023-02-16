@@ -4,12 +4,14 @@
 <h3>Alert</h3>
 <div class="row">
 <div class="input-group mb-3">
+
     <EditForm Model="Pager" OnValidSubmit="()=>GetAll()">
+          
             <InputDate class="form-control-sm" @bind-Value="Pager.StartDate" />
             <InputDate class="form-control-sm" @bind-Value="Pager.EndDate" />
  @*       <InputText class="form-control" @bind-Value="Pager.search" />*@
-            <InputSelect class="form-control-sm" @bind-Value="Pager.search">
-                <option selected disabled value="-1">Employees</option>
+            <InputSelect class="form-control-sm" @bind-Value="Pager.Search">
+                <option selected disabled value="0">Employees</option>
                 @foreach (var alert in Alerts)
                 {
                     <option value="@alert.EmployeeId">@alert.Employee.FirstName</option>
@@ -54,4 +56,5 @@ else
             CurrentPage="Pager.CurrentPage"
             HasNext="Pager.HasNext"
             HasPrevious="Pager.HasPrevious"
-            TotalPages="Pager.TotalPages" />
+            TotalPages="Pager.TotalPages" 
+            />

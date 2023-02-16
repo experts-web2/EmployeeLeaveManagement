@@ -29,6 +29,9 @@ namespace EmpLeave.Api.Controllers
                     Alerts.CurrentPage,
                     Alerts.HasPrevious,
                     Alerts.HasNext,
+                    pager.StartDate,
+                    pager.EndDate,
+                    pager.Search
                 };
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(Alerts);

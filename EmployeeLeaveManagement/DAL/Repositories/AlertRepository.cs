@@ -28,27 +28,27 @@ namespace DAL.Repositories
         public PagedList<Alert> GetAllAlert(Pager pager)
         {
             var Alerts = _dbContext.Alerts.Include(x=>x.Employee).AsQueryable();
-            if(!string.IsNullOrEmpty(pager.search) && pager.StartDate != null && pager.EndDate != null)
+            if(!string.IsNullOrEmpty(pager.Search) && pager.StartDate != null && pager.EndDate != null)
             {
                 Alerts = Alerts.
-                    Where(x => (x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.search.Trim())) &&
+                    Where(x => (x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.Search.Trim())) &&
                             x.AlertDate.Date >= pager.StartDate.Value.Date &&
                              x.AlertDate.Date <= pager.EndDate.Value.Date);
 
             }
-           else if(!string.IsNullOrEmpty(pager.search) && pager.StartDate != null)
+           else if(!string.IsNullOrEmpty(pager.Search) && pager.StartDate != null)
             {
                 Alerts = Alerts.
-                    Where(x => (x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.search.Trim())) &&
+                    Where(x => (x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.Search.Trim())) &&
                             x.AlertDate.Date >= pager.StartDate.Value.Date);
             }
-           else if(!string.IsNullOrEmpty(pager.search)  && pager.EndDate != null)
+           else if(!string.IsNullOrEmpty(pager.Search)  && pager.EndDate != null)
             {
                 Alerts = Alerts.
-                    Where(x => (x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.search.Trim())) &&
+                    Where(x => (x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.Search.Trim())) &&
                              x.AlertDate.Date <= pager.EndDate.Value.Date);
             }
            else if(pager.StartDate != null && pager.EndDate != null)
@@ -58,11 +58,11 @@ namespace DAL.Repositories
                           x.AlertDate.Date <= pager.EndDate.Value.Date);
             }
 
-           else if (!string.IsNullOrEmpty(pager.search))
+           else if (!string.IsNullOrEmpty(pager.Search))
             {
                 Alerts = Alerts.
-                    Where(x => x.EmployeeId.ToString().Contains(pager.search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.search.Trim()));             
+                    Where(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.Search.Trim()));             
             }
            else if(pager.StartDate != null)
             {

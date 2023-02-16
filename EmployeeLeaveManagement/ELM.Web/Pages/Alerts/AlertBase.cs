@@ -16,11 +16,7 @@ namespace ELM.Web.Pages.Alerts
         public Pager Pager { get; set; } = new();
         public List<DomainEntity.Models.Alert> Alerts { get; set; } = new();
 
-        protected override async Task OnInitializedAsync()
-        {
-            await GetAll();
-          
-        }
+        protected override async Task OnInitializedAsync() => await GetAll();
         public async Task GetAll(int currentPage = 1)
         {
             Pager.CurrentPage = currentPage;
