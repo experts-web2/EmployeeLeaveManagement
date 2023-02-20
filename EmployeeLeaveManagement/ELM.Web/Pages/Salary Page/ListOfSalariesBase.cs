@@ -18,6 +18,9 @@ namespace ELM.Web.Pages.Salary_Page
         public List<SalaryHistoryDto> SalaryDtoList { get; set; } = new();
         public SalaryHistoryDto SelectedSalary { get; set; }=new();
         public List<Employee> EmployeesList { get; set; } = new();
+        public DateTime? StartDate { get; set; }=DateTime.Now.Date;
+        public DateTime EndDate { get; set; }=DateTime.Now.Date;
+        public string Search { get; set; } = string.Empty;
         public Pager Paging { get; set; } = new();
 
         public void SetSalaryId(int id)
@@ -32,6 +35,9 @@ namespace ELM.Web.Pages.Salary_Page
         public async Task GetAll(int currentPage=1)
         {
             Paging.CurrentPage = currentPage;
+            Paging.StartDate = StartDate;
+            Paging.EndDate = EndDate;
+            Paging.Search = Search;
            var SalaryDto = await SalaryService.GetSalaries(Paging);
             SalaryDtoList = SalaryDto.DataList;
             Paging = SalaryDto.Pager;

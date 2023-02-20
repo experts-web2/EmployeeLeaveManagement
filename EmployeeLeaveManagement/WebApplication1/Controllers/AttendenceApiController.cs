@@ -38,8 +38,6 @@ namespace EmpLeave.Api.Controllers
                 allAttendences.CurrentPage,
                 allAttendences.HasPrevious,
                 allAttendences.HasNext,
-                paging.StartDate,
-                paging.EndDate,
                 paging.Search
             };
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));

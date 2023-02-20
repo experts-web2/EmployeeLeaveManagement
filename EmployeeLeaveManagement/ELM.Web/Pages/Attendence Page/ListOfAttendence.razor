@@ -18,17 +18,17 @@
        <div class="mb-2">
           <div class="row">    
               <div class="col-md-6">
-                    <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="Paging.StartDate" />
+                    <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="StartDate" />
               </div> 
               <div class="col-md-6">
-                    <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="Paging.EndDate" />
+                    <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="EndDate" />
               </div>
           </div>
        </div>
        <div class="mb-3">
                 <label class="mb-2">Employee Name</label>
                 <div class="col-md-10">
-                    <InputSelect class="form-control" @bind-Value="Paging.Search">
+                    <InputSelect class="form-control" @bind-Value="Search">
                         <option selected disabled value="0">Employee Name List</option>
                         @foreach (var employee in EmployeesList)
                         {
