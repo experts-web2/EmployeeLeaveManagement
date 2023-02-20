@@ -1,9 +1,13 @@
-﻿using DAL.Interface;
+﻿using DAL.Configrations;
+using DAL.Interface;
 using DomainEntity.Models;
 using ELM.Helper;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-
+using System;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DAL.Repositories
 {
@@ -25,77 +29,57 @@ namespace DAL.Repositories
             return _dbContext.Alerts.Where(X => X.AlertDate.Date == DateTime.Now.Date).ToList();
         }
 
-        public PagedList<Alert> GetAllAlert(Pager pager)
+        public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null)
         {
-            var Alerts = _dbContext.Alerts.Include(x=>x.Employee).AsQueryable();
-            if(!string.IsNullOrEmpty(pager.Search) && pager.StartDate != null && pager.EndDate != null)
-            {
-                Alerts = Alerts.
-                    Where(x => (x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.Search.Trim())) &&
-                            x.AlertDate.Date >= pager.StartDate.Value.Date &&
-                             x.AlertDate.Date <= pager.EndDate.Value.Date);
+            if (predicate == null)
+                predicate = PredicateBuilder.True<Alert>();
+            else
+                predicate = predicate.And(predicate);
 
-            }
-           else if(!string.IsNullOrEmpty(pager.Search) && pager.StartDate != null)
-            {
-                Alerts = Alerts.
-                    Where(x => (x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.Search.Trim())) &&
-                            x.AlertDate.Date >= pager.StartDate.Value.Date);
-            }
-           else if(!string.IsNullOrEmpty(pager.Search)  && pager.EndDate != null)
-            {
-                Alerts = Alerts.
-                    Where(x => (x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.Search.Trim())) &&
-                             x.AlertDate.Date <= pager.EndDate.Value.Date);
-            }
-           else if(pager.StartDate != null && pager.EndDate != null)
-            {
-                Alerts = Alerts.
-                 Where(x => x.AlertDate.Date >= pager.StartDate.Value.Date &&
-                          x.AlertDate.Date <= pager.EndDate.Value.Date);
-            }
+            var Alerts = _dbContext.Alerts.Include(x => x.Employee).AsQueryable();
+      
 
-           else if (!string.IsNullOrEmpty(pager.Search))
+             if (!string.IsNullOrEmpty(pager.Search))
             {
-                Alerts = Alerts.
-                    Where(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.Search.Trim()));             
+                predicate = predicate.And(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
+                           x.Employee.FirstName.Contains(pager.Search.Trim()));
             }
-           else if(pager.StartDate != null)
+             if (pager.StartDate != null)
             {
-                Alerts = Alerts.Where(x => x.AlertDate.Date >= pager.StartDate.Value.Date);
+                predicate = predicate.And(x => x.AlertDate.Date >= pager.StartDate.Value.Date);
             }
-          else if (pager.EndDate != null)
+            if (pager.EndDate != null)
             {
-                Alerts = Alerts.Where(x => x.AlertDate.Date <= pager.EndDate.Value.Date);
+                predicate = predicate.And(x => x.AlertDate.Date <= pager.EndDate.Value.Date);
             }
-
+            Alerts = Alerts.
+                Where(predicate);
+                                                                                                                                               
+  
             var paginatedList = PagedList<Alert>.ToPagedList(Alerts, pager.CurrentPage, pager.PageSize);
-            return new PagedList<Alert>
-                (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
-           
+                return new PagedList<Alert>
+                    (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
+          
         }
 
         public List<Alert> AddAbsentEmployeeAlert()
         {
             //Querry For getting Employees Whose are Absent
             var AbsentEmployees = (from Employees in _dbContext.Employees
-                                  join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now.Date)) on Employees.Id equals Attendences.EmployeeId
+                                  join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now.Date) || x.TimeIn == null || x.Timeout == null) on Employees.Id equals Attendences.EmployeeId
                                   into employeeAtendence
                                   from attendence in employeeAtendence.DefaultIfEmpty()
                                   where attendence == null
 
                                   select Employees).ToList();
             List<Alert> Alerts = new List<Alert>();
+
             foreach (var Employee in AbsentEmployees)
             {
               Alert  Alert = new Alert()
                 {
                     AlertDate = DateTime.Now,
-                    AlertType = "Absent Alert",
+                    AlertType = SetAlertType(Employee),
                     EmployeeId = Employee.Id,
   
                 };
@@ -105,5 +89,15 @@ namespace DAL.Repositories
             _dbContext.SaveChanges();
             return Alerts;
         }
+    public string SetAlertType(Employee employee)
+    {
+            if (employee.Attendences.Where(x => x.Timeout == null) is null)
+                return "CheckOut Missing";
+            if (employee.Attendences.Where(x => x.TimeIn == null) is null)
+                return "CheckIn Missing";
+            return "Absent";
+
+    }
+
     }
 }

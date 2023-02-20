@@ -7,10 +7,10 @@
 
     <EditForm Model="Pager" OnValidSubmit="()=>GetAll()">
           
-            <InputDate class="form-control-sm" @bind-Value="Pager.StartDate" />
-            <InputDate class="form-control-sm" @bind-Value="Pager.EndDate" />
+            <InputDate class="form-control-sm" @bind-Value="StartDate" />
+            <InputDate class="form-control-sm" @bind-Value="EndDate" />
  @*       <InputText class="form-control" @bind-Value="Pager.search" />*@
-            <InputSelect class="form-control-sm" @bind-Value="Pager.Search">
+            <InputSelect class="form-control-sm" @bind-Value="search">
                 <option selected disabled value="0">Employees</option>
                 @foreach (var alert in Alerts)
                 {
