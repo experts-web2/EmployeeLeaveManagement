@@ -36,6 +36,7 @@ namespace DAL.Configrations
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
         {
             return first.Compose(second, Expression.OrElse);
+
         }
 
 
