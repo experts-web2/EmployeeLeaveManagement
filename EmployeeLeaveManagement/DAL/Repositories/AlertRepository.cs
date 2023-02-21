@@ -71,7 +71,7 @@ namespace DAL.Repositories
                                   from attendence in employeeAtendence.DefaultIfEmpty()
                                   where attendence == null
 
-                                  select Employees).ToList();
+                                  select Employees).Include(x=>x.Attendences).ToList();
             List<Alert> Alerts = new List<Alert>();
 
             foreach (var Employee in AbsentEmployees)
@@ -91,9 +91,10 @@ namespace DAL.Repositories
         }
     public string SetAlertType(Employee employee)
     {
-            if (employee.Attendences.Where(x => x.Timeout == null) is null)
+
+            if (employee.Attendences.Any(x => x.Timeout == null))
                 return "CheckOut Missing";
-            if (employee.Attendences.Where(x => x.TimeIn == null) is null)
+            if (employee.Attendences.Any(x => x.TimeIn == null))
                 return "CheckIn Missing";
             return "Absent";
 
