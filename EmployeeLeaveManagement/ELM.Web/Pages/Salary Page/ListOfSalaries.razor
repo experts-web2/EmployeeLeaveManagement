@@ -1,8 +1,46 @@
-﻿@page "/ListOfSalaries" 
+﻿@page "/ListOfSalaries"
 @using ELM.Web.Pages.Salary_Page
 @inherits ListOfSalariesBase
 <h3>List Of Salaries</h3>
 <div class="row">
+    <div class="input-group mb-3">
+        <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
+            <div class="mb-1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="Name" class="form-label">Starting Date</label>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Name" class="form-label">Current Date</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="StartDate" />
+                    </div>
+                    <div class="col-md-6">
+                        <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="EndDate" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="mb-3">
+                <label class="mb-2">Employee Name</label>
+                <div class="col-md-10">
+                    <InputSelect class="form-control" @bind-Value="Search">
+                        <option selected disabled value="0">Employee Name List</option>
+                        @foreach (var employee in EmployeesList)
+                        {
+                            <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+            <button>Search</button>
+        </EditForm>
+    </div>
     <div class="col-md-6">
         <a href='/Add_Salary' class="btn btn-primary" role="button">
             <i class="fas fa-user-plus"></i>
@@ -10,6 +48,7 @@
         </a>
     </div>
 </div>
+<br />
 @if (SalaryDtoList == null)
 {
     <p><em>Loading...</em></p>
@@ -17,7 +56,7 @@
 else
 {
     <table class="table table-striped align-middle table-bordered">
-         <thead class="table-success">
+        <thead class="table-success">
             <tr>
                 <th>New Salary</th>
                 <th>Increment Date</th>
@@ -26,22 +65,22 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach(var salary in SalaryDtoList)
+            @foreach (var salary in SalaryDtoList)
             {
-              <tr>
-                <td>@salary.NewSalary</td>
-                <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
-                <td>@salary.FirstName  @salary.LastName</td>
+                <tr>
+                    <td>@salary.NewSalary</td>
+                    <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
+                    <td>@salary.FirstName  @salary.LastName</td>
                     <td>
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
                         @onclick="(() => DeleteConfirm(salary.ID))">
                             Delete
                         </button>
-                          <a href='/edit/salary/@salary.ID' class="btn btn-outline-dark" role="button">
+                        <a href='/edit/salary/@salary.ID' class="btn btn-outline-dark" role="button">
                             Edit
                         </a>
                     </td>
-              </tr>
+                </tr>
             }
         </tbody>
     </table>
@@ -79,5 +118,10 @@ else
         </div>
     </div>
 }
+<Pagination ChangePage="GetAll"
+            CurrentPage="Paging.CurrentPage"
+            HasNext="Paging.HasNext"
+            HasPrevious="Paging.HasPrevious"
+            TotalPages="Paging.TotalPages" />
 
 

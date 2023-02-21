@@ -1,5 +1,7 @@
 ﻿
 using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
 
 namespace DAL.Configrations
@@ -36,6 +38,7 @@ namespace DAL.Configrations
             return first.Compose(second, Expression.OrElse);
         }
 
+
         /// <summary>    
         /// Negates the predicate.    
         /// </summary>    
@@ -61,6 +64,7 @@ namespace DAL.Configrations
             // create a merged lambda expression with parameters from the first expression    
             return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
         }
+
 
         class ParameterRebinder : ExpressionVisitor
         {

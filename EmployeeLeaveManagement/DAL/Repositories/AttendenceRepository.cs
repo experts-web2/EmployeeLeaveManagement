@@ -1,10 +1,13 @@
-﻿using DAL.Interface;
+﻿using DAL.Configrations;
+using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +44,7 @@ namespace DAL.Repositories
         {
             Attendence attendence = new()
             {
-                Id=attendenceDto.ID,
+                Id = attendenceDto.ID,
                 AttendenceDate = attendenceDto.AttendenceDate,
                 TimeIn = attendenceDto.TimeIn,
                 Timeout = attendenceDto.Timeout,
@@ -53,11 +56,29 @@ namespace DAL.Repositories
             };
             return attendence;
         }
-        public List<AttendenceDto> GetAllAttendences()
+        public PagedList<AttendenceDto> GetAllAttendences(Pager paging, Expression<Func<Attendence, bool>> predicate = null)
         {
-            var attendences = _dbContext.Attendences.Include(x=>x.Employee).ToList();
-            List<AttendenceDto> AttendenceDto = ToDtos(attendences);
-            return AttendenceDto;
+
+            if (predicate == null)
+                predicate = PredicateBuilder.True<Attendence>();
+            else
+                predicate = predicate.And(predicate);
+            var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
+            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate.Date != DateTime.MinValue)
+            {
+                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate && x.AttendenceDate >= paging.StartDate);
+            }
+            if (!string.IsNullOrEmpty(paging.Search))
+            {
+                attendences = attendences.Where(x => x.EmployeeId.ToString() == paging.Search);
+            }
+            else
+                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate);
+
+            var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
+            var attendenceDto = ToDtos(paginatedList);
+            return new PagedList<AttendenceDto>
+                (attendenceDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
         }
         private List<AttendenceDto> ToDtos(List<Attendence> attendences)
         {
@@ -137,7 +158,7 @@ namespace DAL.Repositories
             }
             try
             {
-               AttendenceDto employeeDto = new()
+                AttendenceDto employeeDto = new()
                 {
                     ID = attendence.Id,
                     AttendenceDate = attendence.AttendenceDate,
@@ -145,10 +166,10 @@ namespace DAL.Repositories
                     Timeout = attendence.Timeout,
                     HostName = attendence.HostName,
                     IpAddress = attendence.IpAddress,
-                    FirstName=attendence.Employee.FirstName,
-                    LastName=attendence.Employee.LastName,
+                    FirstName = attendence.Employee.FirstName,
+                    LastName = attendence.Employee.LastName,
                     Longitude = attendence.Longitude,
-                   EmployeeId=attendence.EmployeeId
+                    EmployeeId = attendence.EmployeeId
 
                 };
                 return employeeDto;
