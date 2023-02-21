@@ -41,13 +41,13 @@ namespace DAL.Repositories
         public PagedList<EmployeeDto> GetAllEmployee(Pager pager)
         {
             var employees = Db.Employees.Include(x => x.Leaves).AsQueryable();
-            if (!string.IsNullOrEmpty(pager.search))
+            if (!string.IsNullOrEmpty(pager.Search))
             {
                 employees = employees.
-                    Where(x => x.FirstName.Contains(pager.search.Trim()) ||
-                           x.LastName.Contains(pager.search.Trim()) ||
-                           x.Address.Contains(pager.search.Trim()) ||
-                           x.Email.Contains(pager.search.Trim()));
+                    Where(x => x.FirstName.Contains(pager.Search.Trim()) ||
+                           x.LastName.Contains(pager.Search.Trim()) ||
+                           x.Address.Contains(pager.Search.Trim()) ||
+                           x.Email.Contains(pager.Search.Trim()));
             }
             var paginatedList= PagedList<Employee>.ToPagedList(employees, pager.CurrentPage, pager.PageSize);
             var employeesDto = ToDtos(paginatedList);          

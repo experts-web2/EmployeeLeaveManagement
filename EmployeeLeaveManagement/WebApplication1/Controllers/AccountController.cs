@@ -15,7 +15,7 @@ namespace EmpLeave.Api.Controllers
             _userRepository = userRepository;
         }
         [HttpGet]
-       // [Authorize(AuthenticationSchemes = "Bearer")]
+        // [Authorize(AuthenticationSchemes = "Bearer")]
         public IActionResult GetAllUsers()
         {
             var Users = _userRepository.GetAllUser();

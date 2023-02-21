@@ -1,4 +1,5 @@
-﻿using DAL.Interface;
+﻿using DAL.Configrations;
+using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,11 +33,26 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        public PagedList<SalaryHistoryDto> GetSalaries(Pager pager)
+        public PagedList<SalaryHistoryDto> GetSalaries(Pager pager, Expression<Func<SalaryHistory, bool>> predicate = null)
         {
             try
             {
+                if (predicate == null)
+                    predicate = PredicateBuilder.True<SalaryHistory>();
+                else
+                    predicate = predicate.And(predicate);
                 var salaries = dbContext.SalaryHistories.Include(x => x.Employee).AsQueryable();
+                if (!string.IsNullOrEmpty(pager.Search))
+                {
+                    predicate = predicate.And(x => x.EmployeeId.ToString() == pager.Search);
+                }
+                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue)
+                {
+                    predicate = predicate.And(x => x.IncrementDate >= pager.StartDate && x.IncrementDate <= pager.EndDate);
+                }
+                else
+                    predicate = predicate.And(x => x.IncrementDate <= pager.EndDate);
+                salaries = salaries.Where(predicate);
                 var paginatedList = PagedList<SalaryHistory>.ToPagedList(salaries, pager.CurrentPage, pager.PageSize);
                 var SalariesDto = ToDto(paginatedList);
                 return new PagedList<SalaryHistoryDto>
@@ -95,7 +112,7 @@ namespace DAL.Repositories
         {
             SalaryHistory salary = new()
             {
-                Id=salaryDto.ID,
+                Id = salaryDto.ID,
                 NewSalary = salaryDto.NewSalary,
                 IncrementDate = salaryDto.IncrementDate,
                 EmployeeId = salaryDto.EmployeeId
@@ -109,7 +126,7 @@ namespace DAL.Repositories
             {
                 SalaryHistoryDto salaryDto = new()
                 {
-                    ID=salary.Id,
+                    ID = salary.Id,
                     NewSalary = salary.NewSalary,
                     IncrementDate = salary.IncrementDate,
                     FirstName = salary.Employee.FirstName,
@@ -123,12 +140,12 @@ namespace DAL.Repositories
         {
             SalaryHistoryDto salaryDto = new()
             {
-                ID=salary.Id,
+                ID = salary.Id,
                 NewSalary = salary.NewSalary,
                 IncrementDate = salary.IncrementDate,
                 FirstName = salary.Employee.FirstName,
                 LastName = salary.Employee.LastName,
-                EmployeeId=salary.EmployeeId
+                EmployeeId = salary.EmployeeId
             };
             return salaryDto;
         }
