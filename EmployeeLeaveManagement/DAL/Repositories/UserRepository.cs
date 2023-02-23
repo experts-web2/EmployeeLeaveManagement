@@ -45,17 +45,17 @@ namespace DAL.Repositories
                 {
                     UserName = registerDto.Email,
                     Email = registerDto.Email,
-                    FirstName = registerDto.FirstName,
-                    LastName = registerDto.LastName
+                 //   FirstName = registerDto.FirstName,
+                   // LastName = registerDto.LastName
 
                 };
                 IdentityResult identityResult = await _userManager.CreateAsync(user, registerDto.Password);
                 if (!identityResult.Succeeded) throw new InvalidOperationException($"Error: {string.Join("\n", identityResult.Errors.Select(x => x.Description))}");
-                foreach (var role in registerDto.Roles)
+            //    foreach (var role in registerDto.Roles)
                 {
-                    var result = await _userManager.AddToRoleAsync(user, role);
-                    if (!result.Succeeded) throw
-                            new InvalidOperationException($"Error: {string.Join("\n", result.Errors.Select(x => x.Description))}");
+              //      var result = await _userManager.AddToRoleAsync(user, role);
+             //       if (!result.Succeeded) throw
+             //               new InvalidOperationException($"Error: {string.Join("\n", result.Errors.Select(x => x.Description))}");
                 }
             }
             catch (Exception)
