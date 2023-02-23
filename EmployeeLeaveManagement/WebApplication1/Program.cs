@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();
@@ -28,10 +29,10 @@ builder.Services.AddCors(policy =>
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("HangFire")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 builder.Services.AddHangfire(x =>
 {
-    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangFire"));
+    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DBConnection"));
 });
 builder.Services.AddHangfireServer();
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();

@@ -39,7 +39,6 @@ namespace EmpLeave.Api.Controllers
                 allSalaries.CurrentPage,
                 allSalaries.HasPrevious,
                 allSalaries.HasNext,
-                pager.Search
             };
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             if (allSalaries != null)

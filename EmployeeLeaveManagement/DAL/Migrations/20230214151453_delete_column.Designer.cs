@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230131154952_initation")]
-    partial class initation
+    [Migration("20230214151453_delete_column")]
+    partial class delete_column
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,31 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("DomainEntity.Models.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("AlertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AlertType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Alerts");
+                });
+
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
                 {
                     b.Property<int>("Id")
@@ -32,11 +57,16 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("AttendenceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int?>("EmployeeId")
+                        .IsRequired()
                         .HasColumnType("int");
+
+                    b.Property<string>("HostName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
@@ -48,15 +78,13 @@ namespace DAL.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("TimeIn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Timeout")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("hostName")
+                    b.Property<DateTime?>("TimeIn")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Timeout")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -76,6 +104,9 @@ namespace DAL.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("CurrentSalary")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("DateOfBrith")
                         .HasColumnType("datetime2");
@@ -128,6 +159,31 @@ namespace DAL.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Leaves");
+                });
+
+            modelBuilder.Entity("DomainEntity.Models.SalaryHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("IncrementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("NewSalary")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("SalaryHistories");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.User", b =>
@@ -235,15 +291,15 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "71543425-6ce3-401b-9d0a-06b2401bb6f5",
-                            ConcurrencyStamp = "c2d49373-db7f-4d09-8e76-60a65fbb2bac",
+                            Id = "7909b04f-8d7f-4e9f-b1e7-e1b444b1216c",
+                            ConcurrencyStamp = "d764f662-048f-4ad5-9526-e70df93f096b",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "f1fe1c7f-3f79-4196-822c-a3140042e497",
-                            ConcurrencyStamp = "fca9cbea-1cbe-4dad-916e-e861d99cb37f",
+                            Id = "0d182f80-3677-4277-9961-5843186228b2",
+                            ConcurrencyStamp = "0ac2fee1-ecfc-4d88-9b59-d94c6f0fcc33",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -355,6 +411,15 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DomainEntity.Models.Alert", b =>
+                {
+                    b.HasOne("DomainEntity.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
                 {
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
@@ -370,6 +435,17 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
                         .WithMany("Leaves")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("DomainEntity.Models.SalaryHistory", b =>
+                {
+                    b.HasOne("DomainEntity.Models.Employee", "Employee")
+                        .WithMany("SalaryHistories")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -433,6 +509,8 @@ namespace DAL.Migrations
                     b.Navigation("Attendences");
 
                     b.Navigation("Leaves");
+
+                    b.Navigation("SalaryHistories");
                 });
 #pragma warning restore 612, 618
         }

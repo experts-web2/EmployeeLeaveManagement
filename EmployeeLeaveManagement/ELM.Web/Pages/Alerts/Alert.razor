@@ -1,0 +1,60 @@
+﻿@page "/Alert"
+@inherits AlertBase
+
+<h3>Alert</h3>
+<div class="row">
+<div class="input-group mb-3">
+
+    <EditForm Model="Pager" OnValidSubmit="()=>GetAll()">
+          
+            <InputDate class="form-control-sm" @bind-Value="StartDate" />
+            <InputDate class="form-control-sm" @bind-Value="EndDate" />
+ @*       <InputText class="form-control" @bind-Value="Pager.search" />*@
+            <InputSelect class="form-control-sm" @bind-Value="search">
+                <option selected disabled value="0">Employees</option>
+                @foreach (var alert in Alerts)
+                {
+                    <option value="@alert.EmployeeId">@alert.Employee.FirstName</option>
+                }
+            </InputSelect>
+        <button>Search</button>
+    </EditForm>
+</div>
+</div>
+@*<InputDate class="form-control-sm" @bind-Value="Pager.StartDate" />
+<InputDate class="form-control-sm" @bind-Value="Pager.EndDate" />
+<button class=" btn btn-sm btn-primary" @onclick="()=>GetAll()">Search</button>*@
+@if (Alerts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>AlertDate</th>
+                <th>AlertType</th>
+                <th>Employee</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var alert in Alerts)
+            {
+                <tr>
+                    
+                    <td>@alert.AlertDate</td>
+                    <td>@alert.AlertType</td>
+                    <td>@alert.Employee.FirstName</td>
+                
+                </tr>
+            }
+        </tbody>
+</table>
+}
+<Pagination ChangePage="GetAll"
+            CurrentPage="Pager.CurrentPage"
+            HasNext="Pager.HasNext"
+            HasPrevious="Pager.HasPrevious"
+            TotalPages="Pager.TotalPages" 
+            />
