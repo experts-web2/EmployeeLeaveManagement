@@ -3,7 +3,7 @@
 @inherits SigninBase
 
 <h3>Login</h3>
-<EditForm Model="@LogIn" OnValidSubmit="SignIn">
+<EditForm Model="@LogIn" OnValidSubmit="OnAfterRenderAsync">
     <DataAnnotationsValidator/>
 <div class="mb-3 row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>

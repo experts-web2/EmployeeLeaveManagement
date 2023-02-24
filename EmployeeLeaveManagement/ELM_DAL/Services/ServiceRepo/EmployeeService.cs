@@ -22,6 +22,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
         public async Task AddEmployee(EmployeeDto employeeDto)
         {
             await _httpService.PostAsJsonAsync($"{Apiroute()}employee", employeeDto);
+            
         }
         public async Task<Response<EmployeeDto>> GetAllEmployee(Pager paging)
         {

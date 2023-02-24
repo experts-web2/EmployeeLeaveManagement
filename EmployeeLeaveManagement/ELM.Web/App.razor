@@ -1,16 +1,6 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
-@*@using ELM.Web.Pages.AuthPage.LogCredential;
+﻿@inject NavigationManager nav
+@using ELM.Web.Pages.AuthPage
+@using ELM.Web.Pages.AuthPage.LogCredential;
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
@@ -22,14 +12,17 @@
                     <p>Authorizing...</p>
                 </Authorizing>
                 <NotAuthorized>
-                    
-                    @if (!context.User.Identity.IsAuthenticated)
+                    <LoginDisplay/>
+                 @if(new Uri(nav.Uri).AbsolutePath.StartsWith("/RegisterUser"))
                     {
-                        <SignIn/>
+                    
+                        <RegisterUser />
+
+                        
                     }
                     else
                     {
-                        <p>You are not authorized to access this resource.</p>
+                            <SignIn />
                     }
                 </NotAuthorized>
             </AuthorizeView>
@@ -38,9 +31,9 @@
         </Found>
         <NotFound>
           @*  <LayoutView Layout="@typeof(MainLayout)">*@
-        @* <LayoutView>
+        <LayoutView>
                 <p>Sorry, there's nothing at this address.</p>
             </LayoutView>
         </NotFound>
     </Router>
-</CascadingAuthenticationState>*@
+</CascadingAuthenticationState>

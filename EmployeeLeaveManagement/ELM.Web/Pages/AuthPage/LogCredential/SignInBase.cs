@@ -1,4 +1,6 @@
 ﻿using ELM.Shared;
+using ELM_DAL.Services.Interface;
+using ELM_DAL.Services.ServiceRepo;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,30 +15,43 @@ namespace EmpLeave.Web.Pages.AuthPage.LogCredential
         [Inject]
         private IRegisterService RegisterService { get; set; }
         [Inject]
+        private IAuthService authService { get; set; }
+        [Inject]
         public NavigationManager NavigationManager { get; set; }
         public LogIn LogIn { get; set; } = new();
         [CascadingParameter]
         Task<AuthenticationState> authenticationStateTask { get; set; }
-        [Inject]
-        IJSRuntime? JsRuntime { get; set; }
-
-        //private bool ShowErrors;
-        //private string Error = "";
+    
+        private bool ShowErrors;
+        private string Error = "";
         protected override async Task OnInitializedAsync()
         {
-            var user = (await authenticationStateTask).User;
-            if (user.Identity.IsAuthenticated) await JsRuntime.InvokeVoidAsync("history.back");
+            var user = (await authenticationStateTask);
+            
         }
-
-        public void SignIn()
+        protected async Task OnAfterRenderAsync()
         {
-          var response=  RegisterService.SignInCall(LogIn);
-            if (response.IsCompleted)
+            ShowErrors = false;
+
+            var result = await authService.Login(LogIn);
+
+            if (result.Successful)
             {
-                NavigationManager.NavigateTo("addemployee");
+                var returnUrl = new Uri(NavigationManager.Uri).AbsolutePath;
+              
+                if(returnUrl.Contains("login"))
+                     NavigationManager.NavigateTo("/");
+
+                else
+                    NavigationManager.NavigateTo(returnUrl);
+
+                StateHasChanged();
             }
-            NavigationManager.NavigateTo("login");
-        
+            else
+            {
+                Error = result.Error;
+                ShowErrors = true;
+            }
         }
         public void Cancel()
         {

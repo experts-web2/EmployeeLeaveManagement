@@ -1,10 +1,13 @@
+using Blazored.LocalStorage;
+using ELM.Shared;
 using ELM.Web.Data;
 using ELM.Web.Services.Interface;
 using ELM.Web.Services.ServiceRepo;
+using ELM_DAL.Services.Interface;
+using ELM_DAL.Services.ServiceRepo;
 using EmpLeave.Web.Services.Interface;
 using EmpLeave.Web.Services.ServiceRepo;
 using Microsoft.AspNetCore.Components.Authorization;
-using RetailStoreManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,13 +21,16 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IHttpClientService, HttpClientService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ISalaryHistory, SalaryHistoryService>();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpClient("api", o =>
 {
-    o.BaseAddress = new Uri("https://localhost:7150/api/");
+    o.BaseAddress = new Uri("https://localhost:7150/");
 });
 var app = builder.Build();
 app.UseAuthentication();
@@ -38,7 +44,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -1,28 +1,30 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace RetailStoreManagement
-{
+namespace ELM.Shared
+{ 
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly IHttpClientFactory _httpClient;
+       // private readonly IHttpClientFactory _httpClient;
+        private readonly ILocalStorageService _localStorage;
 
-        public ApiAuthenticationStateProvider(IHttpClientFactory httpClient)
+        public ApiAuthenticationStateProvider( ILocalStorageService localStorage)
         {
-            _httpClient = httpClient;
+          //  _httpClient = httpClient;
+            _localStorage = localStorage;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
-                var savedToken = "";// await _localStorage.GetItemAsync<string>("authToken");
+                var savedToken = await _localStorage.GetItemAsync<string>("authToken");
 
                 if (string.IsNullOrWhiteSpace(savedToken))
                 {
@@ -36,8 +38,9 @@ namespace RetailStoreManagement
 
                 throw ex;
             }
-           
+
         }
+
         public void MarkUserAsAuthenticated(string token)
         {
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
@@ -96,3 +99,4 @@ namespace RetailStoreManagement
         }
     }
 }
+
