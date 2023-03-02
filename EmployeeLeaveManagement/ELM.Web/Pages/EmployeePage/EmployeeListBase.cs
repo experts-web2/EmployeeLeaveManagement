@@ -15,12 +15,14 @@ namespace EmpLeave.Web.Pages.EmployeePage
         public List<EmployeeDto> EmployeeDtoList { get; set; } = new();
         public EmployeeDto SelectedEmployee { get; set; } = new();
         public Pager Paging { get; set; } = new();
+        public int Role { get; set; }
         public void SetEmployeeID(int id)
         {
             SelectedEmployee = EmployeeDtoList.FirstOrDefault(x => x.ID == id);
         }
         protected override async Task OnInitializedAsync()
         {
+            Role = 1;
             await GetAll();
         }
         public async Task GetAll(int currentPage = 1)

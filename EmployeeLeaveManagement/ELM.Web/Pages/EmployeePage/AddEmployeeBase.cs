@@ -14,6 +14,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
         public NavigationManager NavigationManager { get; set; }
         [Parameter]
         public int? ID { get; set; }
+        public int Role {get;set;}
         protected override async Task OnParametersSetAsync()
         {
             if (ID.HasValue)
@@ -24,13 +25,17 @@ namespace EmpLeave.Web.Pages.EmployeePage
         }
 
         protected async Task SaveEmployee()
+
+
         {
+
             if (ID.HasValue)
             {
                 await EmployeeService.UpdateEmployee(EmployeeDto);
             }
             else
             {
+                Role = 1;
                 await EmployeeService.AddEmployee(EmployeeDto);
             }
             Cancel();

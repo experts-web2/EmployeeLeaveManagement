@@ -15,6 +15,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();
         public AttendenceDto SelectedAttendence { get; set; } =new();
         public Pager Paging { get; set; } = new();
+        public int Role { get; set; } = 1;
 
         public void SetAttendenceId(int id)
         {
