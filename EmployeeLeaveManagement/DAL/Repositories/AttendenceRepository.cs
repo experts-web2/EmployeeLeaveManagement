@@ -66,14 +66,14 @@ namespace DAL.Repositories
             var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
             if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate.Date != DateTime.MinValue)
             {
-                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate && x.AttendenceDate >= paging.StartDate);
+                attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate &&  x.AttendenceDate.Date >= paging.StartDate);
             }
             if (!string.IsNullOrEmpty(paging.Search))
             {
                 attendences = attendences.Where(x => x.EmployeeId.ToString() == paging.Search);
             }
             else
-                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate);
+                attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate);
 
             var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
             var attendenceDto = ToDtos(paginatedList);

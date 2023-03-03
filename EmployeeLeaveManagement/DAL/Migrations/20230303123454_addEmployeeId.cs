@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class add_user_table : Migration
+    public partial class addEmployeeId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

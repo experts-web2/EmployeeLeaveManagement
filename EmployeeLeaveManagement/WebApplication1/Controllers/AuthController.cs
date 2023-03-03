@@ -36,28 +36,37 @@ namespace EmpLeave.Api.Controllers
         [Route("register")]
         public async Task<IActionResult> Post([FromBody] RegisterDto model)
         {
-            var newUser = new User { UserName = model.Email, Email = model.Email,EmployeeId=model.EmployeeId};
-
-            var result = await _userManager.CreateAsync(newUser, model.Password);
-
-            if (!result.Succeeded)
+            try
             {
-                var errors = result.Errors.Select(x => x.Description);
+                var newUser = new User { UserName = model.Email, Email = model.Email, EmployeeId = model.EmployeeId };
 
-                return BadRequest(new RegisterResult { Successful = false, Errors = errors });
-            }
+                var result = await _userManager.CreateAsync(newUser, model.Password);
 
-            // Add all new users to the User
-          
+                if (!result.Succeeded)
+                {
+                    var errors = result.Errors.Select(x => x.Description);
+
+                    return BadRequest(new RegisterResult { Successful = false, Errors = errors });
+                }
+
+                // Add all new users to the User
+
                 await _userManager.AddToRoleAsync(newUser, "User");
-            
-            // Add new users whose email starts with 'admin' to the Admin role
-            if (newUser.Email.StartsWith("admin"))
-            {
-                await _userManager.AddToRoleAsync(newUser, "Admin");
-            }
 
-            return Ok(new RegisterResult { Successful = true });
+                // Add new users whose email starts with 'admin' to the Admin role
+                if (newUser.Email.StartsWith("admin"))
+                {
+                    await _userManager.AddToRoleAsync(newUser, "Admin");
+                }
+
+                return Ok(new RegisterResult { Successful = true });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
         }
        
 
