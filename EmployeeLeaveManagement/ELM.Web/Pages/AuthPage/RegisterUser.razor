@@ -1,10 +1,13 @@
 ﻿@page "/RegisterUser"
 @using ELM.Shared;
+@using DTOs;
+@using EmpLeave.Web.Services.Interface;
+@using ELM.Helper;
 @using EmpLeave.Web.Pages.AuthPage;
 @using ELM_DAL.Services.Interface;
 @inject IAuthService authService
 @inject NavigationManager navigationManager
-@attribute [Authorize]
+@inject IEmployeeService EmployeeService
 <h3>Register User</h3>
 
 
@@ -30,6 +33,16 @@
                 <InputText type="password" Id="password" Class="form-control" @bind-Value="@RegisterModel.ConfirmPassword" />
                 <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
             </div>
+             <div class="form-group">
+        <label>EMPLOYEE NAME</label>
+                <InputSelect class="form-control" @bind-Value="RegisterModel.EmployeeId">
+            <option selected disabled value="0">Employee Name List</option>
+            @foreach (var employee in EmployeeDtosList)
+            {
+                <option value="@employee.ID">@employee.FirstName</option>
+            }
+        </InputSelect>
+    </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
     </div>
@@ -38,8 +51,14 @@
 
     private UserRegistrationModel RegisterModel = new UserRegistrationModel();
     private bool ShowErrors;
+    public Pager Paging { get; set; } = new();
+    public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
     private IEnumerable<string> Errors;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetEmployees();
+    }
     private async Task HandleRegistration()
     {
         ShowErrors = false;
@@ -56,5 +75,9 @@
             ShowErrors = true;
         }
     }
-
+    public async Task GetEmployees()
+    {
+        Response<EmployeeDto> listEmployee = await EmployeeService.GetAllEmployee(Paging);
+        EmployeeDtosList = listEmployee.DataList;
+    }
 }

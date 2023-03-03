@@ -1,9 +1,12 @@
-﻿using ELM.Shared;
+﻿using DomainEntity.Models;
+using DTOs;
+using ELM.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32.SafeHandles;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,12 +19,12 @@ namespace EmpLeave.Api.Controllers
     public class AuthController : ControllerBase
     {
 
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<IdentityUser> userManager,
-                              SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+        public AuthController(UserManager<User> userManager,
+                              SignInManager<User> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -31,9 +34,9 @@ namespace EmpLeave.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("register")]
-        public async Task<IActionResult> Post([FromBody] UserRegistrationModel model)
+        public async Task<IActionResult> Post([FromBody] RegisterDto model)
         {
-            var newUser = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var newUser = new User { UserName = model.Email, Email = model.Email,EmployeeId=model.EmployeeId};
 
             var result = await _userManager.CreateAsync(newUser, model.Password);
 
@@ -44,9 +47,10 @@ namespace EmpLeave.Api.Controllers
                 return BadRequest(new RegisterResult { Successful = false, Errors = errors });
             }
 
-            // Add all new users to the User role
-            await _userManager.AddToRoleAsync(newUser, "User");
-
+            // Add all new users to the User
+          
+                await _userManager.AddToRoleAsync(newUser, "User");
+            
             // Add new users whose email starts with 'admin' to the Admin role
             if (newUser.Email.StartsWith("admin"))
             {
@@ -55,7 +59,7 @@ namespace EmpLeave.Api.Controllers
 
             return Ok(new RegisterResult { Successful = true });
         }
-
+       
 
         [HttpPost]
         [AllowAnonymous]
@@ -66,12 +70,13 @@ namespace EmpLeave.Api.Controllers
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
 
             if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
-
+          
             var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
             var roles = await _signInManager.UserManager.GetRolesAsync(user);
             var claims = new List<Claim>();
 
             claims.Add(new Claim(ClaimTypes.Name, login.Email));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()));
 
             foreach (var role in roles)
             {
@@ -85,9 +90,12 @@ namespace EmpLeave.Api.Controllers
                 _configuration["JWT:ValidIssuer"],
                 _configuration["JWT:ValidAudience"],
                 claims,
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: creds
             );
             var Token = new JwtSecurityTokenHandler().WriteToken(token);
+            AttendenceApiController.AccessToken = Token;
+            Response.Cookies.Append("jwt", Token);
             return Ok(Token);
         }
 

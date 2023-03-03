@@ -21,5 +21,7 @@ namespace DomainEntity.Models
         public ICollection<Leave> Leaves { get; set; }
         public ICollection<Attendence> Attendences { get; set; }
         public ICollection<SalaryHistory> SalaryHistories { get; set; }
+        public virtual User User { get; set; }
+
     }
 }

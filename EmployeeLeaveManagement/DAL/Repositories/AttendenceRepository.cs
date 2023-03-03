@@ -80,6 +80,10 @@ namespace DAL.Repositories
             return new PagedList<AttendenceDto>
                 (attendenceDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
         }
+        //public PagedList<AttendenceDto> GetAttendence(Pager paging)
+        //{
+        //    return new PagedList<AttendenceDto>();
+        //}
         private List<AttendenceDto> ToDtos(List<Attendence> attendences)
         {
             try
@@ -149,6 +153,12 @@ namespace DAL.Repositories
             var FindAttendence = _dbContext.Attendences.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;
+        }
+        public List<AttendenceDto> GetAttendencebyEmployeeId(int id)
+        {
+            var Attendances = _dbContext.Attendences.Include(x => x.Employee).Where(x => x.EmployeeId == id);
+            var attendenceDto =Attendances.Select (SetAttendenceDto);
+            return attendenceDto.ToList();
         }
         private static AttendenceDto SetAttendenceDto(Attendence attendence)
         {

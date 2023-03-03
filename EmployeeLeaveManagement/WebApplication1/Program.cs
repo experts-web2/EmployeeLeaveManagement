@@ -10,6 +10,7 @@ using DomainEntity.Models;
 using EmpLeave.Api.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 using Hangfire;
+using Microsoft.Extensions.Primitives;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,7 @@ builder.Services.AddHangfire(x =>
     x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DBConnection"));
 });
 builder.Services.AddHangfireServer();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,7 +58,13 @@ builder.Services.AddAuthentication(options =>
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["jwt"];
+                //context.Token = context.Request.Cookies["jwt"];
+                //string accessToken = string.Empty;
+                //context.Request.Headers.TryGetValue("jwt", out StringValues actt);
+                //context.Token = actt.ToString();
+                var cookieToken = context.Request.Cookies["jwt"];
+                var headerToken = context.Request.Headers.Authorization.FirstOrDefault();
+                context.Token = cookieToken != null ? cookieToken : headerToken;
                 return Task.CompletedTask;
             }
         };

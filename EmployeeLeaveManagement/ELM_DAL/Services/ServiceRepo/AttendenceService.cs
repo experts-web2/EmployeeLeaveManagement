@@ -1,8 +1,13 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
+using ELM.Shared;
 using ELM.Web.Services.Interface;
+using EmpLeave.Api.Controllers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -12,21 +17,28 @@ namespace ELM.Web.Services.ServiceRepo
 
     {
         private HttpClient _httpService;
+        private IHttpClientFactory _clientFactory;
+        
+
+        // private IHttpClientService _httpService;
         private IConfiguration _configuration;
-        public AttendenceService(HttpClient httpService, IConfiguration configuration)
+        public AttendenceService(HttpClient httpService, IConfiguration configuration, IHttpClientFactory clientFactory)
         {
             _httpService = httpService;
             _configuration = configuration;
+            _clientFactory = clientFactory;
         }
+        
         public async Task<Response<AttendenceDto>> GetAttendences(Pager paging)
         {
             Response<AttendenceDto> responseDto = new();
             try
             {
-
+                
+               _httpService= _clientFactory.CreateClient("api");
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
+                var response =await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<AttendenceDto>();
                 if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))

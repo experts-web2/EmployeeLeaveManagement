@@ -1,7 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using ELM.Shared;
 using ELM_DAL.Services.Interface;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 
@@ -13,15 +15,16 @@ namespace ELM_DAL.Services.ServiceRepo
         private IConfiguration _configuration;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
-
+        private readonly IHttpContextAccessor httpContextAccessor;
         public AuthService(IHttpClientService httpService, IConfiguration configuration,
                            AuthenticationStateProvider authenticationStateProvider,
-                           ILocalStorageService localStorage)
+                           ILocalStorageService localStorage, IHttpContextAccessor httpContextAccessor)
         {
             _httpService = httpService;
             _configuration = configuration;
             _authenticationStateProvider = authenticationStateProvider;
             _localStorage = localStorage;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<RegisterResult> Register(UserRegistrationModel Userregister)
@@ -42,7 +45,9 @@ namespace ELM_DAL.Services.ServiceRepo
                  if (response == null) return new();
                 if (response.IsSuccessStatusCode)
                 {
-
+                    CookieOptions options = new CookieOptions();
+                    options.Expires = DateTime.Now.AddDays(1);
+                    httpContextAccessor?.HttpContext?.Request.Cookies.Append(new KeyValuePair<string, string>("jwt", result.Token ) );
                     await _localStorage.SetItemAsync("authToken", result.Token);
                     ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result.Token);
                     result.Successful = true;

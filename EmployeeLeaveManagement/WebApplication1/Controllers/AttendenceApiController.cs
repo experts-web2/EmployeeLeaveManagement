@@ -1,20 +1,35 @@
-﻿using DAL.Interface;
+﻿using DAL;
+using DAL.Interface;
+using DomainEntity.Enum;
+using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
+using ELM.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Security.Claims;
 
 namespace EmpLeave.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
     public class AttendenceApiController : ControllerBase
     {
       private  IAttendenceRepository attendenceRepository;
-        public AttendenceApiController(IAttendenceRepository _attendenceRepository)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public AttendenceApiController(IAttendenceRepository _attendenceRepository, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             attendenceRepository= _attendenceRepository;
+            _userManager= userManager;
+            _signInManager = signInManager;
         }
         [HttpPost("AddAttendence")]
         public IActionResult AddAttendence([FromBody]AttendenceDto attendenceDto)
@@ -26,8 +41,25 @@ namespace EmpLeave.Api.Controllers
             }
             else return BadRequest("Unable to Add");
         }
+        public static string AccessToken;
+
         [HttpPost("GetAllAttendences")]
-        public IActionResult GetAllAttendences(Pager paging)
+        public async  Task<IActionResult> GetAllAttendences(Pager paging)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+           // int RoleId = int.Parse(ClaimRoleId);
+
+          // if(RoleId == 1)
+          if(ClaimRoleId is  null)
+                return GetAllEmployeeAttendance(paging);
+            else
+                return GetAttendencebyId(int.Parse(ClaimRoleId));
+
+        }
+        [HttpGet]
+        private IActionResult GetAllEmployeeAttendance(Pager paging)
         {
             var allAttendences = attendenceRepository.GetAllAttendences(paging);
             var metadata = new
@@ -45,6 +77,7 @@ namespace EmpLeave.Api.Controllers
                 return Ok(allAttendences);
             return BadRequest();
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteAttendence(int id)
         {
@@ -53,6 +86,7 @@ namespace EmpLeave.Api.Controllers
                 return BadRequest("Unable to Delete");
             return Ok("Deleted Succesfully");
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)
         {
@@ -62,6 +96,16 @@ namespace EmpLeave.Api.Controllers
             else
                 return BadRequest("Unable to get Attendence");
         }
+        [HttpGet]
+        public IActionResult GetAttendencebyId(int id)
+        {
+            var attendenceDto = attendenceRepository.GetAttendencebyEmployeeId(id);
+            if (attendenceDto != null)
+                return Ok(attendenceDto);
+            else
+                return BadRequest("Unable to get Attendence");
+        }
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public IActionResult UpdateAttendence(AttendenceDto attendenceDto)
         {

@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager nav
 @using ELM.Web.Pages.AuthPage
 @using ELM.Web.Pages.AuthPage.LogCredential;
+
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
@@ -15,18 +16,15 @@
                     <LoginDisplay/>
                  @if(new Uri(nav.Uri).AbsolutePath.StartsWith("/RegisterUser"))
                     {
-                    
                         <RegisterUser />
-
                         
                     }
-                    else
+                 else
                     {
                             <SignIn />
                     }
                 </NotAuthorized>
             </AuthorizeView>
-
 
         </Found>
         <NotFound>

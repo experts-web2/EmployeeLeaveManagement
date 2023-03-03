@@ -3,11 +3,14 @@ using DTOs;
 using ELM.Helper;
 using ELM.Web.Services.Interface;
 using EmpLeave.Web.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel;
+using System.Data;
 
 namespace ELM.Web.Pages.Attendence_Page
 {
+    
     public class AttendenceListBase:ComponentBase
     {
 
@@ -33,6 +36,7 @@ namespace ELM.Web.Pages.Attendence_Page
             EmployeesList = await EmployeeService.GetAllEmployee();
             await GetAll();
         }
+        
         public async Task GetAll(int currentPage=1)
         {
             Paging.CurrentPage = currentPage;

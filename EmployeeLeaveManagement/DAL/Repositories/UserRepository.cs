@@ -45,6 +45,7 @@ namespace DAL.Repositories
                 {
                     UserName = registerDto.Email,
                     Email = registerDto.Email,
+                    EmployeeId=registerDto.EmployeeId
                  //   FirstName = registerDto.FirstName,
                    // LastName = registerDto.LastName
 
