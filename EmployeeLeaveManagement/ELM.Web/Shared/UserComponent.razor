@@ -1,24 +1,19 @@
 ﻿@page "/UserComponent"
 @inject NavigationManager UriHelper
-
-<h3>Click on button Admin button  for  Admin User Button for User</h3>
-
-    <div class="mb-3">
-        <label for="Name" class="form-label">User</label>
-        <div class="col-md-4">
-            <Input type="text" class="form-control" @bind="@parameter" />
-        </div>
+<h3 style="color:white">User View</h3>
+<div class="mb-3">
+    <label for="Name" style="color:white" class="form-label">Add Role</label>
+    <div class="col-md-4">
+        <input type="text" class="form-control" @bind="@parameter" required />
     </div>
-
-<button class="btn btn-primary" @onclick="OnClick">Pass Value</button>
-
+</div>
+<button class="btn btn-primary" @onclick="OnClick">Submit</button>
 @code {
-
-     public string parameter ;
+    private string parameter;
     private void OnClick()
     {
-        if(parameter==null)
-        UriHelper.NavigateTo($"NavMenu");
+        if (parameter != null)
+            UriHelper.NavigateTo($"NavMenu/{parameter}");
     }
-    
+
 }

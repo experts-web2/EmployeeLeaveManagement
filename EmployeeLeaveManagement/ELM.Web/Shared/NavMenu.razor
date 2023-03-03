@@ -1,79 +1,71 @@
-﻿@page "/NavMenu"
+﻿@page "/NavMenu/{value}"
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">ELM.Web</a>
+        <a style="color:black" class="navbar-brand" href="">ELM.Web</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </div>
-
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <NavLink style="color:black" class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
+            <NavLink style="color:black" class="nav-link" href="counter">
                 <span class="oi oi-plus" aria-hidden="true"></span> Counter
             </NavLink>
         </div>
-        
-               
-
-      @if (Value=="Admin"||Value=="admin")
+        @if (Value == "Admin" || Value == "admin")
         {
-             <div class="nav-item px-3">
-            <NavLink class="nav-link" href="add_Attendence">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Attendence
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="location">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>Location
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="listofleaves">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Leaves
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="RegisterUser">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Register User
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="listofuser">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> All User
-            </NavLink>
+            <div class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="add_Attendence">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Attendence
+                </NavLink>
             </div>
-      }
-        else
-        {
-             <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="listofemployee">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Employees
-                    </NavLink>
-                </div>
 
-             <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ListOfSalaries">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>salary
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="location">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Location
+                </NavLink>
+            </div>
+            <div style="color:black" class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="listofleaves">
+                    <span style="color:black" class="oi oi-list-rich" aria-hidden="true"></span> Leaves
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="RegisterUser">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Register User
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="listofuser">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> All User
+                </NavLink>
+            </div>
         }
-
-       
+        @if (Value == "User" || Value == "user")
+        {
+            <div class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="listofemployee">
+                    <span style="color:black" class="oi oi-list-rich" aria-hidden="true"></span> Employees
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink style="color:black" class="nav-link" href="ListOfSalaries">
+                    <span style="color:black" class="oi oi-list-rich" aria-hidden="true"></span>salary
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
-
 @code {
-     [Parameter]
-    public string Value { get; set; }
+    [Parameter]
+    public string Value { get; set; } = "";
     private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
