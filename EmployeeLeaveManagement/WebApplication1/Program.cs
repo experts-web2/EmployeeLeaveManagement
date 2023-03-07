@@ -50,8 +50,8 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidIssuer = "https://localhost:7150",
-            ValidAudience = "User",
+            ValidIssuer = "https://localhost:7225",
+            ValidAudience = "https://localhost:7225",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Thisismysecretkey123456789"))
         };
         options.Events = new JwtBearerEvents

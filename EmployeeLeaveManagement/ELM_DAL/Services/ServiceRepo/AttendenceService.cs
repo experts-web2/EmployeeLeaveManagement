@@ -6,6 +6,7 @@ using ELM.Web.Services.Interface;
 using EmpLeave.Api.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -18,24 +19,30 @@ namespace ELM.Web.Services.ServiceRepo
     {
         private HttpClient _httpService;
         private IHttpClientFactory _clientFactory;
+        private readonly IJSRuntime jsRuntime;
         
 
         // private IHttpClientService _httpService;
         private IConfiguration _configuration;
-        public AttendenceService(HttpClient httpService, IConfiguration configuration, IHttpClientFactory clientFactory)
+        public AttendenceService(HttpClient httpService, IConfiguration configuration, IHttpClientFactory clientFactory, IJSRuntime jsRuntime = null)
         {
             _httpService = httpService;
             _configuration = configuration;
             _clientFactory = clientFactory;
+            this.jsRuntime = jsRuntime;
         }
-        
+
         public async Task<Response<AttendenceDto>> GetAttendences(Pager paging)
         {
             Response<AttendenceDto> responseDto = new();
             try
             {
-                
-               _httpService= _clientFactory.CreateClient("api");
+
+               
+                _httpService = _clientFactory.CreateClient("api");
+                var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response =await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
