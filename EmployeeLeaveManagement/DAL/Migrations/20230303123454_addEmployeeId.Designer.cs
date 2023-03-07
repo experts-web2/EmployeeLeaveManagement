@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230228144238_add_user_table")]
-    partial class add_user_table
+    [Migration("20230303123454_addEmployeeId")]
+    partial class addEmployeeId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -48,10 +48,10 @@ namespace DAL.Repositories
                 }
                 if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue)
                 {
-                    predicate = predicate.And(x => x.IncrementDate >= pager.StartDate && x.IncrementDate <= pager.EndDate);
+                    predicate = predicate.And(x => x.IncrementDate.Date >= pager.StartDate && x.IncrementDate.Date <= pager.EndDate);
                 }
                 else
-                    predicate = predicate.And(x => x.IncrementDate <= pager.EndDate);
+                    predicate = predicate.And(x => x.IncrementDate.Date <= pager.EndDate);
                 salaries = salaries.Where(predicate);
                 var paginatedList = PagedList<SalaryHistory>.ToPagedList(salaries, pager.CurrentPage, pager.PageSize);
                 var SalariesDto = ToDto(paginatedList);
