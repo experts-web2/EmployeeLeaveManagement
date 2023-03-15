@@ -7,7 +7,6 @@ using ELM_DAL.Services.Interface;
 using ELM_DAL.Services.ServiceRepo;
 using EmpLeave.Api.Controllers;
 using EmpLeave.Web.Services.Interface;
-using EmpLeave.Web.Services.ServiceRepo;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.Net.Http;

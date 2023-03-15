@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace ELM.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class SalaryHistoryService:ISalaryHistory
     {

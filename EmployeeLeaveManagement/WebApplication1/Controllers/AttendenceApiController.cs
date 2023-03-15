@@ -51,13 +51,18 @@ namespace EmpLeave.Api.Controllers
         public async  Task<IActionResult> GetAllAttendences(Pager paging)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Role = identity?.FindFirst(ClaimTypes.Role);
             var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
            // int RoleId = int.Parse(ClaimRoleId);
 
           // if(RoleId == 1)
-          if(ClaimRoleId is  null)
+          if(Role.Value.Contains("Admin"))
+            {
                 return GetAllEmployeeAttendance(paging);
+            }
+          
+               
             else
                 return GetAttendencebyId(int.Parse(ClaimRoleId));
 

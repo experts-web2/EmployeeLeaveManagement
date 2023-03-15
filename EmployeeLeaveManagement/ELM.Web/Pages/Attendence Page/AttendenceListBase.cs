@@ -3,22 +3,21 @@ using DTOs;
 using ELM.Helper;
 using ELM.Web.Services.Interface;
 using EmpLeave.Web.Services.Interface;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel;
-using System.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace ELM.Web.Pages.Attendence_Page
 {
-    
-    public class AttendenceListBase:ComponentBase
-    {
 
+    public class AttendenceListBase : ComponentBase
+    {
+       
         [Inject]
         public IAttendenceService AttendenceService { get; set; }
         [Inject]
-
         public IEmployeeService EmployeeService { get; set; }
+        [Inject]
+        public AuthenticationStateProvider _authenticationStateProvider {get;set;}
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();
         public AttendenceDto SelectedAttendence { get; set; } =new();
         public List<Employee> EmployeesList { get; set; } = new();
@@ -26,7 +25,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public DateTime EndDate { get; set; } = DateTime.Now.Date;
         public string Search { get; set; }= string.Empty;
         public Pager Paging { get; set; } = new();
-
+        
         public void SetAttendenceId(int id)
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == id);
@@ -39,6 +38,8 @@ namespace ELM.Web.Pages.Attendence_Page
         
         public async Task GetAll(int currentPage=1)
         {
+            //var x = await ((ApiAuthenticationStateProvider)_authenticationStateProvider).GetAuthenticationStateAsync();
+            //var user = x.User.IsInRole("User");
             Paging.CurrentPage = currentPage;
             Paging.StartDate = StartDate;
             Paging.EndDate = EndDate;

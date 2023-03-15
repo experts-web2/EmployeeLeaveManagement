@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace EmpLeave.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class RegisterService : IRegisterService
     {

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace EmpLeave.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class LeaveService : ILeaveService
     {

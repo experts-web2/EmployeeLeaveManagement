@@ -38,7 +38,10 @@ namespace EmpLeave.Api.Controllers
         {
             try
             {
-                var newUser = new User { UserName = model.Email, Email = model.Email, EmployeeId = model.EmployeeId };
+                var newUser = new User { UserName = model.Email, Email = model.Email};
+
+                if (model.EmployeeId is not null)
+                    newUser.EmployeeId = model.EmployeeId;
 
                 var result = await _userManager.CreateAsync(newUser, model.Password);
 
@@ -52,12 +55,6 @@ namespace EmpLeave.Api.Controllers
                 // Add all new users to the User
 
                 await _userManager.AddToRoleAsync(newUser, "User");
-
-                // Add new users whose email starts with 'admin' to the Admin role
-                if (newUser.Email.StartsWith("admin"))
-                {
-                    await _userManager.AddToRoleAsync(newUser, "Admin");
-                }
 
                 return Ok(new RegisterResult { Successful = true });
             }
@@ -76,36 +73,44 @@ namespace EmpLeave.Api.Controllers
        
         public async Task<IActionResult> Login([FromBody] LogIn login)
         {
-            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
-
-            if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
-          
-            var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
-            var roles = await _signInManager.UserManager.GetRolesAsync(user);
-            var claims = new List<Claim>();
-
-            claims.Add(new Claim(ClaimTypes.Name, login.Email));
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()));
-
-            foreach (var role in roles)
+            try
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
+
+                if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+
+                var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
+                var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                var claims = new List<Claim>();
+
+                claims.Add(new Claim(ClaimTypes.Name, login.Email));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()));
+
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    _configuration["JWT:ValidIssuer"],
+                    _configuration["JWT:ValidAudience"],
+                    claims,
+                    expires: DateTime.Now.AddMinutes(15),
+                    signingCredentials: creds
+                );
+                var Token = new JwtSecurityTokenHandler().WriteToken(token);
+                AttendenceApiController.AccessToken = Token;
+                Response.Cookies.Append("jwt", Token);
+                return Ok(Token);
             }
+            catch (Exception)
+            {
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                _configuration["JWT:ValidIssuer"],
-                _configuration["JWT:ValidAudience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: creds
-            );
-            var Token = new JwtSecurityTokenHandler().WriteToken(token);
-            AttendenceApiController.AccessToken = Token;
-            Response.Cookies.Append("jwt", Token);
-            return Ok(Token);
+                throw;
+            }
         }
 
         [HttpPost]

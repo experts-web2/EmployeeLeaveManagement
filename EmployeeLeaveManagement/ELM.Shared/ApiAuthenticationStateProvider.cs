@@ -24,7 +24,7 @@ namespace ELM.Shared
         {
             try
             {
-                var savedToken = await _localStorage.GetItemAsync<string>("authToken");
+                var savedToken = await _localStorage.GetItemAsync<string>("jwt");
 
                 if (string.IsNullOrWhiteSpace(savedToken))
                 {

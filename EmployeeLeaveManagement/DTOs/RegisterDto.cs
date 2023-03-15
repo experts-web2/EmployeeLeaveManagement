@@ -27,6 +27,6 @@ namespace DTOs
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         [ForeignKey("Employee")]
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
     }
 }

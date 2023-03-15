@@ -7,7 +7,7 @@ using DomainEntity.Models;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace EmpLeave.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class EmployeeService : IEmployeeService
     {
