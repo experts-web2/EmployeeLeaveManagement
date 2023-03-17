@@ -137,7 +137,8 @@ namespace DAL.Repositories
                     Gender = employee.Gender,
                     Email = employee.Email,
                     DateOfBrith = employee.DateOfBrith,
-                    Address = employee.Address,
+                    Address = employee.Address, 
+                    CurrentSalary=employee.CurrentSalary,
                     leaves = employee.Leaves.ToList()
                     
                 };

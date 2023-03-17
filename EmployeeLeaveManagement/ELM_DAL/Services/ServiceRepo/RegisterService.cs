@@ -33,7 +33,7 @@ namespace ELM_DAL.Services.ServiceRepo
             List<User> respons = new();
             try
             {
-                respons = await _httpService.GetFromJsonAsync<List<User>>($"{Apiroute()}account");
+                respons = await _httpService.GetFromJsonAsync<List<User>>($"{Apiroute()}auth");
             }
             catch (System.Exception)
             {

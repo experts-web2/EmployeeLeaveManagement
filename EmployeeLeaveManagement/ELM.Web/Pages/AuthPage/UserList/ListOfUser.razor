@@ -3,7 +3,11 @@
 @inherits ListofUserBase
 <h3>Users List</h3>
 <div class="row">
-
+    
+    <div class="input-group mb-3">
+        <EditForm Model="SelectedUser" OnValidSubmit="()=>GetAll()">
+        </EditForm>
+    </div>
     <div class="col-md-6">
         <a href='/registeruser' class="btn btn-primary" role="button">
             <i class="fas fa-user-plus"></i>
@@ -21,10 +25,7 @@ else
     <table class="table table-striped align-middle table-bordered">
         <thead class="table-success">
             <tr>
-                <th>FirstName</th>
-                <th>LastName</th>
                 <th>Email</th>
-                <th>User Name</th>
                 <th>Hash Password</th>
                
                 <th class="colspan-2">Actions</th>
@@ -34,19 +35,16 @@ else
             @foreach (var user in UserList)
             {
                 <tr>
-                    <td>@user.FirstName</td>
-                    <td>@user.LastName</td>
                     <td>@user.Email</td>
-                    <td>@user.UserName</td>
                     <td>@user.PasswordHash</td>
                     <td>
-                       @* <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
                         @onclick="(() => DeleteConfirm(user.ID))">
                             Delete
                         </button>
                         <a href='/edit/@user.ID' class="btn btn-outline-dark" role="button">
                             Edit
-                        </a>*@
+                        </a>
                     </td>
                 </tr>
             }
@@ -86,10 +84,10 @@ else
                         </tbody>
                     </table>
                 </div>
-               @* <div class="modal-footer">
+                <div class="modal-footer">
                     <button class="btn btn-danger" @onclick="(async () => await DeleteEmployee(SelectedUser.Id))" data-bs-dismiss="modal">YES</button>
                     <button class="btn btn-warning" data-bs-dismiss="modal">No</button>
-                </div>*@
+                </div>
             </div>
         </div>
     </div>

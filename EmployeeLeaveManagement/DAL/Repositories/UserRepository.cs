@@ -1,5 +1,6 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
+using DTOs;
 using ELM.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,26 @@ namespace DAL.Repositories
             _signInManager = signInManager;
             _configuration = configuration;
         }
+        public Task<IdentityResult> AddUser(RegisterDto model)
+        {
+            try
+            {
+                var newUser = new User { UserName = model.Email, Email = model.Email };
+
+                if (model.EmployeeId is not null)
+                    newUser.EmployeeId = model.EmployeeId;
+                var result = _userManager.CreateAsync(newUser, model.Password);
+                if (!result.IsCompleted)
+                    return result;
+                _userManager.AddToRoleAsync(newUser, "User");
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public List<User> GetAllUser()
         {
             return _userManager.Users.ToList();
@@ -37,61 +58,52 @@ namespace DAL.Repositories
         {
             return _roleManager.Roles.ToList();
         }
-        public async Task AddUser(UserRegistrationModel registerDto)
+         
+        public async Task<string> SignIn(LogIn login)
         {
             try
             {
-                User user = new()
+                //string error = "User Email or Password is Invalid";
+                Demo.Error = "User Email or Password is Invalid";
+                var result =   _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
+                if (result is not null)
                 {
-                    UserName = registerDto.Email,
-                    Email = registerDto.Email,
-                    EmployeeId=registerDto.EmployeeId
-                 //   FirstName = registerDto.FirstName,
-                   // LastName = registerDto.LastName
+                    var user = await _signInManager.UserManager.FindByEmailAsync(login.Email);
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    var claims = new List<Claim>();
 
-                };
-                IdentityResult identityResult = await _userManager.CreateAsync(user, registerDto.Password);
-                if (!identityResult.Succeeded) throw new InvalidOperationException($"Error: {string.Join("\n", identityResult.Errors.Select(x => x.Description))}");
-            //    foreach (var role in registerDto.Roles)
-                {
-              //      var result = await _userManager.AddToRoleAsync(user, role);
-             //       if (!result.Succeeded) throw
-             //               new InvalidOperationException($"Error: {string.Join("\n", result.Errors.Select(x => x.Description))}");
+                    claims.Add(new Claim(ClaimTypes.Name, login.Email));
+                    claims.Add(new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()));
+
+                    foreach (var role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
+
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                    var token = new JwtSecurityToken(
+                        _configuration["JWT:ValidIssuer"],
+                        _configuration["JWT:ValidAudience"],
+                        claims,
+                        expires: DateTime.Now.AddMinutes(15),
+                        signingCredentials: creds
+                    );
+                    var Token = new JwtSecurityTokenHandler().WriteToken(token);
+                    Demo.Success = Token;
+                    return Demo.Success;
                 }
+                // Response.Cookies.Append("jwt", Token);
+                else
+                    return Demo.Error;
+
             }
             catch (Exception)
             {
+
                 throw;
             }
-        }
-        public async Task<string> SignIn(LogIn signIn)
-        {
-
-            var result = await _signInManager.PasswordSignInAsync(signIn.Email, signIn.Password, false, false);
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException();
-
-            }
-
-            var authClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name,signIn.Email),
-
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-
-            };
-            var authSignInKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
-            var Token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken
-            (
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddMinutes(20),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSignInKey, SecurityAlgorithms.HmacSha256Signature)
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(Token);
         }
         public async Task SignOut()
         {
@@ -111,4 +123,9 @@ namespace DAL.Repositories
             return false;
         }
     }
+}
+public static class Demo
+    {
+    public  static string Error { get; set; } = string.Empty;
+    public static string Success { get; set; } = string.Empty;
 }

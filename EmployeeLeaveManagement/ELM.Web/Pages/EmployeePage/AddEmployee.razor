@@ -50,7 +50,7 @@
         <div class="col-md-4">
             <InputNumber class="form-control" @bind-Value="EmployeeDto.CurrentSalary" />
         </div>
-        <ValidationMessage For="@(() => EmployeeDto.Address)" />
+        <ValidationMessage For="@(() => EmployeeDto.CurrentSalary)" />
     </div>
      <InputSelect class="form-control-sm" @bind-Value="EmployeeDto.Gender">
         <option selected disabled value="-1">Gender</option>

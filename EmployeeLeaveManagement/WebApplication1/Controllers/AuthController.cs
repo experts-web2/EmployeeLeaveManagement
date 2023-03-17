@@ -65,7 +65,14 @@ namespace EmpLeave.Api.Controllers
             }
             
         }
-       
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetAllUsers()
+        {
+            var users=_userManager.Users.ToList();
+            return Ok(users);
+
+        }
 
         [HttpPost]
         [AllowAnonymous]
