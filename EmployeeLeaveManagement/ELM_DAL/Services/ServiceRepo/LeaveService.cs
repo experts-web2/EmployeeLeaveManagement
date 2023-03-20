@@ -50,7 +50,16 @@ namespace ELM_DAL.Services.ServiceRepo
         }
         public async Task<LeaveDto> GetByIdCall(int id)
         {
-            return await _httpService.GetFromJsonAsync<LeaveDto>($"{Apiroute}leave/GetById/{id}");
+            try
+            {
+                var response = await _httpService.GetFromJsonAsync<LeaveDto>($"{Apiroute()}leave/GetById/{id}");
+                return response;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task AddLeave(LeaveDto leaveDto)
         {

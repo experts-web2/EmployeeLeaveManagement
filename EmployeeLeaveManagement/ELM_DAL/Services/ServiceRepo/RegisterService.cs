@@ -24,9 +24,9 @@ namespace ELM_DAL.Services.ServiceRepo
         {
             await _httpService.PostAsJsonAsync($"{Apiroute()}account/register", userRegistrationModel);
         }
-        public async Task DeleteUserCall(string id)
+        public async Task DeleteUser(string id)
         {
-            await _httpService.DeleteAsync($"{Apiroute()}account/{id}");
+            var response= await _httpService.DeleteAsync($"{Apiroute()}auth/{id}");
         }
         public async Task<List<User>> GetAllUserCall()
         {

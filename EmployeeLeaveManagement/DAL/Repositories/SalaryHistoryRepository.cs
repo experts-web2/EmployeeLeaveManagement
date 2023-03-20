@@ -63,12 +63,14 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        public SalaryHistoryDto GetSalary(int id)
+        public List<SalaryHistoryDto> GetSalary(int id)
         {
             try
             {
-                var salary = dbContext.SalaryHistories.Include(s => s.Employee).FirstOrDefault(x => x.Id == id);
-                SalaryHistoryDto salaryDto = SetSalaryToDto(salary);
+                 List<SalaryHistory> salary = dbContext.SalaryHistories.Include(s => s.Employee).Where(x=>x.EmployeeId == id).ToList();
+                if(salary == null)
+                    return new List<SalaryHistoryDto>();
+                List<SalaryHistoryDto> salaryDto = SetSalaryToDto(salary);
                 return salaryDto;
             }
             catch (Exception)
@@ -136,18 +138,23 @@ namespace DAL.Repositories
             }
             return salariesDto;
         }
-        private SalaryHistoryDto SetSalaryToDto(SalaryHistory salary)
+        private List<SalaryHistoryDto> SetSalaryToDto(List<SalaryHistory> salaries)
         {
-            SalaryHistoryDto salaryDto = new()
+            List<SalaryHistoryDto> salaires = new List<SalaryHistoryDto>();
+            foreach (var salary in salaries)
             {
-                ID = salary.Id,
-                NewSalary = salary.NewSalary,
-                IncrementDate = salary.IncrementDate,
-                FirstName = salary.Employee.FirstName,
-                LastName = salary.Employee.LastName,
-                EmployeeId = salary.EmployeeId
-            };
-            return salaryDto;
+                SalaryHistoryDto salaryDto = new()
+                {
+                    ID = salary.Id,
+                    NewSalary = salary.NewSalary,
+                    IncrementDate = salary.IncrementDate,
+                    FirstName = salary.Employee.FirstName,
+                    LastName = salary.Employee.LastName,
+                    EmployeeId = salary.EmployeeId
+                };
+                salaires.Add(salaryDto);
+            }
+            return salaires;
         }
     }
 }

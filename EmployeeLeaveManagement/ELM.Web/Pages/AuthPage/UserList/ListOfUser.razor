@@ -26,8 +26,7 @@ else
         <thead class="table-success">
             <tr>
                 <th>Email</th>
-                <th>Hash Password</th>
-               
+
                 <th class="colspan-2">Actions</th>
             </tr>
         </thead>
@@ -36,15 +35,14 @@ else
             {
                 <tr>
                     <td>@user.Email</td>
-                    <td>@user.PasswordHash</td>
                     <td>
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
-                        @onclick="(() => DeleteConfirm(user.ID))">
+                        @onclick="(() => DeleteConfirm(user.Id))">
                             Delete
                         </button>
-                        <a href='/edit/@user.ID' class="btn btn-outline-dark" role="button">
+                     @*   <a href='/edit/@user.Id' class="btn btn-outline-dark" role="button">
                             Edit
-                        </a>
+                        </a>*@
                     </td>
                 </tr>
             }
@@ -62,20 +60,8 @@ else
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td>Name</td>
-                                <td>@SelectedUser.FirstName</td>
-                            </tr>
-                            <tr>
-                                <td>Last Name</td>
-                                <td>@SelectedUser.LastName</td>
-                            </tr>
-                            <tr>
                                 <td>Email</td>
                                 <td>@SelectedUser.Email</td>
-                            </tr>
-                            <tr>
-                                <td>User Name</td>
-                                <td>@SelectedUser.UserName</td>
                             </tr>
                             <tr>
                                 <td>Password</td>
@@ -85,7 +71,7 @@ else
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger" @onclick="(async () => await DeleteEmployee(SelectedUser.Id))" data-bs-dismiss="modal">YES</button>
+                    <button class="btn btn-danger" @onclick="(async () => await DeleteUser(SelectedUser.Id))" data-bs-dismiss="modal">YES</button>
                     <button class="btn btn-warning" data-bs-dismiss="modal">No</button>
                 </div>
             </div>

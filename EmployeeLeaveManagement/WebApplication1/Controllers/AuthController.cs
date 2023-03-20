@@ -1,4 +1,5 @@
-﻿using DomainEntity.Models;
+﻿using DAL;
+using DomainEntity.Models;
 using DTOs;
 using ELM.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -18,17 +19,18 @@ namespace EmpLeave.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-
+        private readonly AppDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
         public AuthController(UserManager<User> userManager,
-                              SignInManager<User> signInManager, IConfiguration configuration)
+                              SignInManager<User> signInManager, IConfiguration configuration,AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpPost]
@@ -126,6 +128,18 @@ namespace EmpLeave.Api.Controllers
         {
             await _signInManager.SignOutAsync();
             return Content("You Are Successfully Logout");
+        }
+        [AllowAnonymous]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult>DeleteUser(string id)
+        {
+            var deleteUser=_context.Users.FirstOrDefault(x => x.Id == id);
+            if(deleteUser != null)
+            {
+                _context.Remove(deleteUser);
+                _context.SaveChanges();
+            }
+            return Ok();
         }
     }
 }
