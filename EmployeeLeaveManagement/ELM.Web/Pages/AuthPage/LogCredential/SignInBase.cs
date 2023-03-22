@@ -22,7 +22,7 @@ namespace EmpLeave.Web.Pages.AuthPage.LogCredential
         [CascadingParameter]
         Task<AuthenticationState> authenticationStateTask { get; set; }
     
-        private bool ShowErrors;
+        public bool isInValid = false ;
         private string Error = "";
         protected override async Task OnInitializedAsync()
         {
@@ -31,8 +31,6 @@ namespace EmpLeave.Web.Pages.AuthPage.LogCredential
         }
         protected async Task OnAfterRenderAsync()
         {
-            ShowErrors = false;
-
             var result = await authService.Login(LogIn);
 
             if (result.Successful)
@@ -44,13 +42,12 @@ namespace EmpLeave.Web.Pages.AuthPage.LogCredential
 
                 else
                     NavigationManager.NavigateTo(returnUrl);
-
+                isInValid = false;
                 StateHasChanged();
             }
             else
             {
-                Error = result.Error;
-                ShowErrors = true;
+                isInValid = true;
             }
         }
         public void Cancel()

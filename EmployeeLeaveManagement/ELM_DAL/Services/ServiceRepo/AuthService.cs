@@ -40,19 +40,17 @@ namespace ELM_DAL.Services.ServiceRepo
             try
             {
                var response = await _httpService.Post(Userlogin, $"{Apiroute()}Auth/login/");
-                result.Token = await response.Content.ReadAsStringAsync();
 
-                 if (response == null) return new();
-                if (response.IsSuccessStatusCode)
-                {
-                    CookieOptions options = new CookieOptions();
-                    options.Expires = DateTime.Now.AddDays(1);
-                    httpContextAccessor?.HttpContext?.Request.Cookies.Append(new KeyValuePair<string, string>("jwt", result.Token ) );
-                    await _localStorage.SetItemAsync("jwt", result.Token);
-                    ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result.Token);
-                    result.Successful = true;
-                    return result;
-                }
+                if (!response.IsSuccessStatusCode) return new();
+
+                result.Token = await response.Content.ReadAsStringAsync();
+                CookieOptions options = new CookieOptions();
+                options.Expires = DateTime.Now.AddDays(1);
+                httpContextAccessor?.HttpContext?.Request.Cookies.Append(new KeyValuePair<string, string>("jwt", result.Token ) );
+                await _localStorage.SetItemAsync("jwt", result.Token);
+                ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result.Token);
+                result.Successful = true;
+                return result;
             }
             catch (Exception)
             {

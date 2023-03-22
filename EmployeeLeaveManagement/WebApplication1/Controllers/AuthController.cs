@@ -107,7 +107,7 @@ namespace EmpLeave.Api.Controllers
                     _configuration["JWT:ValidIssuer"],
                     _configuration["JWT:ValidAudience"],
                     claims,
-                    expires: DateTime.Now.AddMinutes(15),
+                    expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds
                 );
                 var Token = new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,9 +1,5 @@
 ﻿using DomainEntity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace DAL.Interface.GenericInterface
 {
@@ -14,5 +10,6 @@ namespace DAL.Interface.GenericInterface
         void deletebyid(int id);
         void update(T item);
         T GetByID(int id);
+        Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
     }
 }

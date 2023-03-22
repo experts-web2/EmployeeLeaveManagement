@@ -3,6 +3,7 @@ using DTOs;
 using ELM.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -26,18 +27,26 @@ namespace EmpLeave.Api.Controllers
         {
             try
             {
-                var AllLeave = _leaveService.GetAll(pager);
-                var metadata = new
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var Role = identity?.FindFirst(ClaimTypes.Role);
+                var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (Role.Value.Contains("Admin"))
                 {
-                    AllLeave.TotalCount,
-                    AllLeave.PageSize,
-                    AllLeave.TotalPages,
-                    AllLeave.CurrentPage,
-                    AllLeave.HasPrevious,
-                    AllLeave.HasNext,
-                };
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                return Ok(AllLeave);
+                    var AllLeave = _leaveService.GetAll(pager);
+                    var metadata = new
+                    {
+                        AllLeave.TotalCount,
+                        AllLeave.PageSize,
+                        AllLeave.TotalPages,
+                        AllLeave.CurrentPage,
+                        AllLeave.HasPrevious,
+                        AllLeave.HasNext,
+                    };
+                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                    return Ok(AllLeave);
+                }
+                return GetById(int.Parse(ClaimRoleId));
+                  
             }
             catch (Exception ex)
             {
