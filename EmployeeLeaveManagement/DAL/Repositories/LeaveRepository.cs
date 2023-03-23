@@ -1,6 +1,7 @@
 ﻿using DAL.Interface;
 using DomainEntity.Models;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,22 @@ namespace DAL.Repositories
         public List<LeaveDto> GetAllLeave()
         {
             throw new NotImplementedException();
+        }
+
+        public List<Leave> GetLeaves(int id)
+        {
+            try
+            {
+                var leaves = _dbContext.Leaves.Include(x=>x.Employee).Where(x => x.EmployeeId == id).ToList();
+                if(leaves != null)
+                    return leaves;
+                return new();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();
 builder.Services.AddScoped<IAttendenceRepository, AttendenceRepository>();
+builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

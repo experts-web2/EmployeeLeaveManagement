@@ -10,5 +10,6 @@ namespace BL.Interface
         LeaveDto Add(LeaveDto leave);
         void Delete(int id);
         LeaveDto Update(LeaveDto leave);
+        List<LeaveDto> GetLeaves(int id);
     }
 }

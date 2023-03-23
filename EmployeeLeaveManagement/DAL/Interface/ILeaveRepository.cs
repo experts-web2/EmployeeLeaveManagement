@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace DAL.Interface
     {
         List<LeaveDto> GetAllLeave();
         void Addleave(LeaveDto leaveDto);
+        List<Leave> GetLeaves(int id);
     }
 }

@@ -11,7 +11,7 @@ namespace DomainEntity.Models
         public Status Status { get; set; }
         public LeaveEnum leaveEnum { get; set; }
         [ForeignKey(nameof(Employee))]
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
      
     }

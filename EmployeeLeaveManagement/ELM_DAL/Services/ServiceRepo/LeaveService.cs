@@ -2,7 +2,9 @@
 using ELM.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -12,10 +14,12 @@ namespace ELM_DAL.Services.ServiceRepo
     {
         private HttpClient _httpService;
         private IConfiguration _configuration;
-        public LeaveService(HttpClient httpService, IConfiguration configuration)
+        private IJSRuntime _jsRunTime;
+        public LeaveService(HttpClient httpService, IConfiguration configuration,IJSRuntime jsRunTime)
         {
             _httpService = httpService;
             _configuration = configuration;
+            _jsRunTime = jsRunTime;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
         public async Task DeleteLeave(int id)
@@ -27,6 +31,9 @@ namespace ELM_DAL.Services.ServiceRepo
             Response<LeaveDto> responseDto = new();
             try
             {
+                var token = await _jsRunTime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(Paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await _httpService.PostAsync($"{Apiroute()}leave/getall", Content);
