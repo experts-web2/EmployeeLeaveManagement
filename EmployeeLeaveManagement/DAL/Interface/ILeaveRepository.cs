@@ -1,4 +1,5 @@
-﻿using DomainEntity.Models;
+﻿using DAL.Interface.GenericInterface;
+using DomainEntity.Models;
 using DTOs;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace DAL.Interface
 {
-    public interface ILeaveRepository
+    public interface ILeaveRepository: IGenericRepository<Leave>
     {
-        List<LeaveDto> GetAllLeave();
-        void Addleave(LeaveDto leaveDto);
-        List<Leave> GetLeaves(int id);
+     
     }
 }

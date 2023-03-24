@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-   public class EmployeeRepository : IEmployeeRepository
+   public class EmployeeRepository :GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly AppDbContext Db;
+        private readonly AppDbContext _dbContext;
 
-        public EmployeeRepository(AppDbContext db)
+        public EmployeeRepository(AppDbContext dbContext):base(dbContext)
         {
-            Db = db;
+            _dbContext = dbContext;
         }
         
-        public void AddEmployee(EmployeeDto employee)
-        {
-            Employee employeeEntity = ToEntity(employee);
-            Db.Employees.Add(employeeEntity);
-            Db.SaveChanges();
+        //public void AddEmployee(EmployeeDto employee)
+        //{
+        //    Employee employeeEntity = ToEntity(employee);
+        //    _dbContext.Employees.Add(employeeEntity);
+        //    _dbContext.SaveChanges();
 
-        }
+        //}
         private Employee ToEntity(EmployeeDto employeeDto)
         {
             Employee employee = new Employee()
@@ -40,7 +40,7 @@ namespace DAL.Repositories
         }
         public PagedList<EmployeeDto> GetAllEmployee(Pager pager)
         {
-            var employees = Db.Employees.Include(x => x.Leaves).AsQueryable();
+            var employees = _dbContext.Employees.Include(x => x.Leaves).AsQueryable();
             if (!string.IsNullOrEmpty(pager.Search))
             {
                 employees = employees.
@@ -86,11 +86,11 @@ namespace DAL.Repositories
         {
             try
             {
-                var Deleted = Db.Employees.FirstOrDefault(x => x.Id == id);
+                var Deleted = _dbContext.Employees.FirstOrDefault(x => x.Id == id);
                 if (Deleted != null)
                 {
-                    Db.Remove(Deleted);
-                    Db.SaveChanges();
+                    _dbContext.Remove(Deleted);
+                    _dbContext.SaveChanges();
                 }
             }
             catch (Exception)
@@ -105,8 +105,8 @@ namespace DAL.Repositories
             try
             {
                  var Updated = ToEntity(employee);
-                Db.Update(Updated);
-                Db.SaveChanges();
+                _dbContext.Update(Updated);
+                _dbContext.SaveChanges();
             }
             catch (Exception)
             {
@@ -116,7 +116,7 @@ namespace DAL.Repositories
         }
         public EmployeeDto GetById(int id)
         {
-          var FindEmployee= Db.Employees.Include(x=>x.Leaves).FirstOrDefault(x => x.Id == id);
+          var FindEmployee= _dbContext.Employees.Include(x=>x.Leaves).FirstOrDefault(x => x.Id == id);
 
             EmployeeDto employeeDto = SetEmployeeDto(FindEmployee);
             return employeeDto;
@@ -152,7 +152,7 @@ namespace DAL.Repositories
         }
         public List<Employee> GetAllEmployees()
         {
-          return  Db.Employees.ToList();
+          return  _dbContext.Employees.ToList();
         }
     }
 }

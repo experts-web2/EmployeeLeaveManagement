@@ -11,6 +11,8 @@ using EmpLeave.Api.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 using Hangfire;
 using Microsoft.Extensions.Primitives;
+using BL.Service;
+using BL.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,8 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();
 builder.Services.AddScoped<IAttendenceRepository, AttendenceRepository>();
 builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
+builder.Services.AddScoped<ILeaveService, LeaveService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

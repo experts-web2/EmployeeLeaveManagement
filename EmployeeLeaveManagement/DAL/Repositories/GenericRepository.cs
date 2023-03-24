@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
         private readonly AppDbContext _DbContext;
         private readonly DbSet<T> _table;
@@ -55,14 +55,46 @@ namespace DAL.Repositories
             _DbContext.SaveChanges();
         }
 
-        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        public  IQueryable<T> Get(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
-            var query = _table.AsQueryable();
+            try
+            {
+                return   Query().Includes(includes).Where(predicate);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        private IQueryable<T> Query()
+        {
+            return Entity().AsQueryable<T>();
+        }
+        private DbSet<T> Entity()
+        {
+            return _DbContext.Set<T>();
+        }
+
+
+    }
+    public static class IQueryableExtension
+    {
+        public static IQueryable<T> Includes<T>(this IQueryable<T> query, params Expression<Func<T, object>>[] includes) where T : class
+        {
+            if (includes is null || !includes.Any())
+                return query;
+
             foreach (var include in includes)
             {
                 query = query.Include(include);
             }
-            return await query.FirstOrDefaultAsync(e => (int)e.GetType().GetProperty("Id").GetValue(e) == id);
+
+            return query;
         }
+
+
+
     }
 }
+

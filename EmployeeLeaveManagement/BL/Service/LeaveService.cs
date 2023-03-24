@@ -5,15 +5,15 @@ using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
 namespace BL.Service
 {
     public class LeaveService : ILeaveService
     {
-        private readonly IGenericRepository<Leave> _genericRepository;
         private readonly ILeaveRepository _leaveRepository;
-        public LeaveService(IGenericRepository<Leave> genericRepository,ILeaveRepository leaveRepository)
+        public LeaveService( ILeaveRepository leaveRepository)
         {
-            _genericRepository = genericRepository;
             _leaveRepository = leaveRepository;
         }
         public LeaveDto Add(LeaveDto leaveDto)
@@ -23,16 +23,16 @@ namespace BL.Service
                 return null;
             }
             try
-                {
-                    Leave leaveEntity = ToEntity(leaveDto);
-                    _genericRepository.Add(leaveEntity);
-                    return leaveDto;
-                }
-                catch (Exception)
-                {
+            {
+                Leave leaveEntity = ToEntity(leaveDto);
+                _leaveRepository.Add(leaveEntity);
+                return leaveDto;
+            }
+            catch (Exception)
+            {
 
-                    throw;
-                }
+                throw;
+            }
         }
         private Leave ToEntity(LeaveDto leaveDto)
         {
@@ -53,7 +53,7 @@ namespace BL.Service
         {
             try
             {
-                _genericRepository.deletebyid(id);
+                _leaveRepository.deletebyid(id);
             }
             catch (Exception)
             {
@@ -64,7 +64,7 @@ namespace BL.Service
 
         public LeaveDto GetById(int id)
         {
-            var GetId = _genericRepository.GetByID(id);
+            var GetId = _leaveRepository.GetByID(id);
             return SetLeaveDto(GetId);
         }
         private static LeaveDto SetLeaveDto(Leave leave)
@@ -97,7 +97,7 @@ namespace BL.Service
         {
             try
             {
-                IQueryable<Leave> allEmpLeaves = _genericRepository.GetAll().Include(x => x.Employee);
+                IQueryable<Leave> allEmpLeaves = _leaveRepository.GetAll().Include(x => x.Employee);
                 if (!string.IsNullOrEmpty(pager.Search))
                 {
                     allEmpLeaves = allEmpLeaves.
@@ -151,7 +151,7 @@ namespace BL.Service
             }
             try
             {
-                _genericRepository.update(ToEntity(leave));
+                _leaveRepository.update(ToEntity(leave));
                 return leave;
             }
             catch (Exception)
@@ -160,21 +160,21 @@ namespace BL.Service
                 throw;
             }
         }
-
-        public List<LeaveDto> GetLeaves(int id)
+        public async Task<List<LeaveDto>> GetLeavesByEmployeeID(int employeeId)
         {
             try
             {
-                var leaves = _leaveRepository.GetLeaves(id);
-                List<LeaveDto> leavesDto = ToDtos(leaves);
-                return leavesDto;
+
+                var leave = _leaveRepository.Get(x => x.EmployeeId == employeeId, x => x.Employee);
+                var dtos = ToDtos( leave.ToList());
+                return dtos;
             }
             catch (Exception)
-            {
 
+            {
                 throw;
             }
         }
-     
+
     }
 }

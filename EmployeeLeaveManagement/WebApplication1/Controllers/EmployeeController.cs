@@ -1,4 +1,5 @@
-﻿using DAL.Interface;
+﻿using BL.Interface;
+using DAL.Interface;
 using DTOs;
 using ELM.Helper;
 using Hangfire;
@@ -14,11 +15,14 @@ namespace EmpLeave.Api.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IJobService _jobService;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        public EmployeeController(IEmployeeRepository employeeRepository, IJobService jobService, IBackgroundJobClient backgroundJobClient)
+        private readonly IEmployeeService _employeeService;
+        public EmployeeController(IEmployeeRepository employeeRepository, IJobService jobService, IBackgroundJobClient backgroundJobClient,IEmployeeService employeeService)
         {
             _employeeRepository = employeeRepository;
             _jobService = jobService;
             _backgroundJobClient = backgroundJobClient;
+            _employeeService = employeeService;
+
         }
         [HttpPost("getall")]
         public IActionResult GetAllEmployee(Pager pager)
@@ -46,7 +50,7 @@ namespace EmpLeave.Api.Controllers
         [HttpPost]
         public IActionResult AddEmployee(EmployeeDto employeeDto)
         {
-            _employeeRepository.AddEmployee(employeeDto);
+            _employeeService.AddEmployee(employeeDto);
             return Ok("Added Succesfully");
         }
 
