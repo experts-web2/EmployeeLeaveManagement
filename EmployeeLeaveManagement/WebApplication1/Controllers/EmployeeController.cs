@@ -29,7 +29,7 @@ namespace EmpLeave.Api.Controllers
         {
             try
             {
-                var allemployees = _employeeRepository.GetAllEmployee(pager);
+                var allemployees = _employeeService.GetAllEmployee(pager);
                 var metadata = new
                 {
                     allemployees.TotalCount,
@@ -57,25 +57,25 @@ namespace EmpLeave.Api.Controllers
         [HttpPut]
         public IActionResult UpdateEmployee(EmployeeDto employee)
         {
-            _employeeRepository.Update(employee);
+            _employeeService.Update(employee);
             return Ok("Updated Succesfully");
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteEmployee(int id)
         {
-            _employeeRepository.DeleteEmployee(id);
+            _employeeService.DeleteEmployee(id);
             return Ok("Deleted Succesfully");
         }
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)
         {
-            var employeeDto = _employeeRepository.GetById(id);
+            var employeeDto = _employeeService.GetById(id);
             return Ok(employeeDto);
         }
         [HttpGet("GetAllEmployees")]
         public IActionResult GetAll()
         {
-           var ListOfEmployees= _employeeRepository.GetAllEmployees();
+           var ListOfEmployees= _employeeService.GetAllEmployees();
             return Ok(ListOfEmployees);
         }
         [HttpGet("GetAllAbsentEmployee")]

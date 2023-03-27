@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,10 @@ namespace BL.Interface
     public interface IEmployeeService
     {
         void AddEmployee(EmployeeDto employee);
+        PagedList<EmployeeDto> GetAllEmployee(Pager pager);
+        void DeleteEmployee(int id);
+        EmployeeDto GetById(int id);
+        void Update(EmployeeDto employee);
+        List<Employee> GetAllEmployees();
     }
 }
