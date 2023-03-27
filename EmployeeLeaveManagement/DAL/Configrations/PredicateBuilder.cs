@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Configrations
 {
-     static  class PredicateBuilder
+   public  static  class PredicateBuilder
     {
         public static Expression<Func<T, bool>> True<T>() { return param => true; }
 

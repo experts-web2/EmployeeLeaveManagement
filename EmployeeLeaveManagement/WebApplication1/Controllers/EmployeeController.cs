@@ -12,13 +12,11 @@ namespace EmpLeave.Api.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeRepository _employeeRepository;
         private readonly IJobService _jobService;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IEmployeeService _employeeService;
-        public EmployeeController(IEmployeeRepository employeeRepository, IJobService jobService, IBackgroundJobClient backgroundJobClient,IEmployeeService employeeService)
+        public EmployeeController(IJobService jobService, IBackgroundJobClient backgroundJobClient,IEmployeeService employeeService)
         {
-            _employeeRepository = employeeRepository;
             _jobService = jobService;
             _backgroundJobClient = backgroundJobClient;
             _employeeService = employeeService;
