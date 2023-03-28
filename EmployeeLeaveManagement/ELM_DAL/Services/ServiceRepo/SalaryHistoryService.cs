@@ -62,7 +62,19 @@ namespace ELM_DAL.Services.ServiceRepo
 
         public async Task<SalaryHistoryDto> GetSalaryById(int id)
         {
-            return await _httpService.GetFromJsonAsync<SalaryHistoryDto>($"{Apiroute()}SalaryHistory/GetById/{id}");
+            try
+            {
+                var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                return await _httpService.GetFromJsonAsync<SalaryHistoryDto>($"{Apiroute()}SalaryHistory/GetById/{id}");
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+           
         }
         public async Task DeleteSalary(int id)
         {

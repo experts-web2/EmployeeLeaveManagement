@@ -1,4 +1,5 @@
-﻿using DomainEntity.Models;
+﻿using DAL.Interface.GenericInterface;
+using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using System;
@@ -10,12 +11,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Interface
 {
-    public interface ISalaryHistoryRepository
+    public interface ISalaryHistoryRepository:IGenericRepository<SalaryHistory>
     {
-        public void AddSalary(SalaryHistoryDto salaryDto);
-        public PagedList<SalaryHistoryDto> GetSalaries(Pager pager, Expression<Func<SalaryHistory, bool>> predicate = null);
-        public List<SalaryHistoryDto> GetSalary(int id);
-        public void EditSalary(SalaryHistoryDto salarDto);
-        public void DeleteSalary(int id);
     }
 }
