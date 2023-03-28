@@ -42,7 +42,7 @@ namespace EmpLeave.Api.Controllers
             {
                 var newUser = new User { UserName = model.Email, Email = model.Email};
 
-                if (model.EmployeeId is not null)
+                if (model.EmployeeId !=0)
                     newUser.EmployeeId = model.EmployeeId;
 
                 var result = await _userManager.CreateAsync(newUser, model.Password);
