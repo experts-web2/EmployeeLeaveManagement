@@ -1,6 +1,8 @@
 using ELM.Web.Data;
 using ELM.Web.Services.Interface;
 using ELM.Web.Services.ServiceRepo;
+using ELM_DAL.Services.Interface;
+using ELM_DAL.Services.ServiceRepo;
 using EmpLeave.Web.Services.Interface;
 using EmpLeave.Web.Services.ServiceRepo;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -18,6 +20,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();

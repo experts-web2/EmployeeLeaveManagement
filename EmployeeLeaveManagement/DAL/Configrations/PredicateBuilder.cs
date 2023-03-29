@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace DAL.Configrations
 {
-     static  class PredicateBuilder
-    {
+    public static class PredicateBuilder
+    {/// <summary>    
+     /// Creates a predicate that evaluates to true.    
+     /// </summary>    
         public static Expression<Func<T, bool>> True<T>() { return param => true; }
 
         /// <summary>    
@@ -29,12 +30,13 @@ namespace DAL.Configrations
             return first.Compose(second, Expression.AndAlso);
         }
 
-        ///// <summary>    
-        ///// Combines the first predicate with the second using the logical "or".    
-        ///// </summary>    
+        /// <summary>    
+        /// Combines the first predicate with the second using the logical "or".    
+        /// </summary>    
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
         {
             return first.Compose(second, Expression.OrElse);
+
         }
 
 
