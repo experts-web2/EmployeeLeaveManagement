@@ -46,7 +46,7 @@ namespace DAL.Repositories
                 {
                     predicate = predicate.And(x => x.EmployeeId.ToString() == pager.Search);
                 }
-                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue)
+                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate?.Date != DateTime.MinValue)
                 {
                     predicate = predicate.And(x => x.IncrementDate.Date >= pager.StartDate && x.IncrementDate.Date <= pager.EndDate);
                 }

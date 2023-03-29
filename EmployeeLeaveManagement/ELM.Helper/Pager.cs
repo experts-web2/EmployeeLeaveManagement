@@ -4,7 +4,7 @@ namespace ELM.Helper;
     {
         public string Search { get; set; } = String.Empty;
         public DateTime? StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public int MaxPagesize = 40;
         public int CurrentPage { get; set; } = 1;
         public bool HasPrevious => CurrentPage > 1;

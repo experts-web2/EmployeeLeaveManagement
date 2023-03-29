@@ -64,7 +64,7 @@ namespace DAL.Repositories
             else
                 predicate = predicate.And(predicate);
             var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
-            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate.Date != DateTime.MinValue)
+            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate?.Date != DateTime.MinValue)
             {
                 attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate &&  x.AttendenceDate.Date >= paging.StartDate);
             }
