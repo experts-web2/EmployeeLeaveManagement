@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230315145333_make_nullable_employee.Designer.cs
-    [Migration("20230315145333_make_nullable_employee")]
-    partial class make_nullable_employee
-========
-    [Migration("20230215114016_Add_newCol")]
-    partial class Add_newCol
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230215114016_Add_newCol.Designer.cs
+    [Migration("20230214124256_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,27 +39,11 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EmployeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("EmployeeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Employee_Id")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -84,15 +63,6 @@ namespace DAL.Migrations
                     b.Property<DateTime>("AttendenceDate")
                         .HasColumnType("datetime2");
 
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230315145333_make_nullable_employee.Designer.cs
-========
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230215114016_Add_newCol.Designer.cs
                     b.Property<int?>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("int");
@@ -105,26 +75,18 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("TimeIn")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("Timeout")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -146,12 +108,6 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double>("CurrentSalary")
                         .HasColumnType("float");
 
@@ -169,17 +125,8 @@ namespace DAL.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -195,26 +142,11 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -240,30 +172,12 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230315145333_make_nullable_employee.Designer.cs
-========
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230215114016_Add_newCol.Designer.cs
                     b.Property<int?>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("IncrementDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("NewSalary")
                         .HasColumnType("float");
@@ -293,9 +207,6 @@ namespace DAL.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -343,10 +254,6 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique()
-                        .HasFilter("[EmployeeId] IS NOT NULL");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -383,25 +290,22 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230315145333_make_nullable_employee.Designer.cs
-========
 
                     b.HasData(
                         new
                         {
-                            Id = "d10f3f92-3c43-436d-a0f4-a5ebcb3ba611",
-                            ConcurrencyStamp = "de034d9f-ee42-4227-9004-c6ae27e42788",
+                            Id = "49acc326-851c-494b-9612-637bb4b55acc",
+                            ConcurrencyStamp = "a1d31602-b344-481a-adba-b1e34b98ecd9",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "a38e75a0-3606-4ad2-a6d2-f5e390b5a9e0",
-                            ConcurrencyStamp = "cf2d8041-f7bb-41b5-b6ea-cb05fa30d3ba",
+                            Id = "a77fb03e-a07c-4a3d-88a8-3519a91625e0",
+                            ConcurrencyStamp = "b7d9f4be-84be-4d99-a000-77bebd0b5328",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230215114016_Add_newCol.Designer.cs
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -514,7 +418,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
                 });
@@ -548,15 +454,6 @@ namespace DAL.Migrations
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("DomainEntity.Models.User", b =>
-                {
-                    b.HasOne("DomainEntity.Models.Employee", "Employee")
-                        .WithOne("User")
-                        .HasForeignKey("DomainEntity.Models.User", "EmployeeId");
 
                     b.Navigation("Employee");
                 });
@@ -619,9 +516,6 @@ namespace DAL.Migrations
                     b.Navigation("Leaves");
 
                     b.Navigation("SalaryHistories");
-
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

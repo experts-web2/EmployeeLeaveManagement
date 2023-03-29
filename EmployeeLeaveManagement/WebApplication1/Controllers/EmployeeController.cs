@@ -74,18 +74,7 @@ namespace EmpLeave.Api.Controllers
            var ListOfEmployees= _employeeRepository.GetAllEmployees();
             return Ok(ListOfEmployees);
         }
-        [HttpGet("GetAllAbsentEmployee")]
-        public ActionResult GetAllAbsentEmployee()
-        {
-            RecurringJob.AddOrUpdate("myrecurringjob", () => _jobService.GetAbsentEmployee(), "0 0 * * MON-FRI");
-            return Ok(_jobService.GetAbsentEmployee());
-        }
-        [HttpGet("GetAllAttendance")]
-        public ActionResult GetAttendanceJob()
-        {
-            var AllAttendnce = _backgroundJobClient.Enqueue(() => _jobService.GetAllAttendences());
-            return Ok(AllAttendnce);
-        }
+
 
     }
 }
