@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230303123454_addEmployeeId.Designer.cs
     [Migration("20230303123454_addEmployeeId")]
     partial class addEmployeeId
-========
-    [Migration("20230214151453_delete_column")]
-    partial class delete_column
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230214151453_delete_column.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,31 +23,6 @@ namespace DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("DomainEntity.Models.Alert", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("AlertDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AlertType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Alerts");
-                });
 
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
                 {
@@ -298,25 +268,6 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230303123454_addEmployeeId.Designer.cs
-========
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "7909b04f-8d7f-4e9f-b1e7-e1b444b1216c",
-                            ConcurrencyStamp = "d764f662-048f-4ad5-9526-e70df93f096b",
-                            Name = "Employee",
-                            NormalizedName = "EMPLOYEE"
-                        },
-                        new
-                        {
-                            Id = "0d182f80-3677-4277-9961-5843186228b2",
-                            ConcurrencyStamp = "0ac2fee1-ecfc-4d88-9b59-d94c6f0fcc33",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230214151453_delete_column.Designer.cs
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -423,15 +374,6 @@ namespace DAL.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("DomainEntity.Models.Alert", b =>
-                {
-                    b.HasOne("DomainEntity.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>

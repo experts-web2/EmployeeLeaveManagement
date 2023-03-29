@@ -16,7 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();

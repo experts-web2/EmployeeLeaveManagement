@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230303123454_addEmployeeId.cs
     public partial class addEmployeeId : Migration
-========
-    public partial class init : Migration
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230214124256_init.cs
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -257,116 +253,6 @@ namespace DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-<<<<<<<< HEAD:EmployeeLeaveManagement/DAL/Migrations/20230303123454_addEmployeeId.cs
-========
-            migrationBuilder.CreateTable(
-                name: "Alerts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AlertDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AlertType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Employee_Id = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Alerts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Alerts_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Attendences",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AttendenceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TimeIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Timeout = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HostName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Longitude = table.Column<double>(type: "float", nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Attendences", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Attendences_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Leaves",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    leaveEnum = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Leaves", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Leaves_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SalaryHistories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NewSalary = table.Column<double>(type: "float", nullable: false),
-                    IncrementDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SalaryHistories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SalaryHistories_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "49acc326-851c-494b-9612-637bb4b55acc", "a1d31602-b344-481a-adba-b1e34b98ecd9", "Employee", "EMPLOYEE" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a77fb03e-a07c-4a3d-88a8-3519a91625e0", "b7d9f4be-84be-4d99-a000-77bebd0b5328", "Administrator", "ADMINISTRATOR" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Alerts_EmployeeId",
-                table: "Alerts",
-                column: "EmployeeId");
-
->>>>>>>> dev:EmployeeLeaveManagement/DAL/Migrations/20230214124256_init.cs
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -430,9 +316,6 @@ namespace DAL.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Alerts");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
