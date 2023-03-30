@@ -7,7 +7,7 @@ namespace EmpLeave.Web.Services.Interface
     public interface IRegisterService
     {
         Task AddUserCall(UserRegistrationModel userRegistrationModel);
-        Task DeleteUserCall(string id);
+        Task DeleteUser(string id);
         Task<List<User>> GetAllUserCall();
         Task SignOut();
         Task UpdateUserCall(User user);

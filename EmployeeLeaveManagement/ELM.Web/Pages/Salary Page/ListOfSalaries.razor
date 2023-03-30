@@ -26,18 +26,22 @@
                 </div>
             </div>
             <br />
-            <div class="mb-3">
-                <label class="mb-2">Employee Name</label>
-                <div class="col-md-10">
-                    <InputSelect class="form-control" @bind-Value="Search">
-                        <option selected disabled value="0">Employee Name List</option>
-                        @foreach (var employee in EmployeesList)
-                        {
-                            <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
-                        }
-                    </InputSelect>
-                </div>
-            </div>
+            <AuthorizeView Roles="Admin">
+                <ChildContent Context="authContext">
+                    <div class="mb-3">
+                        <label class="mb-2">Employee Name</label>
+                        <div class="col-md-10">
+                            <InputSelect class="form-control" @bind-Value="Search">
+                                <option selected disabled value="0">Employee Name List</option>
+                                @foreach (var employee in EmployeesList)
+                                {
+                                    <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
             <button>Search</button>
         </EditForm>
     </div>
@@ -71,7 +75,7 @@ else
                     <td>@salary.NewSalary</td>
                     <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
                     <td>@salary.FirstName  @salary.LastName</td>
-                    <td>
+                    <td style="width:15%;">
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
                         @onclick="(() => DeleteConfirm(salary.ID))">
                             Delete

@@ -1,15 +1,19 @@
 ﻿using BL.Interface;
 using DTOs;
 using ELM.Helper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
+using System.Security.Claims;
 
 namespace EmpLeave.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
     public class LeaveController : ControllerBase
-    {
+    {       
         private readonly ILeaveService _leaveService;
         public LeaveController(ILeaveService leaveService)
         {
@@ -18,7 +22,11 @@ namespace EmpLeave.Api.Controllers
         [HttpPost]
         public IActionResult AddLeave(LeaveDto leaveDto)
         {
-            var response = _leaveService.Add(leaveDto);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (leaveDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
+                leaveDto.EmployeeId = RoleID;
+                var response = _leaveService.Add(leaveDto);
             return Ok(response);
         }
         [HttpPost("getall")]
@@ -26,18 +34,26 @@ namespace EmpLeave.Api.Controllers
         {
             try
             {
-                var AllLeave = _leaveService.GetAll(pager);
-                var metadata = new
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var Role = identity?.FindFirst(ClaimTypes.Role);
+                var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (Role.Value.Contains("Admin"))
                 {
-                    AllLeave.TotalCount,
-                    AllLeave.PageSize,
-                    AllLeave.TotalPages,
-                    AllLeave.CurrentPage,
-                    AllLeave.HasPrevious,
-                    AllLeave.HasNext,
-                };
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                return Ok(AllLeave);
+                    var AllLeave = _leaveService.GetAll(pager);
+                    var metadata = new
+                    {
+                        AllLeave.TotalCount,
+                        AllLeave.PageSize,
+                        AllLeave.TotalPages,
+                        AllLeave.CurrentPage,
+                        AllLeave.HasPrevious,
+                        AllLeave.HasNext,
+                    };
+                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                    return Ok(AllLeave);
+                }
+                return GetLeavesByEmployeeId(int.Parse(ClaimRoleId));
+                  
             }
             catch (Exception ex)
             {
@@ -61,6 +77,14 @@ namespace EmpLeave.Api.Controllers
         {
             var leaveDto = _leaveService.GetById(id);
             return Ok(leaveDto);
+        }
+        [HttpGet("GetLeavesByEmployeeId/{Id}")]
+        public IActionResult GetLeavesByEmployeeId(int id)
+        {
+            var leaves = _leaveService.GetLeaves(id);
+            if (leaves != null)
+                return Ok(leaves);
+            return BadRequest();
         }
     }
 }

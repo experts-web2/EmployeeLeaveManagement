@@ -10,16 +10,17 @@ using DomainEntity.Models;
 using EmpLeave.Api.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 using Hangfire;
+using Microsoft.Extensions.Primitives;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ISalaryHistoryRepository, SalaryHistoryRepository>();
 builder.Services.AddScoped<IAttendenceRepository, AttendenceRepository>();
+builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>
@@ -50,15 +51,21 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidIssuer = "https://localhost:7150",
-            ValidAudience = "User",
+            ValidIssuer = "https://localhost:7225",
+            ValidAudience = "https://localhost:7225",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Thisismysecretkey123456789"))
         };
         options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["jwt"];
+                //context.Token = context.Request.Cookies["jwt"];
+                //string accessToken = string.Empty;
+                //context.Request.Headers.TryGetValue("jwt", out StringValues actt);
+                //context.Token = actt.ToString();
+                var cookieToken = context.Request.Cookies["jwt"];
+                var headerToken = context.Request.Headers.Authorization.FirstOrDefault();
+                context.Token = cookieToken != null ? cookieToken : headerToken;
                 return Task.CompletedTask;
             }
         };

@@ -2,20 +2,24 @@
 using ELM.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace EmpLeave.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class LeaveService : ILeaveService
     {
         private HttpClient _httpService;
         private IConfiguration _configuration;
-        public LeaveService(HttpClient httpService, IConfiguration configuration)
+        private IJSRuntime _jsRunTime;
+        public LeaveService(HttpClient httpService, IConfiguration configuration,IJSRuntime jsRunTime)
         {
             _httpService = httpService;
             _configuration = configuration;
+            _jsRunTime = jsRunTime;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
         }
         public async Task DeleteLeave(int id)
@@ -27,6 +31,9 @@ namespace EmpLeave.Web.Services.ServiceRepo
             Response<LeaveDto> responseDto = new();
             try
             {
+                var token = await _jsRunTime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(Paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await _httpService.PostAsync($"{Apiroute()}leave/getall", Content);
@@ -50,7 +57,16 @@ namespace EmpLeave.Web.Services.ServiceRepo
         }
         public async Task<LeaveDto> GetByIdCall(int id)
         {
-            return await _httpService.GetFromJsonAsync<LeaveDto>($"{Apiroute}leave/GetById/{id}");
+            try
+            {
+                var response = await _httpService.GetFromJsonAsync<LeaveDto>($"{Apiroute()}leave/GetById/{id}");
+                return response;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task AddLeave(LeaveDto leaveDto)
         {

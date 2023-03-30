@@ -21,9 +21,15 @@ namespace EmpLeave.Web.Pages.AuthPage.UserList
         {
             UserList = await RegisterService.GetAllUserCall();
         }
-        public void SetUser(string id)
+        public void DeleteConfirm(string id)
         {
             SelectedUser = UserList.FirstOrDefault(x=>x.Id==id);
+        }
+        public async Task DeleteUser(string id)
+        {
+            await  RegisterService.DeleteUser(id);
+            await GetAll();
+
         }
     }
 }

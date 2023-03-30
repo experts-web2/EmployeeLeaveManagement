@@ -1,12 +1,13 @@
 namespace ELM.Web.Data
 {
     public class WeatherForecastService
+
     {
         private static readonly string[] Summaries = new[]
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
-
+        public static string AccessToken;
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {
             return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast

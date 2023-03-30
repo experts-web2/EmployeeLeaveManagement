@@ -1,19 +1,20 @@
 ﻿using BL.Interface;
+using DAL.Interface;
 using DAL.Interface.GenericInterface;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
-
 namespace BL.Service
 {
     public class LeaveService : ILeaveService
     {
         private readonly IGenericRepository<Leave> _genericRepository;
-
-        public LeaveService(IGenericRepository<Leave> genericRepository)
+        private readonly ILeaveRepository _leaveRepository;
+        public LeaveService(IGenericRepository<Leave> genericRepository,ILeaveRepository leaveRepository)
         {
             _genericRepository = genericRepository;
+            _leaveRepository = leaveRepository;
         }
         public LeaveDto Add(LeaveDto leaveDto)
         {
@@ -159,5 +160,21 @@ namespace BL.Service
                 throw;
             }
         }
+
+        public List<LeaveDto> GetLeaves(int id)
+        {
+            try
+            {
+                var leaves = _leaveRepository.GetLeaves(id);
+                List<LeaveDto> leavesDto = ToDtos(leaves);
+                return leavesDto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+     
     }
 }

@@ -13,7 +13,7 @@ namespace EmpLeave.Api.Controllers
         private readonly IAlertRepository _alertRepository;
         public AlertController(IAlertRepository alertRepository)
         {
-            _alertRepository = alertRepository; 
+            _alertRepository = alertRepository;
         }
         [HttpPost]
         public ActionResult GetAlert(Pager pager)
@@ -29,9 +29,9 @@ namespace EmpLeave.Api.Controllers
                     Alerts.CurrentPage,
                     Alerts.HasPrevious,
                     Alerts.HasNext,
-                  //  pager.StartDate,
-                 //   pager.EndDate,
-                   // pager.Search
+                    //  pager.StartDate,
+                    //   pager.EndDate,
+                    // pager.Search
                 };
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(Alerts);
@@ -44,9 +44,9 @@ namespace EmpLeave.Api.Controllers
         [HttpGet("getAbsent")]
         public ActionResult GetAllAbsentEmployee()
         {
-              RecurringJob.AddOrUpdate("AlertRecurringJob", () => _alertRepository.AddAbsentEmployeeAlert(), "0 0 0 * * Mon-Fri");
+            RecurringJob.AddOrUpdate("AlertRecurringJob", () => _alertRepository.AddAbsentEmployeeAlert(), "0 0 0 * * Mon-Fri");
             return Ok(_alertRepository.AddAbsentEmployeeAlert());
         }
-        
+
     }
 }

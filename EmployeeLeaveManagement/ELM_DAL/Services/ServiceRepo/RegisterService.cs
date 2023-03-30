@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace EmpLeave.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class RegisterService : IRegisterService
     {
@@ -24,16 +24,16 @@ namespace EmpLeave.Web.Services.ServiceRepo
         {
             await _httpService.PostAsJsonAsync($"{Apiroute()}account/register", userRegistrationModel);
         }
-        public async Task DeleteUserCall(string id)
+        public async Task DeleteUser(string id)
         {
-            await _httpService.DeleteAsync($"{Apiroute()}account/{id}");
+            var response= await _httpService.DeleteAsync($"{Apiroute()}auth/{id}");
         }
         public async Task<List<User>> GetAllUserCall()
         {
             List<User> respons = new();
             try
             {
-                respons = await _httpService.GetFromJsonAsync<List<User>>($"{Apiroute()}account");
+                respons = await _httpService.GetFromJsonAsync<List<User>>($"{Apiroute()}auth");
             }
             catch (System.Exception)
             {

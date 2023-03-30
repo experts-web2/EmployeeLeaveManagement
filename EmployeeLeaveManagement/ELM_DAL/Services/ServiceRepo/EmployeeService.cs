@@ -7,7 +7,7 @@ using DomainEntity.Models;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace EmpLeave.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class EmployeeService : IEmployeeService
     {
@@ -22,6 +22,7 @@ namespace EmpLeave.Web.Services.ServiceRepo
         public async Task AddEmployee(EmployeeDto employeeDto)
         {
             await _httpService.PostAsJsonAsync($"{Apiroute()}employee", employeeDto);
+            
         }
         public async Task<Response<EmployeeDto>> GetAllEmployee(Pager paging)
         {

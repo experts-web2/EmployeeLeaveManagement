@@ -16,8 +16,8 @@ namespace DAL.Repositories
         private readonly AppDbContext _dbContext;
         public AlertRepository(AppDbContext dbContext)
         {
-            _dbContext=dbContext;
-              
+            _dbContext = dbContext;
+
         }
         public void GetAllAbsentEmployee()
         {
@@ -37,14 +37,14 @@ namespace DAL.Repositories
                 predicate = predicate.And(predicate);
 
             var Alerts = _dbContext.Alerts.Include(x => x.Employee).AsQueryable();
-      
 
-             if (!string.IsNullOrEmpty(pager.Search))
+
+            if (!string.IsNullOrEmpty(pager.Search))
             {
                 predicate = predicate.And(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
                            x.Employee.FirstName.Contains(pager.Search.Trim()));
             }
-             if (pager.StartDate != null)
+            if (pager.StartDate != null)
             {
                 predicate = predicate.And(x => x.AlertDate.Date >= pager.StartDate.Value.Date);
             }
@@ -54,34 +54,34 @@ namespace DAL.Repositories
             }
             Alerts = Alerts.
                 Where(predicate);
-                                                                                                                                               
-  
+
+
             var paginatedList = PagedList<Alert>.ToPagedList(Alerts, pager.CurrentPage, pager.PageSize);
-                return new PagedList<Alert>
-                    (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
-          
+            return new PagedList<Alert>
+                (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
+
         }
 
         public List<Alert> AddAbsentEmployeeAlert()
         {
             //Querry For getting Employees Whose are Absent
             var AbsentEmployees = (from Employees in _dbContext.Employees
-                                  join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now.Date) || x.TimeIn == null || x.Timeout == null) on Employees.Id equals Attendences.EmployeeId
-                                  into employeeAtendence
-                                  from attendence in employeeAtendence.DefaultIfEmpty()
-                                  where attendence == null
+                                   join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now.Date) || x.TimeIn == null || x.Timeout == null) on Employees.Id equals Attendences.EmployeeId
+                                   into employeeAtendence
+                                   from attendence in employeeAtendence.DefaultIfEmpty()
+                                   where attendence == null
 
-                                  select Employees).Include(x=>x.Attendences).ToList();
+                                   select Employees).Include(x => x.Attendences).ToList();
             List<Alert> Alerts = new List<Alert>();
 
             foreach (var Employee in AbsentEmployees)
             {
-              Alert  Alert = new Alert()
+                Alert Alert = new Alert()
                 {
                     AlertDate = DateTime.Now,
                     AlertType = SetAlertType(Employee),
                     EmployeeId = Employee.Id,
-  
+
                 };
                 Alerts.Add(Alert);
             }
@@ -89,8 +89,8 @@ namespace DAL.Repositories
             _dbContext.SaveChanges();
             return Alerts;
         }
-    public string SetAlertType(Employee employee)
-    {
+        public string SetAlertType(Employee employee)
+        {
 
             if (employee.Attendences.Any(x => x.Timeout == null))
                 return "CheckOut Missing";
@@ -98,7 +98,7 @@ namespace DAL.Repositories
                 return "CheckIn Missing";
             return "Absent";
 
-    }
+        }
 
     }
 }

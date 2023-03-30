@@ -5,18 +5,22 @@
 <h3>Employees List</h3>
 
 <div class="row">
+   
     <div class="input-group mb-3">
         <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
             <InputText class="form-control" @bind-Value="Paging.Search" />
             <button>Search</button>
         </EditForm>
     </div>
+   
+
     <div class="col-md-6">
         <a href='/addemployee' class="btn btn-primary" role="button">
             <i class="fas fa-user-plus"></i>
             Add Employee
         </a>
     </div>
+   
 </div>
 <br />
 @if (EmployeeDtoList == null)
@@ -55,16 +59,21 @@ else
                         <button type="button" @onclick="()=>SetEmployeeID(employee.ID)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Details
                         </button>
+                        @*<a @onclick="()=>SetEmployeeID(employee.ID)"  class="button" data-bs-toggle="model" data-bs-target="#exampleModal" role="button">details</a>*@
 
                     </td>
                     <td>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                        <div class="button-container" style="height:40px;width:40px">
+                        <button class="button" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
                         @onclick="(() => DeleteConfirm(employee.ID))">
                             Delete
                         </button>
-                        <a href='/edit/@employee.ID' class="btn btn-outline-dark" role="button">
+                        </div>
+                        <div class="button-container">
+                        <a  href='/edit/@employee.ID' style="height:40px;width:70px" class="btn btn-outline-dark" role="button" text-align="center" >
                             Edit
                         </a>
+                        </div>
                     </td>
                 </tr>
             }

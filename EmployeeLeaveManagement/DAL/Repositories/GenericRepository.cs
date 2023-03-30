@@ -1,6 +1,11 @@
 ﻿using DAL.Interface.GenericInterface;
 using DomainEntity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
@@ -48,6 +53,16 @@ namespace DAL.Repositories
         {
             _DbContext.Update(item);
             _DbContext.SaveChanges();
+        }
+
+        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _table.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.FirstOrDefaultAsync(e => (int)e.GetType().GetProperty("Id").GetValue(e) == id);
         }
     }
 }

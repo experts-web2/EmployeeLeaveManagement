@@ -20,12 +20,9 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         public LeaveDto LeaveDto { get; set; } = new();
         [Parameter]
         public int? ID { get; set; }
-        protected override async Task OnInitializedAsync()
-        {
-           await GetEmployees();
-        }
         protected override async Task OnParametersSetAsync()
         {
+            await GetEmployees();
             if (ID.HasValue)
             {
 

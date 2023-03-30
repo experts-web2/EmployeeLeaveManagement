@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\ChecktypeofApp.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
@@ -24,11 +30,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\ChecktypeofApp.razor" />
     <_ContentIncludedByDefault Remove="Pages\GeoLocation\GeoLocation.razor" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\ChecktypeofApp.razor" />
     <None Include="Pages\GeoLocation\GeoLocation.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ChecktypeofApp.razor" />
   </ItemGroup>
 
 </Project>

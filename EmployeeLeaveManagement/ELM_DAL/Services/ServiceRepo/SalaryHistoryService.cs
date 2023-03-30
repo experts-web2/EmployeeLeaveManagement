@@ -2,20 +2,26 @@
 using ELM.Helper;
 using ELM.Web.Services.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace ELM.Web.Services.ServiceRepo
+namespace ELM_DAL.Services.ServiceRepo
 {
     public class SalaryHistoryService:ISalaryHistory
     {
         private HttpClient _httpService;
         private IConfiguration configuration;
-        public SalaryHistoryService(HttpClient httpService,IConfiguration _configuration)
+        private IHttpClientFactory _clientFactory;
+        private readonly IJSRuntime _jsRuntime;
+        public SalaryHistoryService(HttpClient httpService,IConfiguration _configuration,IHttpClientFactory httpClientFactory,IJSRuntime jSRuntime)
         {
             configuration = _configuration;
             _httpService = httpService;
+            _clientFactory = httpClientFactory;
+            _jsRuntime = jSRuntime;
         }
         public async Task AddSalary(SalaryHistoryDto salaryHistoryDto)
         {
@@ -27,6 +33,11 @@ namespace ELM.Web.Services.ServiceRepo
             Response<SalaryHistoryDto> responseDto = new();
             try
             {
+
+                _httpService = _clientFactory.CreateClient("api");
+                var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
                 var response = await _httpService.PostAsync($"{Apiroute()}SalaryHistory/getSalaries", Content);

@@ -1,6 +1,6 @@
 ﻿
-using DAL.Configrations;
 using DomainEntity.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,13 +16,11 @@ namespace DAL
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<Attendence> Attendences { get; set; }
         public DbSet<SalaryHistory>SalaryHistories { get; set; }
-        public DbSet<Alert> Alerts { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        }
-
+        public DbSet<Alert>Alerts { get; set; }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+        //    modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        //}
     }
 }

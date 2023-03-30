@@ -64,22 +64,26 @@ namespace DAL.Repositories
             else
                 predicate = predicate.And(predicate);
             var attendences = _dbContext.Attendences.Include(x => x.Employee).AsQueryable();
-            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate.Date != DateTime.MinValue)
+            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate?.Date != DateTime.MinValue)
             {
-                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate && x.AttendenceDate >= paging.StartDate);
+                attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate &&  x.AttendenceDate.Date >= paging.StartDate);
             }
             if (!string.IsNullOrEmpty(paging.Search))
             {
                 attendences = attendences.Where(x => x.EmployeeId.ToString() == paging.Search);
             }
             else
-                attendences = attendences.Where(x => x.AttendenceDate <= paging.EndDate);
+                attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate);
 
             var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
             var attendenceDto = ToDtos(paginatedList);
             return new PagedList<AttendenceDto>
                 (attendenceDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
         }
+        //public PagedList<AttendenceDto> GetAttendence(Pager paging)
+        //{
+        //    return new PagedList<AttendenceDto>();
+        //}
         private List<AttendenceDto> ToDtos(List<Attendence> attendences)
         {
             try
@@ -149,6 +153,12 @@ namespace DAL.Repositories
             var FindAttendence = _dbContext.Attendences.Include(x => x.Employee).FirstOrDefault(x => x.Id == id);
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;
+        }
+        public List<AttendenceDto> GetAttendencebyEmployeeId(int id)
+        {
+            var Attendances = _dbContext.Attendences.Include(x => x.Employee).Where(x => x.EmployeeId == id);
+            var attendenceDto =Attendances.Select (SetAttendenceDto);
+            return attendenceDto.ToList();
         }
         private static AttendenceDto SetAttendenceDto(Attendence attendence)
         {

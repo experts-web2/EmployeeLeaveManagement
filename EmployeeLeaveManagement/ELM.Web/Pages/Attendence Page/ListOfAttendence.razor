@@ -1,52 +1,60 @@
-﻿@page "/ListOfAttendence" 
+﻿@page "/ListOfAttendence"
 @using ELM.Web.Pages.Attendence_Page;
 @inherits AttendenceListBase
 <h3>List Of Attendence</h3>
 <div class="row">
-  <div class="input-group mb-3">
-    <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
-       <div class="mb-1">
-          <div class="row">
-             <div class="col-md-6">
-                 <label for="Name" class="form-label">Starting Date</label>
-             </div>
-            <div class="col-md-6">
-               <label for="Name" class="form-label">Current Date</label>
-            </div>
-          </div>
-       </div>
-       <div class="mb-2">
-          <div class="row">    
-              <div class="col-md-6">
-                    <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="StartDate" />
-              </div> 
-              <div class="col-md-6">
-                    <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="EndDate" />
-              </div>
-          </div>
-       </div>
-       <div class="mb-3">
-                <label class="mb-2">Employee Name</label>
-                <div class="col-md-10">
-                    <InputSelect class="form-control" @bind-Value="Search">
-                        <option selected disabled value="0">Employee Name List</option>
-                        @foreach (var employee in EmployeesList)
-                        {
-                            <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
-                        }
-                    </InputSelect>
+    <div class="input-group mb-3">
+        <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
+            <div class="mb-1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="Name" class="form-label">Starting Date</label>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Name" class="form-label">Current Date</label>
+                    </div>
                 </div>
-       </div>
+            </div>
+            <div class="mb-2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="StartDate" />
+                    </div>
+                    <div class="col-md-6">
+                        <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="EndDate" />
+                    </div>
+                </div>
+            </div>
+            <AuthorizeView Roles="Admin">
+                <ChildContent Context="authContext">
+                    <div class="mb-3">
+
+                        <label class="mb-2">Employee Name</label>
+                        <div class="col-md-10">
+                            <InputSelect class="form-control" @bind-Value="Search">
+                                <option selected disabled value="0">Employee Name List</option>
+                                @foreach (var employee in EmployeesList)
+                                {
+                                    <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
             <br />
             <button>Search</button>
-    </EditForm>
+        </EditForm>
     </div>
-    <div class="col-md-6">
-        <a href='/Add_Attendence' class="btn btn-primary" role="button">
-            <i class="fas fa-user-plus"></i>
-            Add Attendence
-        </a>
-  </div>
+    
+        <div class="col-md-6">
+            <a href='/Add_Attendence' class="btn btn-primary" role="button">
+                <i class="fas fa-user-plus"></i>
+                Add Attendence
+            </a>
+        </div>
+  
 </div>
 <br />
 @if (AttendenceDtoList == null)
@@ -56,46 +64,49 @@
 else
 {
     <table class="table table-striped align-middle table-bordered">
-         <thead class="table-success">
+        <thead class="table-success">
             <tr>
                 <th>Attendence Date</th>
                 <th>TimeIn</th>
                 <th>TimeOut</th>
                 <th>Host Name</th>
                 <th>IpAddress</th>
-                <th>Longitude</th>
-                <th>Latitude</th>
                 <th>Employee Name</th>
-                <th class="colspan-2">Actions</th>
+                <AuthorizeView Roles="Admin">
+                    <th class="colspan-2">Actions</th>
+                </AuthorizeView>
             </tr>
         </thead>
         <tbody>
-            @foreach(var attendence in AttendenceDtoList)
+            @foreach (var attendence in AttendenceDtoList)
             {
-              <tr>
-                <td>@attendence.AttendenceDate.ToString("dd/MM/yyyy")</td>
-                <td>@attendence.TimeIn?.ToString("hh:mm tt")</td>
-                <td>@attendence.Timeout?.ToString("hh:mm tt")</td>
-                <td>@attendence.HostName</td>
-                <td>@attendence.IpAddress</td>
-                <td>@attendence.Longitude</td>
-                <td>@attendence.Latitude</td>
-                <td>@attendence.FirstName  @attendence.LastName</td>
-                    <td>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalary"
-                        @onclick="(() => DeleteConfirm(attendence.ID))">
-                            Delete
-                        </button>
-                        <a href='/edit/attendence/@attendence.ID' class="btn btn-outline-dark" role="button">
-                            Edit
-                        </a>
-                    </td>
-              </tr>
+                <tr>
+                    <td>@attendence.AttendenceDate.ToString("dd/MM/yyyy")</td>
+                    <td>@attendence.TimeIn?.ToString("hh:mm tt")</td>
+                    <td>@attendence.Timeout?.ToString("hh:mm tt")</td>
+                    <td>@attendence.HostName</td>
+                    <td>@attendence.IpAddress</td>
+                    <td>@attendence.FirstName  @attendence.LastName</td>
+                    <AuthorizeView Roles="Admin">
+                        <td>
+                             <div class="button-container" style="height:40px;width:40px">
+                            <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSalary"
+                            @onclick="(() => DeleteConfirm(attendence.ID))">
+                                Delete
+                            </button>
+                            </div>
+                              <div class="button-container">
+                            <a href='/edit/attendence/@attendence.ID' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
+                                Edit
+                            </a>
+                            </div>
+                        </td>
+                    </AuthorizeView>
+                </tr>
             }
-          
         </tbody>
     </table>
-     <div class="modal fade" id="deleteSalary" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="deleteSalary" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

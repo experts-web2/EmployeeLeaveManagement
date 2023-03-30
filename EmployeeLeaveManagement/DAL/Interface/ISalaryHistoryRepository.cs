@@ -14,7 +14,7 @@ namespace DAL.Interface
     {
         public void AddSalary(SalaryHistoryDto salaryDto);
         public PagedList<SalaryHistoryDto> GetSalaries(Pager pager, Expression<Func<SalaryHistory, bool>> predicate = null);
-        public SalaryHistoryDto GetSalary(int id);
+        public List<SalaryHistoryDto> GetSalary(int id);
         public void EditSalary(SalaryHistoryDto salarDto);
         public void DeleteSalary(int id);
     }

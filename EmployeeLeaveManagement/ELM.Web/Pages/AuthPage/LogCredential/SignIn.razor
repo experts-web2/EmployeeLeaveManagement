@@ -3,12 +3,16 @@
 @inherits SigninBase
 
 <h3>Login</h3>
-<EditForm Model="@LogIn" OnValidSubmit="SignIn">
+
+<EditForm Model="@LogIn" OnValidSubmit="OnAfterRenderAsync">
     <DataAnnotationsValidator/>
 <div class="mb-3 row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
     <div class="col-sm-10">
         <input type="email" class="form-control"  @bind-value="LogIn.Email">
+        @if(isInValid){
+        <div class="text-danger">Invalid Email or Password</div>
+    }
     </div>
 </div>
 <div class="mb-3 row">

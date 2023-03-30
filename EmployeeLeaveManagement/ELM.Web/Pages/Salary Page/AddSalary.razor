@@ -7,7 +7,7 @@
     <div class="mb-3">
         <label for="Name" class="form-label">New Salary</label>
         <div class="col-md-4">
-            <InputNumber class="form-control" @bind-Value="SalaryHistoryDto.NewSalary"/>
+            <InputNumber class="form-control" @bind-Value="SalaryHistoryDto.NewSalary" />
         </div>
         <ValidationMessage For="@(() => SalaryHistoryDto.NewSalary)" />
     </div>
@@ -18,20 +18,24 @@
         </div>
         <ValidationMessage For="@(() => SalaryHistoryDto.IncrementDate)" />
     </div>
-    <div class="mb-3">
-        <label class="mb-2" >Employee Name</label>
-        <div class="col-md-4">
-            <InputSelect class="form-control" @bind-Value="SalaryHistoryDto.EmployeeId">
-                <option selected disabled value="0">Employee Name List</option>
-                @foreach (var employee in EmployeesList)
-                {
-                  <option value="@employee.Id">@employee.FirstName</option>
-                }
-            </InputSelect>
-        </div>
-    </div>
+    <AuthorizeView Roles="Admin">
+        <ChildContent Context="authContext">
+            <div class="mb-3">
+                <label class="mb-2">Employee Name</label>
+                <div class="col-md-4">
+                    <InputSelect class="form-control" @bind-Value="SalaryHistoryDto.EmployeeId">
+                        <option selected disabled value="0">Employee Name List</option>
+                        @foreach (var employee in EmployeesList)
+                        {
+                            <option value="@employee.Id">@employee.FirstName</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+        </ChildContent>
+    </AuthorizeView>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-light" @onclick="Cancel">Cancel</button>
     </div>
-</EditForm> 
+</EditForm>

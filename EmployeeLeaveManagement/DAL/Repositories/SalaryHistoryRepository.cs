@@ -46,12 +46,12 @@ namespace DAL.Repositories
                 {
                     predicate = predicate.And(x => x.EmployeeId.ToString() == pager.Search);
                 }
-                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue)
+                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate?.Date != DateTime.MinValue)
                 {
-                    predicate = predicate.And(x => x.IncrementDate >= pager.StartDate && x.IncrementDate <= pager.EndDate);
+                    predicate = predicate.And(x => x.IncrementDate.Date >= pager.StartDate && x.IncrementDate.Date <= pager.EndDate);
                 }
                 else
-                    predicate = predicate.And(x => x.IncrementDate <= pager.EndDate);
+                    predicate = predicate.And(x => x.IncrementDate.Date <= pager.EndDate);
                 salaries = salaries.Where(predicate);
                 var paginatedList = PagedList<SalaryHistory>.ToPagedList(salaries, pager.CurrentPage, pager.PageSize);
                 var SalariesDto = ToDto(paginatedList);
@@ -63,12 +63,14 @@ namespace DAL.Repositories
                 throw;
             }
         }
-        public SalaryHistoryDto GetSalary(int id)
+        public List<SalaryHistoryDto> GetSalary(int id)
         {
             try
             {
-                var salary = dbContext.SalaryHistories.Include(s => s.Employee).FirstOrDefault(x => x.Id == id);
-                SalaryHistoryDto salaryDto = SetSalaryToDto(salary);
+                 List<SalaryHistory> salary = dbContext.SalaryHistories.Include(s => s.Employee).Where(x=>x.EmployeeId == id).ToList();
+                if(salary == null)
+                    return new List<SalaryHistoryDto>();
+                List<SalaryHistoryDto> salaryDto = SetSalaryToDto(salary);
                 return salaryDto;
             }
             catch (Exception)
@@ -136,18 +138,23 @@ namespace DAL.Repositories
             }
             return salariesDto;
         }
-        private SalaryHistoryDto SetSalaryToDto(SalaryHistory salary)
+        private List<SalaryHistoryDto> SetSalaryToDto(List<SalaryHistory> salaries)
         {
-            SalaryHistoryDto salaryDto = new()
+            List<SalaryHistoryDto> salaires = new List<SalaryHistoryDto>();
+            foreach (var salary in salaries)
             {
-                ID = salary.Id,
-                NewSalary = salary.NewSalary,
-                IncrementDate = salary.IncrementDate,
-                FirstName = salary.Employee.FirstName,
-                LastName = salary.Employee.LastName,
-                EmployeeId = salary.EmployeeId
-            };
-            return salaryDto;
+                SalaryHistoryDto salaryDto = new()
+                {
+                    ID = salary.Id,
+                    NewSalary = salary.NewSalary,
+                    IncrementDate = salary.IncrementDate,
+                    FirstName = salary.Employee.FirstName,
+                    LastName = salary.Employee.LastName,
+                    EmployeeId = salary.EmployeeId
+                };
+                salaires.Add(salaryDto);
+            }
+            return salaires;
         }
     }
 }
