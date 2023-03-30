@@ -8,7 +8,7 @@ namespace EmpLeave.Api.Extensions.DependencyInjection
     {
         public static IServiceCollection AddAndConfigureRepositories(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return services;
         }

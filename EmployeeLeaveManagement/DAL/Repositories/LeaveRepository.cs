@@ -11,53 +11,12 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class LeaveRepository : ILeaveRepository
+    public class LeaveRepository :GenericRepository<Leave>, ILeaveRepository
     {
         private readonly AppDbContext _dbContext;
-        public LeaveRepository(AppDbContext dbContext)
+        public LeaveRepository(AppDbContext dbContext):base(dbContext)
         {
             _dbContext = dbContext;
-        }
-        public void Addleave(LeaveDto leaveDto)
-        {
-            Leave leaveEntity = ToEntity(leaveDto);
-            _dbContext.Leaves.Add(leaveEntity);
-            _dbContext.SaveChanges();
-        }
-        private Leave ToEntity(LeaveDto leaveDto)
-        {
-            Leave leave = new()
-            {
-
-                StartTime = leaveDto.StartTime,
-                EndTime = leaveDto.EndTime,
-                Status = leaveDto.Status,
-                Id = leaveDto.ID,
-                leaveEnum = leaveDto.LeaveEnum
-
-            };
-            return leave;
-        }
-
-        public List<LeaveDto> GetAllLeave()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Leave> GetLeaves(int id)
-        {
-            try
-            {
-                var leaves = _dbContext.Leaves.Include(x=>x.Employee).Where(x => x.EmployeeId == id).ToList();
-                if(leaves != null)
-                    return leaves;
-                return new();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
         }
     }
 }

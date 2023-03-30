@@ -79,9 +79,9 @@ namespace EmpLeave.Api.Controllers
             return Ok(leaveDto);
         }
         [HttpGet("GetLeavesByEmployeeId/{Id}")]
-        public IActionResult GetLeavesByEmployeeId(int id)
+        public  IActionResult GetLeavesByEmployeeId(int id)
         {
-            var leaves = _leaveService.GetLeaves(id);
+            var leaves = _leaveService.GetLeavesByEmployeeID(id).GetAwaiter().GetResult();
             if (leaves != null)
                 return Ok(leaves);
             return BadRequest();

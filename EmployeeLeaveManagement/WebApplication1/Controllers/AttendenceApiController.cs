@@ -1,17 +1,11 @@
-﻿using DAL;
-using DAL.Interface;
-using DomainEntity.Enum;
+﻿using BL.Interface;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
-using ELM.Shared;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Security.Claims;
 
 namespace EmpLeave.Api.Controllers
@@ -21,26 +15,26 @@ namespace EmpLeave.Api.Controllers
     [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
     public class AttendenceApiController : ControllerBase
     {
-      private  IAttendenceRepository attendenceRepository;
+        private IAttendenceService _attendenceService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AttendenceApiController(IAttendenceRepository _attendenceRepository, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AttendenceApiController(UserManager<User> userManager, SignInManager<User> signInManager, IAttendenceService attendenceService)
         {
-            attendenceRepository= _attendenceRepository;
-            _userManager= userManager;
+            _userManager = userManager;
             _signInManager = signInManager;
+            _attendenceService = attendenceService;
         }
         [HttpPost("AddAttendence")]
-        public IActionResult AddAttendence([FromBody]AttendenceDto attendenceDto)
+        public IActionResult AddAttendence([FromBody] AttendenceDto attendenceDto)
         {
             if (ModelState.IsValid)
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var ClaimRoleId = identity?.Claims.FirstOrDefault(x=>x.Type==  ClaimTypes.NameIdentifier)?.Value;
-                if (attendenceDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId,out int RoleID ) && RoleID>0)
-                    attendenceDto.EmployeeId =RoleID;
-                var response = attendenceRepository.AddAttendence(attendenceDto);
+                var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (attendenceDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
+                    attendenceDto.EmployeeId = RoleID;
+                var response = _attendenceService.AddAttendence(attendenceDto);
                 return Ok("Added Successfull");
             }
             else return BadRequest("Unable to Add");
@@ -48,21 +42,18 @@ namespace EmpLeave.Api.Controllers
         public static string AccessToken;
 
         [HttpPost("GetAllAttendences")]
-        public async  Task<IActionResult> GetAllAttendences(Pager paging)
+        public async Task<IActionResult> GetAllAttendences(Pager paging)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var Role = identity?.FindFirst(ClaimTypes.Role);
             var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-           // int RoleId = int.Parse(ClaimRoleId);
-
-          // if(RoleId == 1)
-          if(Role.Value.Contains("Admin"))
+            if (Role.Value.Contains("Admin"))
             {
                 return GetAllEmployeeAttendance(paging);
             }
-          
-               
+
+
             else
                 return GetAttendencebyId(int.Parse(ClaimRoleId));
 
@@ -70,7 +61,7 @@ namespace EmpLeave.Api.Controllers
         [HttpGet]
         private IActionResult GetAllEmployeeAttendance(Pager paging)
         {
-            var allAttendences = attendenceRepository.GetAllAttendences(paging);
+            var allAttendences = _attendenceService.GetAllAttendences(paging);
             var metadata = new
             {
                 allAttendences.TotalCount,
@@ -90,8 +81,8 @@ namespace EmpLeave.Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteAttendence(int id)
         {
-            bool response =attendenceRepository.DeleteAttendence(id);
-            if (response=false)
+            bool response = _attendenceService.DeleteAttendence(id);
+            if (response == false)
                 return BadRequest("Unable to Delete");
             return Ok("Deleted Succesfully");
         }
@@ -99,7 +90,7 @@ namespace EmpLeave.Api.Controllers
         [HttpGet("GetById/{Id}")]
         public IActionResult GetById(int id)
         {
-            var attendenceDto = attendenceRepository.GetById(id);
+            var attendenceDto = _attendenceService.GetById(id);
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else
@@ -108,7 +99,7 @@ namespace EmpLeave.Api.Controllers
         [HttpGet]
         public IActionResult GetAttendencebyId(int id)
         {
-            var attendenceDto = attendenceRepository.GetAttendencebyEmployeeId(id);
+            var attendenceDto = _attendenceService.GetAttendencebyEmployeeId(id);
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else
@@ -118,8 +109,8 @@ namespace EmpLeave.Api.Controllers
         [HttpPut]
         public IActionResult UpdateAttendence(AttendenceDto attendenceDto)
         {
-            bool response =attendenceRepository.Update(attendenceDto);
-            if (response = false)
+            bool response = _attendenceService.UpdateAttendence(attendenceDto);
+            if (response == false)
                 return BadRequest("Unable to Update Attendence");
             return Ok("Update Successfull");
         }

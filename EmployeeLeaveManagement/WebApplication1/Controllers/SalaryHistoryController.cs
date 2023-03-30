@@ -1,4 +1,5 @@
-﻿using DAL.Interface;
+﻿using BL.Interface;
+using DAL.Interface;
 using DTOs;
 using ELM.Helper;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,11 @@ namespace EmpLeave.Api.Controllers
     public class SalaryHistoryController : ControllerBase
     {
         private readonly ISalaryHistoryRepository repositroy;
-        public SalaryHistoryController(ISalaryHistoryRepository _repository)
+        private readonly ISalaryService _salaryService;
+        public SalaryHistoryController(ISalaryHistoryRepository _repository,ISalaryService salaryService)
         {
             repositroy= _repository;
+            _salaryService=salaryService;
         }
         [HttpPost("AddSalary")]
         public IActionResult AddSalary(SalaryHistoryDto salaryDto)
@@ -28,7 +31,7 @@ namespace EmpLeave.Api.Controllers
                 var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
                 if (salaryDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
                     salaryDto.EmployeeId = RoleID;
-                repositroy.AddSalary(salaryDto);
+                _salaryService.AddSalary(salaryDto);
                 return Ok();
             }
            return BadRequest();
@@ -41,28 +44,34 @@ namespace EmpLeave.Api.Controllers
             var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (Role.Value.Contains("Admin"))
             {
-                var allSalaries = repositroy.GetSalaries(pager);
+                var allSalaries = _salaryService.GetSalaries(pager);
+                var metadata = new
+                {
+                    allSalaries.TotalCount,
+                    allSalaries.PageSize,
+                    allSalaries.TotalPages,
+                    allSalaries.CurrentPage,
+                    allSalaries.HasPrevious,
+                    allSalaries.HasNext,
+                    pager.Search
+                };
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
                 if (allSalaries != null) return Ok(allSalaries);
                 return BadRequest();
             }
             else
-                return GerSalary(int.Parse(ClaimRoleId));
-            //var metadata = new
-            //{
-            //    allSalaries.TotalCount,
-            //    allSalaries.PageSize,
-            //    allSalaries.TotalPages,
-            //    allSalaries.CurrentPage,
-            //    allSalaries.HasPrevious,
-            //    allSalaries.HasNext,
-            //    pager.Search
-            //};
-            //Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return GetSalariesForUser(int.Parse(ClaimRoleId));
         }
         [HttpGet("GetById/{Id}")]
-        public IActionResult GerSalary(int id)
+        public IActionResult GetSalaryById(int id)
         {
-            var response = repositroy.GetSalary(id);
+            var response = _salaryService.GetSalaryById(id);
+            if (response != null) return Ok(response);
+            return BadRequest();
+        }
+        private IActionResult GetSalariesForUser(int id)
+        {
+            var response = _salaryService.GetSalary(id);
             if (response != null)
                 return Ok(response);
             return BadRequest();
@@ -72,7 +81,7 @@ namespace EmpLeave.Api.Controllers
         {
             if(salaryDto!=null)
             {
-                repositroy.EditSalary(salaryDto);
+                _salaryService.EditSalary(salaryDto);
                 return Ok("Updated successfull");
             }
             return BadRequest();
@@ -80,7 +89,7 @@ namespace EmpLeave.Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteSalary(int id)
         {
-            repositroy.DeleteSalary(id);
+            _salaryService.DeleteSalary(id);
             return Ok("Deleted Successfull");
         }
     }

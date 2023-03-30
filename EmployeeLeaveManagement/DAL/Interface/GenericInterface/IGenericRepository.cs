@@ -10,6 +10,7 @@ namespace DAL.Interface.GenericInterface
         void deletebyid(int id);
         void update(T item);
         T GetByID(int id);
-        Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
+        //  Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
+        IQueryable<T> Get(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
     }
 }
