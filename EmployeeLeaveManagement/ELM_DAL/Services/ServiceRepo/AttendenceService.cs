@@ -65,6 +65,9 @@ namespace ELM.Web.Services.ServiceRepo
         }
         public async Task AddAttendence(AttendenceDto attendenceDto)
         {
+            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+            token = token?.Replace("\"", "");
+            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
             var response = await _httpService.PostAsJsonAsync($"{Apiroute()}AttendenceApi/AddAttendence", attendenceDto);
         }
         public async Task DeleteAttendence(int id)
@@ -73,10 +76,16 @@ namespace ELM.Web.Services.ServiceRepo
         }
         public async Task UpdateAttendence(AttendenceDto attendenceDto)
         {
+            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+            token = token?.Replace("\"", "");
+            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
             await _httpService.PutAsJsonAsync($"{Apiroute()}AttendenceApi", attendenceDto);
         }
-        public async Task<AttendenceDto> GetByID(int value)
+        public async Task<AttendenceDto> GetByID(int value,DateTime dateTime)
         {
+            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+            token = token?.Replace("\"", "");
+            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
             return await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById/{value}");
         }
         private string Apiroute()

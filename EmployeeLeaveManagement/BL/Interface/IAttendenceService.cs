@@ -16,7 +16,7 @@ namespace BL.Interface
         //  PagedList<AttendenceDto> GetAttendence(Pager paging);
         bool AddAttendence(AttendenceDto attendenceDto);
         bool DeleteAttendence(int id);
-        AttendenceDto GetById(int id);
+        AttendenceDto GetById(int id,DateTime dateTitme);
         List<AttendenceDto> GetAttendencebyEmployeeId(int id);
         bool UpdateAttendence(AttendenceDto attendenceDto);
     }

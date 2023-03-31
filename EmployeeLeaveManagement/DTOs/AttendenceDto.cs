@@ -18,7 +18,7 @@ namespace DTOs
 
         [Required]
         [DataType(DataType.Time)]
-        public DateTime? TimeIn { get; set; }
+        public DateTime? TimeIn { get; set; } = DateTime.Now;
         [DataType(DataType.Time)]
         public DateTime? Timeout { get; set; }
         public string HostName { get; set; } = String.Empty;

@@ -47,14 +47,23 @@
             <button>Search</button>
         </EditForm>
     </div>
-    
-        <div class="col-md-6">
-            <a href='/Add_Attendence' class="btn btn-primary" role="button">
+    <div class="col-md-6">
+        @if (isCheckout.HasValue)
+        {
+            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault()?.ID/@isCheckout' class="btn btn-primary" role="button">
                 <i class="fas fa-user-plus"></i>
                 Add Attendence
             </a>
-        </div>
-  
+        }
+        else
+        {
+            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault()?.ID' class="btn btn-primary" role="button">
+                <i class="fas fa-user-plus"></i>
+                Add Attendence
+            </a>
+        }
+
+    </div>
 </div>
 <br />
 @if (AttendenceDtoList == null)
@@ -74,6 +83,9 @@ else
                 <th>Employee Name</th>
                 <AuthorizeView Roles="Admin">
                     <th class="colspan-2">Actions</th>
+                </AuthorizeView>  
+                <AuthorizeView Roles="User">
+                    <th class="colspan-2">Actions</th>
                 </AuthorizeView>
             </tr>
         </thead>
@@ -87,21 +99,23 @@ else
                     <td>@attendence.HostName</td>
                     <td>@attendence.IpAddress</td>
                     <td>@attendence.FirstName  @attendence.LastName</td>
-                    <AuthorizeView Roles="Admin">
-                        <td>
-                             <div class="button-container" style="height:40px;width:40px">
-                            <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSalary"
-                            @onclick="(() => DeleteConfirm(attendence.ID))">
-                                Delete
-                            </button>
+
+                    <td>
+                        <AuthorizeView Roles="Admin">
+                            <div class="button-container" style="height:40px;width:40px">
+                                <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSalary"
+                                @onclick="(() => DeleteConfirm(attendence.ID))">
+                                    Delete
+                                </button>
                             </div>
-                              <div class="button-container">
+                        </AuthorizeView>
+                        <div class="button-container">
                             <a href='/edit/attendence/@attendence.ID' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
                                 Edit
                             </a>
-                            </div>
-                        </td>
-                    </AuthorizeView>
+                        </div>
+                    </td>
+
                 </tr>
             }
         </tbody>

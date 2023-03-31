@@ -19,13 +19,15 @@ namespace ELM.Web.Pages.Attendence_Page
 
         [Parameter]
         public int? ID { get; set; }
+        [Parameter]
+        public bool? isCheckOut { get; set; }
         public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
         protected override async Task OnInitializedAsync()
         {
             EmployeesList = await  EmployeeService.GetAllEmployee();
             if (ID.HasValue)
             {
-                AttendenceDto =await  AttendenceService.GetByID(ID.Value);
+                AttendenceDto =await  AttendenceService.GetByID(ID.Value,AttendenceDto.AttendenceDate);
             }
         }
         protected async Task SaveAttendence()
@@ -35,7 +37,7 @@ namespace ELM.Web.Pages.Attendence_Page
                 await AttendenceService.AddAttendence(AttendenceDto);
             }
             else
-                await AttendenceService.UpdateAttendence(AttendenceDto);
+                  await AttendenceService.UpdateAttendence(AttendenceDto);
 
             Cancel();
         }

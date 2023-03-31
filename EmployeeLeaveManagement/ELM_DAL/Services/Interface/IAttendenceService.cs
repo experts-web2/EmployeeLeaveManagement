@@ -9,6 +9,6 @@ namespace ELM.Web.Services.Interface
         Task<Response<AttendenceDto>> GetAttendences(Pager paging);
         Task DeleteAttendence(int id);
         Task UpdateAttendence(AttendenceDto attendenceDto);
-        Task<AttendenceDto> GetByID(int value);
+        Task<AttendenceDto> GetByID(int value,DateTime dateTime);
     }
 }

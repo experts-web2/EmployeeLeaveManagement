@@ -60,7 +60,7 @@ namespace BL.Service
             else
                 predicate = predicate.And(predicate);
             var attendences = _attendenceRepository.GetAll().Include(x => x.Employee).AsQueryable();
-            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate.Date != DateTime.MinValue)
+            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate?.Date != DateTime.MinValue)
             {
                 attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate && x.AttendenceDate.Date >= paging.StartDate);
             }
@@ -71,7 +71,7 @@ namespace BL.Service
             else
                 attendences = attendences.Where(x => x.AttendenceDate.Date <= paging.EndDate);
 
-            var paginatedList = PagedList<Attendence>.ToPagedList(attendences, paging.CurrentPage, paging.PageSize);
+            var paginatedList = PagedList<Attendence>.ToPagedList(attendences.OrderByDescending(x=>x.AttendenceDate), paging.CurrentPage, paging.PageSize);
             var attendenceDto = ToDtos(paginatedList);
             return new PagedList<AttendenceDto>
                 (attendenceDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
@@ -132,12 +132,12 @@ namespace BL.Service
         {
             string HostName = Dns.GetHostName();
             IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
-            return ipaddress[1].ToString();
+            return ipaddress[4].ToString();
         }
 
-        public AttendenceDto GetById(int id)
+        public AttendenceDto GetById(int id,DateTime dateTime)
         {
-            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id, x => x.Employee).FirstOrDefault();
+            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id && x.AttendenceDate==dateTime, x => x.Employee).FirstOrDefault();
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;
         }
