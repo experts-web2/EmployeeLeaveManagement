@@ -10,6 +10,7 @@ using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.WebSockets;
 using System.Text;
 
 namespace ELM.Web.Services.ServiceRepo
@@ -83,10 +84,21 @@ namespace ELM.Web.Services.ServiceRepo
         }
         public async Task<AttendenceDto> GetByID(int value,DateTime dateTime)
         {
-            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-            token = token?.Replace("\"", "");
-            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
-            return await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById/{value}");
+            try
+            {
+                var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById?id={value}&AttendenceDate={dateTime}");
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
+
         }
         private string Apiroute()
         {

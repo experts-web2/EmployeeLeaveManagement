@@ -50,14 +50,14 @@
     <div class="col-md-6">
         @if (isCheckout.HasValue)
         {
-            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault()?.ID/@isCheckout' class="btn btn-primary" role="button">
+            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault(x=>x.AttendenceDate.Date==DateTime.Now.Date)?.ID/@isCheckout' class="btn btn-primary" role="button">
                 <i class="fas fa-user-plus"></i>
                 Add Attendence
             </a>
         }
         else
         {
-            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault()?.ID' class="btn btn-primary" role="button">
+            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault(x=>x.AttendenceDate.Date==DateTime.Now.Date)?.ID' class="btn btn-primary" role="button">
                 <i class="fas fa-user-plus"></i>
                 Add Attendence
             </a>

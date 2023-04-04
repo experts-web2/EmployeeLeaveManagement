@@ -132,12 +132,12 @@ namespace BL.Service
         {
             string HostName = Dns.GetHostName();
             IPAddress[] ipaddress = Dns.GetHostAddresses(HostName);
-            return ipaddress[4].ToString();
+            return ipaddress[1].ToString();
         }
 
         public AttendenceDto GetById(int id,DateTime dateTime)
         {
-            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id && x.AttendenceDate==dateTime, x => x.Employee).FirstOrDefault();
+            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id && x.AttendenceDate.Date==dateTime.Date, x => x.Employee).FirstOrDefault();
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;
         }

@@ -22,7 +22,7 @@ namespace ELM.Web.Pages.Attendence_Page
         {
             get
             {
-                return AttendenceDtoList.FirstOrDefault()?.Timeout.HasValue;
+                return AttendenceDtoList.FirstOrDefault(x => x.AttendenceDate.Date == DateTime.Now.Date)?.Timeout.HasValue;
             }
         }
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();

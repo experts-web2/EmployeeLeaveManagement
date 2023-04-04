@@ -86,10 +86,10 @@ namespace EmpLeave.Api.Controllers
                 return BadRequest("Unable to Delete");
             return Ok("Deleted Succesfully");
         }
-        [HttpGet("GetById/{Id}/{AttendenceDate}")]
-        public IActionResult GetById(int id,DateTime dateTime)
+        [HttpGet("GetById")]
+        public IActionResult GetById([FromQuery]int id, [FromQuery] DateTime AttendenceDate)
         {
-            var attendenceDto = _attendenceService.GetById(id,dateTime);
+            var attendenceDto = _attendenceService.GetById(id, AttendenceDate);
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else
