@@ -55,7 +55,7 @@ namespace EmpLeave.Api.Controllers
 
 
             else
-                return GetAttendencebyId(int.Parse(ClaimRoleId));
+                return GetAttendencesByEmployeeId(int.Parse(ClaimRoleId));
 
         }
         [HttpGet]
@@ -87,18 +87,28 @@ namespace EmpLeave.Api.Controllers
             return Ok("Deleted Succesfully");
         }
         [HttpGet("GetById")]
-        public IActionResult GetById([FromQuery]int id, [FromQuery] DateTime AttendenceDate)
+        public IActionResult GetById([FromQuery]int id)
         {
-            var attendenceDto = _attendenceService.GetById(id, AttendenceDate);
+            var attendenceDto = _attendenceService.GetById(id);
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else
                 return BadRequest("Unable to get Attendence");
         }
         [HttpGet]
-        public IActionResult GetAttendencebyId(int id)
+        public IActionResult GetAttendencesByEmployeeId(int id)
         {
-            var attendenceDto = _attendenceService.GetAttendencebyEmployeeId(id);
+            var attendenceDto = _attendenceService.GetAttendencesByEmployeeId(id);
+            if (attendenceDto != null)
+                return Ok(attendenceDto);
+            else
+                return BadRequest("Unable to get Attendence");
+        }
+
+        [HttpGet("GetAttendenceByEmployeeId")]
+        public IActionResult GetAttendenceByEmployeeId([FromQuery] int id)
+        {
+            var attendenceDto = _attendenceService.GetAttendenceByEmployeeId(id);
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else

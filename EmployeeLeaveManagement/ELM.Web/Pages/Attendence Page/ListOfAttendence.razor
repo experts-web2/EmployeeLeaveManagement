@@ -48,21 +48,30 @@
         </EditForm>
     </div>
     <div class="col-md-6">
-        @if (isCheckout.HasValue)
+        @if ( isAdmin)
         {
-            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault(x=>x.AttendenceDate.Date==DateTime.Now.Date)?.ID/@isCheckout' class="btn btn-primary" role="button">
+            
+        <a href='/' class="btn btn-primary" role="button">
                 <i class="fas fa-user-plus"></i>
                 Add Attendence
             </a>
         }
-        else
-        {
-            <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault(x=>x.AttendenceDate.Date==DateTime.Now.Date)?.ID' class="btn btn-primary" role="button">
-                <i class="fas fa-user-plus"></i>
-                Add Attendence
-            </a>
+        else{
+            @if (isCheckout.HasValue)
+            {
+                <a href='/edit/attendence/@AttendenceDtoList.FirstOrDefault(x=>x.AttendenceDate.Date==DateTime.Now.Date)?.ID/@isCheckout' class="btn btn-primary" role="button">
+                    <i class="fas fa-user-plus"></i>
+                    Add Attendence
+                </a>
+            }
+            else
+            {
+                <a href='/' class="btn btn-primary" role="button">
+                    <i class="fas fa-user-plus"></i>
+                    Add Attendence
+                </a>
+            }
         }
-
     </div>
 </div>
 <br />

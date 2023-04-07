@@ -135,13 +135,14 @@ namespace BL.Service
             return ipaddress[1].ToString();
         }
 
-        public AttendenceDto GetById(int id,DateTime dateTime)
+        public AttendenceDto GetById(int id)
         {
-            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id && x.AttendenceDate.Date==dateTime.Date, x => x.Employee).FirstOrDefault();
+            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id && x.AttendenceDate.Date==DateTime.Now.Date, x => x.Employee).FirstOrDefault();
+            if (FindAttendence == null) return new AttendenceDto();
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;
         }
-        public List<AttendenceDto> GetAttendencebyEmployeeId(int id)
+        public List<AttendenceDto> GetAttendencesByEmployeeId(int id)
         {
             var Attendances = _attendenceRepository.Get(x => x.EmployeeId == id, x => x.Employee);
             var attendenceDto = Attendances.Select(SetAttendenceDto);
@@ -190,6 +191,23 @@ namespace BL.Service
                    
                 }
             return false;
+        }
+
+        public AttendenceDto GetAttendenceByEmployeeId(int employeeId)
+        {
+            try
+            {
+                Attendence? FindAttendence = _attendenceRepository.Get(x => x.EmployeeId == employeeId && x.AttendenceDate.Date == DateTime.Now.Date, x => x.Employee).FirstOrDefault();
+                if (FindAttendence == null) return new AttendenceDto();
+                AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
+                return attendenceDto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
         }
     }
 }

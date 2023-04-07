@@ -25,6 +25,8 @@ namespace ELM.Web.Pages.Attendence_Page
                 return AttendenceDtoList.FirstOrDefault(x => x.AttendenceDate.Date == DateTime.Now.Date)?.Timeout.HasValue;
             }
         }
+        [CascadingParameter]
+        Task<AuthenticationState> authenticationStateTask { get; set; }
         public List<AttendenceDto> AttendenceDtoList { get; set; } = new();
         public AttendenceDto SelectedAttendence { get; set; } = new();
         public List<Employee> EmployeesList { get; set; } = new();
@@ -32,13 +34,16 @@ namespace ELM.Web.Pages.Attendence_Page
         public DateTime EndDate { get; set; } = DateTime.Now.Date;
         public string Search { get; set; } = string.Empty;
         public Pager Paging { get; set; } = new();
-
+        public bool isAdmin { get; set; }
         public void SetAttendenceId(int id)
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == id);
         }
         protected override async Task OnInitializedAsync()
         {
+            var user = await authenticationStateTask;
+            var u = user.User;
+            isAdmin = u.IsInRole("Admin");
             EmployeesList = await EmployeeService.GetAllEmployee();
             await GetAll();
         }

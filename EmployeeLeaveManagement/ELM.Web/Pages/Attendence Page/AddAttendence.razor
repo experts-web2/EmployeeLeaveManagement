@@ -27,15 +27,15 @@
     <div class="mb-2">
         <div class="row">
             <div class="col-md-2">
-                @if (!isCheckOut.HasValue)
+                @if  (AttendenceDto.TimeIn==null)
                 {
-                    AttendenceDto.TimeIn = DateTime.Now;                    
+                    AttendenceDto.TimeIn = DateTime.Now;
                 }
                 <InputDate Type="InputDateType.Time" class="form-control" disabled @bind-Value="AttendenceDto.TimeIn" />                
                 <ValidationMessage For="@(() => AttendenceDto.TimeIn)" />
             </div>
             <div class="col-md-2">
-                @if (isCheckOut.HasValue && !isCheckOut.Value)
+                @if  (AttendenceDto.Timeout==null&&isCheckOut.HasValue && !isCheckOut.Value)//(isCheckOut.HasValue && !isCheckOut.Value)
                 {
                     AttendenceDto.Timeout = DateTime.Now;
 
@@ -72,26 +72,61 @@
             <div class="mb-3">
                 <label class="mb-2">Employee Name</label>
                 <div class="col-md-4">
-                    <InputSelect class="form-control" @bind-Value="AttendenceDto.EmployeeId">
+                    @*<InputSelect class="form-control" @onchange="(e)=>HandleChange(e)">
                         <option selected disabled value="0">Employee Name List</option>
                         @foreach (var employee in EmployeesList)
                         {
                             <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
                         }
-                    </InputSelect>
+                    </InputSelect>*@
+                    <InputSelect class="form-control"
+                                   ValueChanged="@((int value) => HandleChange(value))"
+                                   ValueExpression="@(() => EmployeeId)"
+                                   Value="@EmployeeId">
+                    <option value="0">--Select a Employee--</option>
+                    @foreach (var employee in EmployeesList)
+                        {@if (employee.Id == EmployeeId)
+                            {
+                                <option selected value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                            }
+                        else
+                        {
+                            <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                        }
+                    }
+                </InputSelect>
                 </div>
             </div>
         </ChildContent>
     </AuthorizeView>
     <div class="form-group">
-        @if(!isCheckOut.HasValue || !isCheckOut.Value)
+        @if(!isAdmin)
         {
-        <button type="submit" class="btn btn-primary" disabled="@(ID!=null)">CheckIn</button>
-            <button type="submit" class="btn btn-primary" disabled="@(ID==null)">CheckOut</button>
+             @if(!isCheckOut.HasValue || !isCheckOut.Value)
+             {
+               <button type="submit" class="btn btn-primary" disabled="@(ID!=null)">CheckIn</button>
+               <button type="submit" class="btn btn-primary" disabled="@(ID==null)">CheckOut</button>
+             }
+              else
+              {
+               <h3 class="alert-success">Your Attendence already marked..</h3>
+              }
         }
         else
         {
-            <h3 class="alert-success">Your Attendence already marked..</h3>
+             @if( !isCheckOut.HasValue || !isCheckOut.Value)
+             {
+                if (EmployeeId > 0)
+                {
+                    
+                <button type="submit" class="btn btn-primary" disabled="@(isCheckOut!=null)">CheckIn</button>
+               <button type="submit" class="btn btn-primary" disabled="@(isCheckOut==null)">CheckOut</button>
+                }
+             }
+              else
+              {
+               <h3 class="alert-success">Attendence is already marked..</h3>
+              }
         }
         <button type="button" class="btn btn-light" @onclick="Cancel">Cancel</button>
     </div>

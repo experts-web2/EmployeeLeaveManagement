@@ -62,7 +62,7 @@ namespace ELM_DAL.Services.ServiceRepo
 
         public async Task Logout()
         {
-            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("jwt");
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
         }
         private string Apiroute()

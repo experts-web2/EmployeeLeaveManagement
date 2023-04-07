@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.NetworkInformation;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -66,30 +68,56 @@ namespace ELM.Web.Services.ServiceRepo
         }
         public async Task AddAttendence(AttendenceDto attendenceDto)
         {
-            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-            token = token?.Replace("\"", "");
-            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
-            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}AttendenceApi/AddAttendence", attendenceDto);
+            try
+            {
+
+                var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                var response = await _httpService.PostAsJsonAsync($"{Apiroute()}AttendenceApi/AddAttendence", attendenceDto);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task DeleteAttendence(int id)
         {
-            await _httpService.DeleteAsync($"{Apiroute()}AttendenceApi/{id}");
+            try
+            {
+                await _httpService.DeleteAsync($"{Apiroute()}AttendenceApi/{id}");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task UpdateAttendence(AttendenceDto attendenceDto)
         {
-            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-            token = token?.Replace("\"", "");
-            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
-            await _httpService.PutAsJsonAsync($"{Apiroute()}AttendenceApi", attendenceDto);
+            try
+            {
+
+                var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                await _httpService.PutAsJsonAsync($"{Apiroute()}AttendenceApi", attendenceDto);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
-        public async Task<AttendenceDto> GetByID(int value,DateTime dateTime)
+        public async Task<AttendenceDto> GetByID(int value)
         {
             try
             {
                 var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
                 token = token?.Replace("\"", "");
                 _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
-                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById?id={value}&AttendenceDate={dateTime}");
+                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById?id={value}");
                 return result;
             }
             catch (Exception)
@@ -98,6 +126,24 @@ namespace ELM.Web.Services.ServiceRepo
                 throw;
             }
            
+
+        }
+        public async Task<AttendenceDto> GetAttendenceByEmployeeId(int value)
+        {
+            try
+            {
+                var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+                token = token?.Replace("\"", "");
+                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetAttendenceByEmployeeId?id={value}");
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
 
         }
         private string Apiroute()

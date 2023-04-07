@@ -5,6 +5,8 @@ using ELM.Web.Services.Interface;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
 
@@ -29,39 +31,60 @@ namespace ELM.Web.Pages.Attendence_Page
         Task<AuthenticationState> authenticationStateTask { get; set; }
         public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
         public Pager Paging { get; set; } = new();
+        public int EmployeeId { get; set; }
+        public bool isAdmin { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            var authState = await authenticationStateTask;
-            var user = authState.User;
+            var user = await authenticationStateTask;
+            var u = user.User;
+            isAdmin = u.IsInRole("Admin");
             EmployeesList = await EmployeeService.GetAllEmployee();
-            var isLogedInUSer = int.TryParse(user?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int currentEmployeeID);
-            if (!isLogedInUSer) return;
+            var isAdminLogedIn = int.TryParse(u?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
+            if (!isAdminLogedIn &&!ID.HasValue) return;
 
 
             if (ID.HasValue)
-                AttendenceDto = await AttendenceService.GetByID(ID.Value, AttendenceDto.AttendenceDate);
+                AttendenceDto = await AttendenceService.GetByID(ID.Value);
             else
+                AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(employeeId);
+                
+            EmployeeId = AttendenceDto.EmployeeId.HasValue?AttendenceDto.EmployeeId.Value:0;
+            SetUserCheckout();
+        }
+        public async Task HandleChange(int value)
+        {
+            EmployeeId = value;
+            AttendenceDto.EmployeeId = value;
+            AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(value);
+            SetUserCheckout();
+
+
+        }
+        private void SetUserCheckout()
+        {
+            if (AttendenceDto.TimeIn?.Date != DateTime.Now.Date)
             {
-                var attendences = (await AttendenceService.GetAttendences(Paging)).DataList;
-                if (attendences.Any())
-                {
-                    var todayAttendence = attendences.FirstOrDefault(x => x.AttendenceDate.Date == DateTime.Now.Date);
-                    if (todayAttendence == null) return;
-                    isCheckOut = todayAttendence.Timeout != null; 
-                    AttendenceDto = await AttendenceService.GetByID(todayAttendence.ID, DateTime.Now);
-                }
+                isCheckOut = null;
+                return;
             }
+            if (!AttendenceDto.Timeout.HasValue)
+            {
+                isCheckOut = false;
+                return;
+            }
+            isCheckOut = AttendenceDto.Timeout != null;
         }
         protected async Task SaveAttendence()
         {
-            if (!ID.HasValue)
+            if (EmployeeId > 0)
+                AttendenceDto.EmployeeId = EmployeeId;
+            if (AttendenceDto.ID > 0)
             {
-                await AttendenceService.AddAttendence(AttendenceDto);
+                await AttendenceService.UpdateAttendence(AttendenceDto);
             }
             else
-                await AttendenceService.UpdateAttendence(AttendenceDto);
-
+                await AttendenceService.AddAttendence(AttendenceDto);
             Cancel();
         }
 
