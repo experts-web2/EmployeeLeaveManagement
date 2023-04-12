@@ -31,9 +31,9 @@ namespace EmpLeave.Api.Controllers
             if (ModelState.IsValid)
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (attendenceDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
-                    attendenceDto.EmployeeId = RoleID;
+                var ClaimEmployeeId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (attendenceDto.EmployeeId is null && ClaimEmployeeId is not null && int.TryParse(ClaimEmployeeId, out int EmployeeID) && EmployeeID > 0)
+                    attendenceDto.EmployeeId = EmployeeID;
                 var response = _attendenceService.AddAttendence(attendenceDto);
                 return Ok("Added Successfull");
             }

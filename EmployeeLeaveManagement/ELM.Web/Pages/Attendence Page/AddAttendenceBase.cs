@@ -33,22 +33,24 @@ namespace ELM.Web.Pages.Attendence_Page
         public Pager Paging { get; set; } = new();
         public int EmployeeId { get; set; }
         public bool isAdmin { get; set; }
-
+        
         protected override async Task OnInitializedAsync()
         {
             var user = await authenticationStateTask;
             var u = user.User;
             isAdmin = u.IsInRole("Admin");
-            EmployeesList = await EmployeeService.GetAllEmployee();
-            var isAdminLogedIn = int.TryParse(u?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
-            if (!isAdminLogedIn &&!ID.HasValue) return;
+            if(isAdmin)
+                EmployeesList = await EmployeeService.GetAllEmployee();
+            var isUserLogedIn = int.TryParse(u?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
+            if (!isUserLogedIn && !ID.HasValue) return;
 
 
             if (ID.HasValue)
                 AttendenceDto = await AttendenceService.GetByID(ID.Value);
             else
                 AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(employeeId);
-                
+            //When Admin loggedin then we use Edit case so we populate EmployeeID from fetched AttendenceDto
+            //Reason: If Admin LoggedIn then it use Admin EmployeeID thats why we populate from fetched AttendeceDto
             EmployeeId = AttendenceDto.EmployeeId.HasValue?AttendenceDto.EmployeeId.Value:0;
             SetUserCheckout();
         }
@@ -63,7 +65,7 @@ namespace ELM.Web.Pages.Attendence_Page
         }
         private void SetUserCheckout()
         {
-            if (AttendenceDto.TimeIn?.Date != DateTime.Now.Date)
+            if (!(ID.HasValue) && AttendenceDto.TimeIn?.Date != DateTime.Now.Date)
             {
                 isCheckOut = null;
                 return;

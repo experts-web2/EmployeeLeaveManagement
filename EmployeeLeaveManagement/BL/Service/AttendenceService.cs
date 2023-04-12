@@ -137,7 +137,7 @@ namespace BL.Service
 
         public AttendenceDto GetById(int id)
         {
-            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id && x.AttendenceDate.Date==DateTime.Now.Date, x => x.Employee).FirstOrDefault();
+            Attendence? FindAttendence = _attendenceRepository.Get(x => x.Id == id , x => x.Employee).FirstOrDefault();
             if (FindAttendence == null) return new AttendenceDto();
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;

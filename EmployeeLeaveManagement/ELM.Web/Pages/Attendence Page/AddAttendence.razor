@@ -104,8 +104,8 @@
         {
              @if(!isCheckOut.HasValue || !isCheckOut.Value)
              {
-               <button type="submit" class="btn btn-primary" disabled="@(ID!=null)">CheckIn</button>
-               <button type="submit" class="btn btn-primary" disabled="@(ID==null)">CheckOut</button>
+               <button type="submit" class="btn btn-primary" disabled="@(isCheckOut!=null)">CheckIn</button>
+               <button type="submit" class="btn btn-primary" disabled="@(isCheckOut==null)">CheckOut</button>
              }
               else
               {
