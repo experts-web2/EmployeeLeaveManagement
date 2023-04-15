@@ -1,5 +1,6 @@
 ﻿using BL.Interface;
 using DAL.Interface;
+using DomainEntity.Enum;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -87,12 +89,13 @@ namespace BL.Service
                 throw;
             }
         }
-        public void Update(EmployeeDto employee)
+        public void Update(EmployeeDto employeeDto)
         {
             try
             {
-                var updateEmployee = ToEntity(employee);
-                _employeeRepository.update(updateEmployee);
+                var employee = _employeeRepository.GetByID(employeeDto.ID);
+                ToEntity(employee,employeeDto);
+                _employeeRepository.update(employee);
             }
             catch (Exception)
             {
@@ -100,6 +103,27 @@ namespace BL.Service
                 throw;
             }
         }
+
+        private void ToEntity(Employee employee, EmployeeDto employeeDto)
+        {
+            try
+            {
+                employee.FirstName = employeeDto.FirstName;
+                employee.LastName = employeeDto.LastName;
+                employee.Address = employeeDto.Address;
+                employee.DateOfBrith = employeeDto.DateOfBrith;
+                employee.Gender = employeeDto.Gender;
+                employee.Email = employeeDto.Email;
+                employee.CurrentSalary = employeeDto.CurrentSalary;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
+        }
+
         private Employee ToEntity(EmployeeDto employeeDto)
         {
             Employee employee = new Employee()

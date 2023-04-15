@@ -12,5 +12,6 @@ namespace ELM_DAL.Services.Interface
     public interface IAlertService
     {
         public Task<Response<Alert>> GetAlerts(Pager Paging);
+     
     }
 }

@@ -33,6 +33,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public Pager Paging { get; set; } = new();
         public int EmployeeId { get; set; }
         public bool isAdmin { get; set; }
+        public bool CheckAttendence { get; set; }
         
         protected override async Task OnInitializedAsync()
         {
@@ -47,6 +48,7 @@ namespace ELM.Web.Pages.Attendence_Page
 
             if (ID.HasValue)
                 AttendenceDto = await AttendenceService.GetByID(ID.Value);
+            if (AttendenceDto.TimeIn == null) return;
             else
                 AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(employeeId);
             //When Admin loggedin then we use Edit case so we populate EmployeeID from fetched AttendenceDto

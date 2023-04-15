@@ -12,7 +12,8 @@ namespace DAL.Interface
 {
     public interface IAlertRepository
     {
-        public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null);
-        List<Alert> AddAbsentEmployeeAlert();
+        //public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null);
+        //public List<Alert> GetAlertsByEmployeeId(int id);
+        //List<Alert> AddAbsentEmployeeAlert();
     }
 }

@@ -36,6 +36,7 @@ else
                 <th>AlertDate</th>
                 <th>AlertType</th>
                 <th>Employee</th>
+                <th>Modify</th>
             </tr>
         </thead>
         <tbody>
@@ -46,7 +47,17 @@ else
                     <td>@alert.AlertDate</td>
                     <td>@alert.AlertType</td>
                     <td>@alert.Employee.FirstName</td>
-                
+                    @if(alert.AlertType != "Absent")
+                    {
+                         <td>
+                         <div class="button-container">
+                            <a href='/edit/attendence/@alert.Employee.Id' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
+                                Edit
+                            </a>
+                        </div>
+                    </td>
+                    }
+                   
                 </tr>
             }
         </tbody>

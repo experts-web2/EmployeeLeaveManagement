@@ -63,8 +63,8 @@ namespace EmpLeave.Api.Controllers
         [HttpPut]
         public IActionResult UpdateLeave(LeaveDto leaveDto)
         {
-            var Updated = _leaveService.Update(leaveDto);
-            return Ok(Updated);
+             _leaveService.Update(leaveDto);
+            return Ok();
         }
         [HttpDelete("{id}")]
         public IActionResult Deleteleave(int id)

@@ -1,6 +1,7 @@
 ﻿using BL.Interface;
 using DAL.Interface;
 using DAL.Interface.GenericInterface;
+using DomainEntity.Enum;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
@@ -143,16 +144,13 @@ namespace BL.Service
                 throw;
             }
         }
-        public LeaveDto Update(LeaveDto leave)
+        public void Update(LeaveDto leaveDto)
         {
-            if (leave == null)
-            {
-                return null;
-            }
             try
             {
-                _leaveRepository.update(ToEntity(leave));
-                return leave;
+                var leave=_leaveRepository.GetByID(leaveDto.ID);
+                ToEntity(leave,leaveDto);
+                _leaveRepository.update(leave);
             }
             catch (Exception)
             {
@@ -160,6 +158,25 @@ namespace BL.Service
                 throw;
             }
         }
+
+        private void ToEntity(Leave leave, LeaveDto leaveDto)
+        {
+            try
+            {
+                leave.EmployeeId = leaveDto.EmployeeId;
+                leave.StartTime = leaveDto.StartTime;
+                leave.EndTime = leaveDto.EndTime;
+                leave.Status = leaveDto.Status;
+                leave.leaveEnum = leaveDto.LeaveEnum;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
+        }
+
         public async Task<List<LeaveDto>> GetLeavesByEmployeeID(int employeeId)
         {
             try

@@ -182,8 +182,11 @@ namespace BL.Service
             if (attendenceDto != null)
                 try
                 {
-                    var Updated = ToEntity(attendenceDto);
-                    _attendenceRepository.update(Updated);
+
+                    var attencence = _attendenceRepository.GetByID(attendenceDto.ID);
+                    ToEntity(attencence,attendenceDto);
+
+                    _attendenceRepository.update(attencence);
                     return true;
                 }
                 catch (Exception ex)
@@ -191,6 +194,26 @@ namespace BL.Service
                    
                 }
             return false;
+        }
+
+        private void ToEntity(Attendence attendence, AttendenceDto attendenceDto)
+        {
+            try
+            {
+                attendence.AttendenceDate = attendenceDto.AttendenceDate;
+                attendence.TimeIn = attendenceDto.TimeIn;
+                attendence.Timeout = attendenceDto.Timeout;
+                attendence.HostName = attendenceDto.HostName;
+                attendence.IpAddress = attendenceDto.IpAddress;
+                attendence.Longitude = attendenceDto.Longitude;
+                attendence.EmployeeId = attendenceDto.EmployeeId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
         }
 
         public AttendenceDto GetAttendenceByEmployeeId(int employeeId)

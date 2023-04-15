@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 
 namespace ELM.Web.Services.Interface
