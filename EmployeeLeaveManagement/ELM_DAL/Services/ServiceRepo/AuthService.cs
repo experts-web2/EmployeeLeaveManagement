@@ -13,18 +13,19 @@ namespace ELM_DAL.Services.ServiceRepo
     {
         private IHttpClientService _httpService;
         private IConfiguration _configuration;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
         private readonly IHttpContextAccessor httpContextAccessor;
         public AuthService(IHttpClientService httpService, IConfiguration configuration,
-                           AuthenticationStateProvider authenticationStateProvider,
-                           ILocalStorageService localStorage, IHttpContextAccessor httpContextAccessor)
+                         
+                           ILocalStorageService localStorage, IHttpContextAccessor httpContextAccessor,AuthenticationStateProvider authenticationStateProvider)
         {
             _httpService = httpService;
             _configuration = configuration;
-            _authenticationStateProvider = authenticationStateProvider;
+           
             _localStorage = localStorage;
             this.httpContextAccessor = httpContextAccessor;
+            _authenticationStateProvider = authenticationStateProvider;
         }
 
         public async Task<RegisterResult> Register(UserRegistrationModel Userregister)

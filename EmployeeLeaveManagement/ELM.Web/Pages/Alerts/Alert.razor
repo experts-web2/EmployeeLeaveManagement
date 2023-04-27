@@ -9,7 +9,7 @@
           
             <InputDate class="form-control-sm" @bind-Value="StartDate" />
             <InputDate class="form-control-sm" @bind-Value="EndDate" />
- @*       <InputText class="form-control" @bind-Value="Pager.search" />*@
+          @*<InputText class="form-control" @bind-Value="Pager.search" />*@
             <InputSelect class="form-control-sm" @bind-Value="search">
                 <option selected disabled value="0">Employees</option>
                 @foreach (var alert in Alerts)
@@ -44,14 +44,14 @@ else
             {
                 <tr>
                     
-                    <td>@alert.AlertDate</td>
+                    <td>@alert.AlertDate.ToShortDateString()</td>
                     <td>@alert.AlertType</td>
                     <td>@alert.Employee.FirstName</td>
                     @if(alert.AlertType != "Absent")
                     {
                          <td>
                          <div class="button-container">
-                            <a href='/edit/attendence/@alert.Employee.Id' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
+                            <a href='/edit/attendence?AlertDate=@alert.AlertDate&Id=@alert.Employee.Id' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
                                 Edit
                             </a>
                         </div>

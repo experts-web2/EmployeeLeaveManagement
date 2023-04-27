@@ -24,10 +24,10 @@ namespace DAL.Repositories
         //    RecurringJob.AddOrUpdate("AlertRecurringJob", () => AddAbsentEmployeeAlert(), "0 0 * * MON-FRI");
 
         //}
-        public List<Alert> GetAlerts()
-        {
-            return _dbContext.Alerts.Where(X => X.AlertDate.Date == DateTime.Now.Date).ToList();
-        }
+        //public List<Alert> GetAlerts()
+        //{
+        //    return _dbContext.Alerts.Where(X => X.AlertDate.Date == DateTime.Now.Date).ToList();
+        //}
 
         //public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null)
         //{

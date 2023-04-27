@@ -8,6 +8,7 @@ namespace DAL.Interface.GenericInterface
         IQueryable<T> GetAll ();
         T Add(T item);
         void deletebyid(int id);
+        void DeleteAlertByEmployeeId(Expression<Func<T,bool>> predicate);
         void update(T item);
         T GetByID(int id);
         //  Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);

@@ -76,7 +76,15 @@ namespace DAL.Repositories
             return _DbContext.Set<T>();
         }
 
-
+        public void DeleteAlertByEmployeeId(Expression<Func<T, bool>> predicate)
+        {
+            var alert = _table.FirstOrDefault(predicate);
+            if(alert != null)
+            {
+                _DbContext.Remove(alert);
+                _DbContext.SaveChanges();
+            }
+        }
     }
     public static class IQueryableExtension
     {

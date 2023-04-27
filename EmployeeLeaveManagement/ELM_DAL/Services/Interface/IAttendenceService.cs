@@ -12,5 +12,6 @@ namespace ELM.Web.Services.Interface
         Task UpdateAttendence(AttendenceDto attendenceDto);
         Task<AttendenceDto> GetByID(int value);
         Task<AttendenceDto> GetAttendenceByEmployeeId(int employeeId);
+       Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate, int employeeId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using DomainEntity.Models;
+﻿using DAL.Interface.GenericInterface;
+using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Interface
 {
-    public interface IAlertRepository
+    public interface IAlertRepository:IGenericRepository<Alert>
     {
         //public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null);
         //public List<Alert> GetAlertsByEmployeeId(int id);

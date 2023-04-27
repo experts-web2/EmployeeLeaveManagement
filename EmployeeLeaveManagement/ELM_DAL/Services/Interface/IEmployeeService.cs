@@ -12,6 +12,5 @@ namespace EmpLeave.Web.Services.Interface
         Task DeleteEmployeebyId(int id);
         Task<EmployeeDto> GetEmployeebyId(int id);
          Task<List<Employee>> GetAllEmployee();
-
     }
 }

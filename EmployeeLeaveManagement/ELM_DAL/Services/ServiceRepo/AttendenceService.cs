@@ -4,6 +4,8 @@ using ELM.Helper;
 using ELM.Shared;
 using ELM.Web.Services.Interface;
 using EmpLeave.Api.Controllers;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
@@ -13,6 +15,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net.NetworkInformation;
 using System.Net.WebSockets;
+using System.Security.Claims;
 using System.Text;
 
 namespace ELM.Web.Services.ServiceRepo
@@ -23,16 +26,21 @@ namespace ELM.Web.Services.ServiceRepo
         private HttpClient _httpService;
         private IHttpClientFactory _clientFactory;
         private readonly IJSRuntime jsRuntime;
-        
 
-        // private IHttpClientService _httpService;
+
+        private AuthenticationStateProvider _authenticationStateProvider;
         private IConfiguration _configuration;
-        public AttendenceService(HttpClient httpService, IConfiguration configuration, IHttpClientFactory clientFactory, IJSRuntime jsRuntime = null)
+        public AttendenceService(HttpClient httpService,
+            IConfiguration configuration,
+            IHttpClientFactory clientFactory,
+            AuthenticationStateProvider authenticationStateProvider,
+            IJSRuntime jsRuntime = null)
         {
             _httpService = httpService;
             _configuration = configuration;
             _clientFactory = clientFactory;
             this.jsRuntime = jsRuntime;
+            _authenticationStateProvider=authenticationStateProvider;
         }
 
         public async Task<Response<AttendenceDto>> GetAttendences(Pager paging)
@@ -40,15 +48,21 @@ namespace ELM.Web.Services.ServiceRepo
             Response<AttendenceDto> responseDto = new();
             try
             {
-
-               
                 _httpService = _clientFactory.CreateClient("api");
                 var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
                 token = token?.Replace("\"", "");
                 _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response =await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
+
+                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                HttpResponseMessage response;
+                if (user.IsInRole("Admin"))
+                    response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
+                else
+                    response = await _httpService.GetAsync($"{Apiroute()}AttendenceApi/GetAttendencesByEmployeeId/{int.Parse(employeeId)}");
                 if (!response.IsSuccessStatusCode)
                     return new Response<AttendenceDto>();
                 if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
@@ -125,8 +139,6 @@ namespace ELM.Web.Services.ServiceRepo
 
                 throw;
             }
-           
-
         }
         public async Task<AttendenceDto> GetAttendenceByEmployeeId(int value)
         {
@@ -143,8 +155,6 @@ namespace ELM.Web.Services.ServiceRepo
 
                 throw;
             }
-
-
         }
         private string Apiroute()
         {
@@ -152,6 +162,16 @@ namespace ELM.Web.Services.ServiceRepo
             if (apiRoute == null)
                 return "https://localhost:7150/api/";
             return apiRoute;
+        }
+
+        public async  Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate, int employeeId)
+        {
+            var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+            token = token?.Replace("\"", "");
+            _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+             var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetAttendenceByAlertDateAndEmployeeId?alertDate={alertDate}&employeeId={employeeId}");
+            return result;
+
         }
     }
 }

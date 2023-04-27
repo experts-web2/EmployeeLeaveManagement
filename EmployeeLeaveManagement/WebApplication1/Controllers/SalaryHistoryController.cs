@@ -39,11 +39,6 @@ namespace EmpLeave.Api.Controllers
         [HttpPost("GetSalaries")]
         public IActionResult GetSalaries(Pager pager)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var Role = identity?.FindFirst(ClaimTypes.Role);
-            var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (Role.Value.Contains("Admin"))
-            {
                 var allSalaries = _salaryService.GetSalaries(pager);
                 var metadata = new
                 {
@@ -58,9 +53,6 @@ namespace EmpLeave.Api.Controllers
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
                 if (allSalaries != null) return Ok(allSalaries);
                 return BadRequest();
-            }
-            else
-                return GetSalariesForUser(int.Parse(ClaimRoleId));
         }
         [HttpGet("GetById/{Id}")]
         public IActionResult GetSalaryById(int id)
@@ -69,7 +61,8 @@ namespace EmpLeave.Api.Controllers
             if (response != null) return Ok(response);
             return BadRequest();
         }
-        private IActionResult GetSalariesForUser(int id)
+        [HttpPost("GetSalariesForUser/{id}")]
+        public IActionResult GetSalariesForUser(int id)
         {
             var response = _salaryService.GetSalary(id);
             if (response != null)

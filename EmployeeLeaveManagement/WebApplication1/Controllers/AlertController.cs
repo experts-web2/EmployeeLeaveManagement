@@ -23,11 +23,7 @@ namespace EmpLeave.Api.Controllers
         [HttpPost("GetAlerts")]
         public IActionResult GetAlert(Pager pager)
         {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var Role = identity?.FindFirst(ClaimTypes.Role);
-                var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (Role.Value.Contains("Admin"))
-                {
+                
                     var Alerts = _alertService.GetAllAlert(pager);
                     var metadata = new
                     {
@@ -43,10 +39,6 @@ namespace EmpLeave.Api.Controllers
                     };
                     Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
                     return Ok(Alerts);
-                }
-                else
-                    return GetAlertsByEmployeeId(int.Parse(ClaimRoleId));
-            
         }
         [HttpGet("getAbsent")]
         public ActionResult GetAllAbsentEmployee()
@@ -62,12 +54,17 @@ namespace EmpLeave.Api.Controllers
             var response= _alertService.AddAbsentEmployeeAlert();
             return Ok(response);
         }
-        [HttpGet]
+        [HttpPost("GetAlertsByEmployeeId/{id}")]
         public IActionResult GetAlertsByEmployeeId(int id)
         {
             var alerts = _alertService.GetAlertsByEmployeeId(id);
             return Ok(alerts);
         }
-
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAlert(int id)
+        {
+            _alertService.DeleteAlertByEmployeeId(id);
+            return Ok();
+        }
     }
 }

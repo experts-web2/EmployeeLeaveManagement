@@ -14,5 +14,6 @@ namespace BL.Interface
         public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null);
         List<Alert> AddAbsentEmployeeAlert();
         public List<Alert> GetAlertsByEmployeeId(int id);
+        public void DeleteAlertByEmployeeId(int employeeId);
     }
 }

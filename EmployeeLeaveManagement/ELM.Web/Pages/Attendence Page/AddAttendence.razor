@@ -1,9 +1,17 @@
 ﻿@page "/"
+@page "/edit/attendence"
 @page "/edit/attendence/{ID:int}"
 @page "/edit/attendence/{ID:int}/{isCheckOut:bool}"
 @inherits AddAttendenceBase
+@if(CheckAttendence)
+{
+    <div>
+        <h2 style="color:red">Your Previous Timeout is Missing 
+        <a href='/Alert' class="btn btn-danger" role="button" >Notifications</a</h2>
+    </div>
+}
+<br />
 <h3>Add Attendence</h3>
-
 <EditForm Model="AttendenceDto" OnValidSubmit="SaveAttendence">
     <DataAnnotationsValidator />
     <div class="mb-3">

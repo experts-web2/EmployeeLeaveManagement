@@ -26,6 +26,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
+//builder.Services.AddScoped<AuthenticationState>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IHttpClientService, HttpClientService>();

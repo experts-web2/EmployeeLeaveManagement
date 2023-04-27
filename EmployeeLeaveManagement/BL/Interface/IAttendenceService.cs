@@ -20,5 +20,6 @@ namespace BL.Interface
         List<AttendenceDto> GetAttendencesByEmployeeId(int id);
         AttendenceDto GetAttendenceByEmployeeId(int employeeId);
         bool UpdateAttendence(AttendenceDto attendenceDto);
+        Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate,int employeeId);
     }
 }

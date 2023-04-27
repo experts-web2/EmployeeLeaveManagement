@@ -156,7 +156,7 @@ namespace BL.Service
             }
             try
             {
-                AttendenceDto employeeDto = new()
+                AttendenceDto attendenceDto = new()
                 {
                     ID = attendence.Id,
                     AttendenceDate = attendence.AttendenceDate,
@@ -167,10 +167,14 @@ namespace BL.Service
                     FirstName = attendence.Employee.FirstName,
                     LastName = attendence.Employee.LastName,
                     Longitude = attendence.Longitude,
-                    EmployeeId = attendence.EmployeeId
+                    EmployeeId = attendence.EmployeeId,
+                    CreatedBy = attendence.CreatedBy,
+                    CreatedDate = attendence.CreatedDate,
+                    ModifiedBy = attendence.ModifiedBy,
+                    ModifiedDate = attendence.ModifiedDate,
 
                 };
-                return employeeDto;
+                return attendenceDto;
             }
             catch (Exception ex)
             {
@@ -231,6 +235,14 @@ namespace BL.Service
                 throw;
             }
            
+        }
+
+        public async Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate, int employeeId)
+        {
+            var attendence = await _attendenceRepository.Get(x => x.EmployeeId == employeeId && x.AttendenceDate.Date == alertDate.Date, x => x.Employee).FirstOrDefaultAsync();
+            if (attendence == null) return new AttendenceDto();
+            AttendenceDto attendenceDto=SetAttendenceDto(attendence);
+            return attendenceDto;
         }
     }
 }

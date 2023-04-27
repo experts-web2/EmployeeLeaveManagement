@@ -1,11 +1,14 @@
 ﻿using DTOs;
 using ELM.Helper;
 using ELM.Web.Services.Interface;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
 
 namespace ELM_DAL.Services.ServiceRepo
@@ -16,12 +19,17 @@ namespace ELM_DAL.Services.ServiceRepo
         private IConfiguration configuration;
         private IHttpClientFactory _clientFactory;
         private readonly IJSRuntime _jsRuntime;
-        public SalaryHistoryService(HttpClient httpService,IConfiguration _configuration,IHttpClientFactory httpClientFactory,IJSRuntime jSRuntime)
+        private AuthenticationStateProvider _authenticationStateProvider;
+        public SalaryHistoryService(HttpClient httpService,
+            IConfiguration _configuration,
+            IHttpClientFactory httpClientFactory,
+            IJSRuntime jSRuntime,AuthenticationStateProvider authenticationStateProvider)
         {
             configuration = _configuration;
             _httpService = httpService;
             _clientFactory = httpClientFactory;
             _jsRuntime = jSRuntime;
+            _authenticationStateProvider = authenticationStateProvider;
         }
         public async Task AddSalary(SalaryHistoryDto salaryHistoryDto)
         {
@@ -40,7 +48,15 @@ namespace ELM_DAL.Services.ServiceRepo
                 _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await _httpService.PostAsync($"{Apiroute()}SalaryHistory/getSalaries", Content);
+
+                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                HttpResponseMessage response;
+                if (user.IsInRole("Admin"))
+                    response = await _httpService.PostAsync($"{Apiroute()}SalaryHistory/getSalaries", Content);
+                else
+                    response = await _httpService.PostAsync($"{Apiroute()}SalaryHistory/GetSalariesForUser/{int.Parse(employeeId)}",Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<SalaryHistoryDto>();
                 if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
