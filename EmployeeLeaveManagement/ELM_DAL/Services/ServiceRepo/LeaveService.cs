@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
-    public class LeaveService : ILeaveService
+    public class LeaveService :ServiceBase, ILeaveService
     {
         private HttpClient _httpService;
         private IConfiguration _configuration;
@@ -21,7 +21,7 @@ namespace ELM_DAL.Services.ServiceRepo
         private AuthenticationStateProvider _authenticationStateProvider;
         public LeaveService(HttpClient httpService,
             IConfiguration configuration,
-            IJSRuntime jsRunTime,AuthenticationStateProvider authenticationStateProvider)
+            IJSRuntime jsRunTime,AuthenticationStateProvider authenticationStateProvider) : base(httpService, configuration, jsRunTime, authenticationStateProvider)
         {
             _httpService = httpService;
             _configuration = configuration;
@@ -38,9 +38,7 @@ namespace ELM_DAL.Services.ServiceRepo
             Response<LeaveDto> responseDto = new();
             try
             {
-                var token = await _jsRunTime.InvokeAsync<string>("localStorage.getItem", "jwt");
-                token = token?.Replace("\"", "");
-                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                await SetToken();
                 string data = JsonConvert.SerializeObject(Paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
 
@@ -74,6 +72,7 @@ namespace ELM_DAL.Services.ServiceRepo
         {
             try
             {
+                await SetToken();
                 var response = await _httpService.GetFromJsonAsync<LeaveDto>($"{Apiroute()}leave/GetById/{id}");
                 return response;
             }
@@ -85,18 +84,13 @@ namespace ELM_DAL.Services.ServiceRepo
         }
         public async Task AddLeave(LeaveDto leaveDto)
         {
+            await SetToken();
             await _httpService.PostAsJsonAsync<LeaveDto>($"{Apiroute()}leave", leaveDto);
         }
         public async Task EditLeave(LeaveDto leaveDto)
         {
+            await SetToken();
             await _httpService.PutAsJsonAsync($"{Apiroute()}leave", leaveDto);
-        }
-        private string Apiroute()
-        {
-            var apiRoute = _configuration["Api:Apiroute"];
-            if (apiRoute == null)
-                return "https://localhost:7150/api/";
-            return apiRoute;
         }
     }
 }

@@ -28,105 +28,162 @@ namespace BL.Service
         }
         public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null)
         {
-            if (predicate == null)
-                predicate = PredicateBuilder.True<Alert>();
-            else
-                predicate = predicate.And(predicate);
-
-            var Alerts = _alertRepository.GetAll().Include(x => x.Employee).AsQueryable();
-
-
-            if (!string.IsNullOrEmpty(pager.Search))
+            try
             {
-                predicate = predicate.And(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
-                           x.Employee.FirstName.Contains(pager.Search.Trim()));
+                if (predicate == null)
+                    predicate = PredicateBuilder.True<Alert>();
+                else
+                    predicate = predicate.And(predicate);
+
+                var Alerts = _alertRepository.GetAll().Include(x => x.Employee).AsQueryable();
+
+
+                if (!string.IsNullOrEmpty(pager.Search))
+                {
+                    predicate = predicate.And(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
+                               x.Employee.FirstName.Contains(pager.Search.Trim()));
+                }
+                if (pager.StartDate != (DateTime.Now.Date) && pager.EndDate != DateTime.MinValue)
+                {
+                    predicate = predicate.And(x => x.AlertDate.Date >= pager.StartDate.Value.Date && x.AlertDate.Date >= pager.EndDate);
+                }
+                //if (pager.EndDate != DateTime.MinValue)
+                //{
+                //    predicate = predicate.And(x => x.AlertDate.Date <= pager.EndDate.Value.Date);
+                //}
+                else
+                {
+                    predicate = predicate.And(x => x.AlertDate.Date <= pager.EndDate);
+                }
+                Alerts = Alerts.
+                    Where(predicate);
+
+
+                var paginatedList = PagedList<Alert>.ToPagedList(Alerts, pager.CurrentPage, pager.PageSize);
+                return new PagedList<Alert>
+                    (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
             }
-            if (pager.StartDate != (DateTime.Now.Date) && pager.EndDate != DateTime.MinValue)
+            catch (Exception)
             {
-                predicate = predicate.And(x => x.AlertDate.Date >= pager.StartDate.Value.Date && x.AlertDate.Date >= pager.EndDate);
+
+                throw;
             }
-            //if (pager.EndDate != DateTime.MinValue)
-            //{
-            //    predicate = predicate.And(x => x.AlertDate.Date <= pager.EndDate.Value.Date);
-            //}
-            else
-            {
-                predicate = predicate.And(x => x.AlertDate.Date <= pager.EndDate);
-            }
-            Alerts = Alerts.
-                Where(predicate);
-
-
-            var paginatedList = PagedList<Alert>.ToPagedList(Alerts, pager.CurrentPage, pager.PageSize);
-            return new PagedList<Alert>
-                (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
-
         }
         public List<Alert> AddAbsentEmployeeAlert()
         {
-            //Querry For getting Employees Whose are Absent
-            var AbsentEmployees = (from Employees in _dbContext.Employees
-                                   join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now))
-                                   on Employees.Id equals Attendences.EmployeeId
-                                   into employeeAtendence
-                                   from attendence in employeeAtendence.DefaultIfEmpty()
-                                   where attendence == null || attendence.Timeout == null
-                                   select Employees).Include(x => x.Attendences);
-
-            //var today = DateTime.Now.Date;
-            //var AbsentEmployees = from e in _dbContext.Employees
-            //                      join a in _dbContext.Attendences
-            //                      on e.Id equals a.EmployeeId into employeeAttendences
-            //                      from ea in employeeAttendences.DefaultIfEmpty()
-            //                      where ea == null || ea.Timeout == null
-            //                          || ea.AttendenceDate == today
-            //                      select e;
-
-            List<Alert> Alerts = new List<Alert>();
-
-            foreach (var Employee in AbsentEmployees)
+            try
             {
-                Alert Alert = new Alert()
-                {
-                    AlertDate = DateTime.Now,
-                    AlertType = SetAlertType(Employee),
-                    EmployeeId = Employee.Id,
+                //Querry For getting Employees Whose are Absent
+                var AbsentEmployees = (from Employees in _dbContext.Employees
+                                       join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now))
+                                       on Employees.Id equals Attendences.EmployeeId
+                                       into employeeAtendence
+                                       from attendence in employeeAtendence.DefaultIfEmpty()
+                                       where attendence == null || attendence.Timeout == null
+                                       select Employees).Include(x => x.Attendences);
+                List<Alert> Alerts = new List<Alert>();
 
-                };
-                var alreadyInserted = _dbContext.Alerts.FirstOrDefault(x => x.AlertDate.Date == Alert.AlertDate.Date&&x.EmployeeId==Alert.EmployeeId);
-                if (alreadyInserted == null)
-                    Alerts.Add(Alert);
+                foreach (var Employee in AbsentEmployees)
+                {
+                    Alert Alert = new Alert()
+                    {
+                        AlertDate = DateTime.Now,
+                        AlertType = SetAlertType(Employee),
+                        EmployeeId = Employee.Id,
+
+                    };
+                    var alreadyInserted = _dbContext.Alerts.FirstOrDefault(x => x.AlertDate.Date == Alert.AlertDate.Date && x.EmployeeId == Alert.EmployeeId);
+                    if (alreadyInserted == null)
+                        Alerts.Add(Alert);
+                }
+                if (Alerts is null || !Alerts.Any())
+                    return new List<Alert>();
+                _dbContext.Alerts.AddRange(Alerts);
+                _dbContext.SaveChanges();
+                return Alerts;
             }
-            if (Alerts is null || !Alerts.Any())
-                return new List<Alert>();
-            _dbContext.Alerts.AddRange(Alerts);
-            _dbContext.SaveChanges();
-            return Alerts;
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
         }
         public string SetAlertType(Employee employee)
         {
-            var toadayAttendence = employee.Attendences.FirstOrDefault(x => x.AttendenceDate.Date == DateTime.Now.Date); 
-            if (toadayAttendence == null)
-                return "Absent";
-            if (toadayAttendence.TimeIn ==null)
-                return "TimeIn Missing";
-            if (toadayAttendence.Timeout == null)
-                return "TimeOut Missing";
-            else return "Attendence Marked";
-               
+            try
+            {
+                var toadayAttendence = employee.Attendences.FirstOrDefault(x => x.AttendenceDate.Date == DateTime.Now.Date);
+                if (toadayAttendence == null)
+                    return "Absent";
+                if (toadayAttendence.TimeIn == null)
+                    return "TimeIn Missing";
+                if (toadayAttendence.Timeout == null)
+                    return "TimeOut Missing";
+                else return "Attendence Marked";
 
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
         }
         public List<Alert> GetAlertsByEmployeeId(int id)
         {
-            var alerts = _alertRepository.Get(x => x.EmployeeId == id, x => x.Employee).ToList();
-            return alerts;
+            try
+            {
+                var alerts = _alertRepository.Get(x => x.EmployeeId == id, x => x.Employee).ToList();
+                return alerts;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
 
-        public void DeleteAlertByEmployeeId(int employeeId)
+        public void DeleteAlertByEmployeeId(int employeeId,DateTime attendenceDate)
         {
-            _alertRepository.DeleteAlertByEmployeeId(x =>x.EmployeeId ==employeeId && x.AlertDate.Date ==DateTime.Now.Date);
+            try
+            {
+                _alertRepository.DeleteAlertByEmployeeId(x => x.EmployeeId == employeeId && x.AlertDate.Date == attendenceDate);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
+        }
+
+        public Alert GetAlertById(int id)
+        {
+            try
+            {
+                var alert = _alertRepository.GetByID(id);
+                return alert;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+          
+        }
+        public void UpdateAlert(Alert alert)
+        {
+            try
+            {
+                _alertRepository.update(alert);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
         }
     }
 }

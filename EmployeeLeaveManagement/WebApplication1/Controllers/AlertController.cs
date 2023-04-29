@@ -1,5 +1,7 @@
 ﻿using BL.Interface;
 using DAL.Interface;
+using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -23,22 +25,22 @@ namespace EmpLeave.Api.Controllers
         [HttpPost("GetAlerts")]
         public IActionResult GetAlert(Pager pager)
         {
-                
-                    var Alerts = _alertService.GetAllAlert(pager);
-                    var metadata = new
-                    {
-                        Alerts.TotalCount,
-                        Alerts.PageSize,
-                        Alerts.TotalPages,
-                        Alerts.CurrentPage,
-                        Alerts.HasPrevious,
-                        Alerts.HasNext,
-                        //  pager.StartDate,
-                        //   pager.EndDate,
-                        // pager.Search
-                    };
-                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                    return Ok(Alerts);
+
+            var Alerts = _alertService.GetAllAlert(pager);
+            var metadata = new
+            {
+                Alerts.TotalCount,
+                Alerts.PageSize,
+                Alerts.TotalPages,
+                Alerts.CurrentPage,
+                Alerts.HasPrevious,
+                Alerts.HasNext,
+                //  pager.StartDate,
+                //   pager.EndDate,
+                // pager.Search
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            return Ok(Alerts);
         }
         [HttpGet("getAbsent")]
         public ActionResult GetAllAbsentEmployee()
@@ -51,7 +53,7 @@ namespace EmpLeave.Api.Controllers
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var ClaimEmployeeId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var response= _alertService.AddAbsentEmployeeAlert();
+            var response = _alertService.AddAbsentEmployeeAlert();
             return Ok(response);
         }
         [HttpPost("GetAlertsByEmployeeId/{id}")]
@@ -60,10 +62,27 @@ namespace EmpLeave.Api.Controllers
             var alerts = _alertService.GetAlertsByEmployeeId(id);
             return Ok(alerts);
         }
+
         [HttpDelete("{id}")]
-        public IActionResult DeleteAlert(int id)
+        public IActionResult DeleteAlert([FromBody] List<DateTime> attendenceDates, [FromRoute] int id)
         {
-            _alertService.DeleteAlertByEmployeeId(id);
+            foreach (var attendenceDate in attendenceDates)
+            {
+                _alertService.DeleteAlertByEmployeeId(id, attendenceDate);
+            }
+            
+            return Ok();
+        }
+        [HttpGet("GetAlertById/{id}")]
+        public IActionResult GetAlertById(int id)
+        {
+            var alert = _alertService.GetAlertById(id);
+            return Ok(alert);
+        }
+        [HttpPut("UpdateAlert")]
+        public IActionResult UpdateAlert(Alert alert)
+        {
+            _alertService.UpdateAlert(alert);
             return Ok();
         }
     }

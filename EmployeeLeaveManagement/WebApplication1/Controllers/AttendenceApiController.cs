@@ -46,6 +46,12 @@ namespace EmpLeave.Api.Controllers
         {
                 return GetAllEmployeeAttendance(paging);
         }
+        [HttpGet("GetAllAttendencesWithoutPaging")]
+        public IActionResult GetAllAttendencesWithoutPaging()
+        {
+            var attendences=_attendenceService.GetAllAttendencesWithoutPaging();
+            return Ok(attendences);
+        }
         [HttpGet]
         private IActionResult GetAllEmployeeAttendance(Pager paging)
         {

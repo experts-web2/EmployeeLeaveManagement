@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
-    public class SalaryHistoryService:ISalaryHistory
+    public class SalaryHistoryService : ServiceBase,ISalaryHistory
     {
         private HttpClient _httpService;
         private IConfiguration configuration;
@@ -23,7 +23,7 @@ namespace ELM_DAL.Services.ServiceRepo
         public SalaryHistoryService(HttpClient httpService,
             IConfiguration _configuration,
             IHttpClientFactory httpClientFactory,
-            IJSRuntime jSRuntime,AuthenticationStateProvider authenticationStateProvider)
+            IJSRuntime jSRuntime,AuthenticationStateProvider authenticationStateProvider):base(httpService, _configuration, jSRuntime, authenticationStateProvider)
         {
             configuration = _configuration;
             _httpService = httpService;
@@ -41,11 +41,8 @@ namespace ELM_DAL.Services.ServiceRepo
             Response<SalaryHistoryDto> responseDto = new();
             try
             {
-
+                await SetToken();
                 _httpService = _clientFactory.CreateClient("api");
-                var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-                token = token?.Replace("\"", "");
-                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
 
@@ -80,9 +77,7 @@ namespace ELM_DAL.Services.ServiceRepo
         {
             try
             {
-                var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-                token = token?.Replace("\"", "");
-                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                await SetToken();
                 return await _httpService.GetFromJsonAsync<SalaryHistoryDto>($"{Apiroute()}SalaryHistory/GetById/{id}");
             }
             catch (Exception ex)
@@ -99,13 +94,6 @@ namespace ELM_DAL.Services.ServiceRepo
         public async Task UpdateSalary(SalaryHistoryDto salaryHistoryDto)
         {
             await _httpService.PutAsJsonAsync($"{Apiroute()}SalaryHistory/EditSalary", salaryHistoryDto);
-        }
-        private string Apiroute()
-        {
-            var apiRoute = configuration["Api:Apiroute"];
-            if (apiRoute == null)
-                return "https://localhost:7150/api/";
-            return apiRoute;
         }
     }
 }

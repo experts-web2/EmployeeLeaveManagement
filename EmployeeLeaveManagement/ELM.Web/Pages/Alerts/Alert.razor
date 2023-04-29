@@ -49,9 +49,11 @@ else
                     <td>@alert.Employee.FirstName</td>
                     @if(alert.AlertType != "Absent")
                     {
+                        @*int AlertId = @alert.Id;
+                        int? EmployeeID = @alert.EmployeeId;*@
                          <td>
                          <div class="button-container">
-                            <a href='/edit/attendence?AlertDate=@alert.AlertDate&Id=@alert.Employee.Id' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
+                            <a href='/edit/attendence?EmployeeId=@alert.EmployeeId&AlertDate=@alert.AlertDate.Date&AlertId=@alert.Id' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">
                                 Edit
                             </a>
                         </div>

@@ -13,6 +13,7 @@ namespace BL.Interface
     public interface IAttendenceService
     {
         PagedList<AttendenceDto> GetAllAttendences(Pager paging, Expression<Func<Attendence, bool>> predicate = null);
+        List<AttendenceDto> GetAllAttendencesWithoutPaging();
         //  PagedList<AttendenceDto> GetAttendence(Pager paging);
         bool AddAttendence(AttendenceDto attendenceDto);
         bool DeleteAttendence(int id);

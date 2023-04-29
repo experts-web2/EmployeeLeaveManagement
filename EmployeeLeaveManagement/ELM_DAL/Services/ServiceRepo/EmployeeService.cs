@@ -6,18 +6,25 @@ using ELM.Helper;
 using DomainEntity.Models;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService : ServiceBase, IEmployeeService
     {
         private HttpClient _httpService;
         private IConfiguration _configuration;
-        public EmployeeService(HttpClient httpClient, IConfiguration configuration)
+        private IJSRuntime _jsruntime;
+        private AuthenticationStateProvider _authenticationStateProvider;
+        public EmployeeService(HttpClient httpClient, IConfiguration configuration,IJSRuntime jsRuntime,AuthenticationStateProvider authenticationStateProvider):base(httpClient,configuration,jsRuntime,authenticationStateProvider)
         {
             _configuration = configuration;
             _httpService = httpClient;
+            _jsruntime = jsRuntime;
+            _authenticationStateProvider = authenticationStateProvider;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
+
         }
         public async Task AddEmployee(EmployeeDto employeeDto)
         {
@@ -64,13 +71,6 @@ namespace ELM_DAL.Services.ServiceRepo
         public async Task<List<Employee>> GetAllEmployee()
         {
             return await _httpService.GetFromJsonAsync<List<Employee>>($"{Apiroute()}employee/GetAllEmployees");
-        }
-        private string Apiroute()
-        {
-            var apiRoute = _configuration["Api:Apiroute"];
-            if (apiRoute == null)
-                return "https://localhost:7150/api/";
-            return apiRoute;
         }
     }
 }

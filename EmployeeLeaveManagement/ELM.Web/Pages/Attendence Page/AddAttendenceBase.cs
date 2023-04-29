@@ -31,9 +31,8 @@ namespace ELM.Web.Pages.Attendence_Page
         public int? ID { get; set; }
         [Parameter]
         public bool? isCheckOut { get; set; }
-
         public DateTime AlertDate { get; set; }
-
+        public int AlertId { get; set; }
         [CascadingParameter]
         Task<AuthenticationState> authenticationStateTask { get; set; }
         public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
@@ -44,6 +43,8 @@ namespace ELM.Web.Pages.Attendence_Page
         public bool isAdmin { get; set; }
         public bool CheckAttendence { get; set; }
         
+       
+        
         protected override async Task OnInitializedAsync()
         {
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -52,11 +53,14 @@ namespace ELM.Web.Pages.Attendence_Page
             {
                 AlertDate = DateTime.Parse(alertDate!);
             }
-            if (queryStrings.TryGetValue("Id", out var id))
+            if (queryStrings.TryGetValue("EmployeeId", out var id))
             {
                 EmployeeId = Convert.ToInt32(id);
             }
-
+            if(queryStrings.TryGetValue("AlertId",out var alertId))
+            {
+                AlertId = Convert.ToInt32(alertId);
+            }
             var user = await authenticationStateTask;
             var u = user.User;
             isAdmin = u.IsInRole("Admin");
@@ -97,13 +101,21 @@ namespace ELM.Web.Pages.Attendence_Page
             EmployeeId = value;
             AttendenceDto.EmployeeId = value;
             AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(value);
+
+            Pager.CurrentPage = currentPage;
+            List<Alert> AlertList = await AlertService.GetAllAlertsByEmployeeId(value);
+            Alerts = AlertList;
+            if (AlertList.Any(x => x.AlertType == "TimeOut Missing"))
+            {
+                CheckAttendence = true;
+            }
             SetUserCheckout();
 
 
         }
         private void SetUserCheckout()
         {
-            if (!(ID.HasValue) && AttendenceDto.TimeIn?.Date == DateTime.Now.Date)
+            if (!(ID.HasValue) && AttendenceDto.TimeIn?.Date != DateTime.Now.Date && (AttendenceDto.ID == 0))
             {
                 isCheckOut = null;
                 return;
@@ -122,12 +134,29 @@ namespace ELM.Web.Pages.Attendence_Page
             if (AttendenceDto.ID > 0)
             {
                 await AttendenceService.UpdateAttendence(AttendenceDto);
+
+                var user = await authenticationStateTask;
+                var u = user.User;
+                string employeeId = u.FindFirstValue(ClaimTypes.NameIdentifier);
+                var attendences = await AttendenceService.GetAttendencesWithoutPagination(employeeId, u);
+                List<DateTime> attendenceDates = attendences.Where(x => x.Timeout != null).Select(y => y.AttendenceDate.Date).ToList();
+                var alertById = AlertService.GetAlertById(AlertId);
+                Alert alert = new Alert()
+                {
+                   AlertType= alertById.Result.AlertType,
+                   isDeleted = true,
+                   Id = alertById.Result.Id,
+                   EmployeeId = alertById.Result.EmployeeId
+                    
+                };
+                 await AlertService.UpdateAlert(alert);
+                if (!string.IsNullOrEmpty(employeeId))
+                    await AlertService.DeleteAlert(int.Parse(employeeId), attendenceDates);
             }
             else
                 await AttendenceService.AddAttendence(AttendenceDto);
             Cancel();
         }
-
         public void Cancel()
         {
             NavigationManager.NavigateTo("/ListOfAttendence");

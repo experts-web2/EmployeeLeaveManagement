@@ -20,7 +20,20 @@
             <InputDate class="form-control" disabled @bind-Value="AttendenceDto.AttendenceDate" />
         </div>
         <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
-    </div
+    </div>
+  @*   <AuthorizeView Roles="Admin">
+        <div class="mb-3">
+          <label for="Name" class="form-label">Date</label>
+          <div class="col-md-4">
+              @if(AttendenceDto.AttendenceDate == DateTime.Now.Date)
+                {
+                    AttendenceDto.AttendenceDate = ;
+                }
+                <InputDate class="form-control" disabled @bind-Value="AttendenceDto.AttendenceDate" />
+          </div>
+          <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
+        </div>
+    </AuthorizeView>*@
     <div class="mb-0">
         <div class="row">
             <div class="col-md-2">
@@ -52,7 +65,7 @@
             </div>
         </div>
     </div>
-    @*<div class="mb-0">
+    @*<div class="mb-0">Emp
     <div class="row">
     <div class="col-md-2">
     <label for="Name" class="form-label">Longitude</label>

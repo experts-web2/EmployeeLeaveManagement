@@ -10,7 +10,7 @@ using System.Net;
 
 namespace BL.Service
 {
-    public class AttendenceService : IAttendenceService
+    public class AttendenceService :  IAttendenceService
     {
         private readonly IAttendenceRepository _attendenceRepository;
         public AttendenceService(IAttendenceRepository attendenceRepository)
@@ -178,7 +178,7 @@ namespace BL.Service
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
         public bool UpdateAttendence(AttendenceDto attendenceDto)
@@ -243,6 +243,14 @@ namespace BL.Service
             if (attendence == null) return new AttendenceDto();
             AttendenceDto attendenceDto=SetAttendenceDto(attendence);
             return attendenceDto;
+        }
+
+        public List<AttendenceDto> GetAllAttendencesWithoutPaging()
+        {
+            var attendences = _attendenceRepository.GetAll().Include(x => x.Employee).ToList();
+            var attendenceDto = ToDtos(attendences);
+            if (attendences == null) return new List<AttendenceDto>();
+            else return attendenceDto;
         }
     }
 }

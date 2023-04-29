@@ -27,14 +27,13 @@ namespace ELM.Web.Pages.Alerts
         public Pager Paging { get; set; } = new();
         protected override async Task OnInitializedAsync()
         {
-            var user = await authenticationStateTask;
-            var u = user.User;
-            string employeeId = u.FindFirstValue(ClaimTypes.NameIdentifier);
-            var attendence = await AttendenceService.GetAttendenceByEmployeeId(int.Parse(employeeId));
-            if(attendence.Timeout != null)
-            {
-              await  AlertService.DeleteAlert(int.Parse(employeeId));
-            }
+            //var user = await authenticationStateTask;
+            //var u = user.User;
+            //string employeeId = u.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var attendences = await AttendenceService.GetAttendencesWithoutPagination(employeeId,u);
+            //List<DateTime> attendenceDates = attendences.Where(x => x.Timeout != null).Select(y => y.AttendenceDate.Date).ToList();
+            //if(!string.IsNullOrEmpty(employeeId))
+            // await  AlertService.DeleteAlert(int.Parse(employeeId), attendenceDates);
 
             await GetAll();
         }
