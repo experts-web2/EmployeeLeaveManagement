@@ -14,27 +14,65 @@
 <h3>Add Attendence</h3>
 <EditForm Model="AttendenceDto" OnValidSubmit="SaveAttendence">
     <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label for="Name" class="form-label">Date</label>
-        <div class="col-md-4">
-            <InputDate class="form-control" disabled @bind-Value="AttendenceDto.AttendenceDate" />
-        </div>
-        <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
-    </div>
-  @*   <AuthorizeView Roles="Admin">
+    <AuthorizeView Roles="User">
+         <ChildContent Context="authContext">
         <div class="mb-3">
           <label for="Name" class="form-label">Date</label>
           <div class="col-md-4">
-              @if(AttendenceDto.AttendenceDate == DateTime.Now.Date)
-                {
-                    AttendenceDto.AttendenceDate = ;
-                }
-                <InputDate class="form-control" disabled @bind-Value="AttendenceDto.AttendenceDate" />
+              <InputDate class="form-control" disabled @bind-Value="AttendenceDto.AttendenceDate" />
           </div>
           <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
         </div>
-    </AuthorizeView>*@
-    <div class="mb-0">
+        </ChildContent>
+    </AuthorizeView>
+     <AuthorizeView Roles="Admin">
+         <ChildContent Context="authContext">
+        <div class="mb-3">
+          <label for="Name" class="form-label">Date</label>
+          <div class="col-md-4">
+              <InputDate class="form-control"  @bind-Value="AttendenceDto.AttendenceDate" />
+          </div>
+          <ValidationMessage For="@(() => AttendenceDto.AttendenceDate)" />
+        </div>
+        </ChildContent>
+    </AuthorizeView>
+    @if(isAdmin)
+    {
+         <div class="mb-0">
+        <div class="row">
+            <div class="col-md-2">
+                <label for="Name" class="form-label">TimeIn</label>
+            </div>
+            <div class="col-md-2">
+                <label for="Name" class="form-label">Time out</label>
+            </div>
+        </div>
+    </div>
+    <div class="mb-2">
+        <div class="row">
+            <div class="col-md-2">
+                @if  (AttendenceDto.TimeIn==null)
+                {
+                    AttendenceDto.TimeIn = DateTime.Now;
+                }
+                <InputDate Type="InputDateType.Time" class="form-control" @bind-Value="AttendenceDto.TimeIn" />                
+                <ValidationMessage For="@(() => AttendenceDto.TimeIn)" />
+            </div>
+            <div class="col-md-2">
+                @if  (AttendenceDto.Timeout==null&&isCheckOut.HasValue && !isCheckOut.Value)//(isCheckOut.HasValue && !isCheckOut.Value)
+                {
+                    AttendenceDto.Timeout = DateTime.Now;
+
+                }
+                    <InputDate Type="InputDateType.Time" class="form-control"  @bind-Value="AttendenceDto.Timeout" />
+                <ValidationMessage For="@(() => AttendenceDto.Timeout)" />
+            </div>
+        </div>
+    </div>
+    }
+    else
+    {
+         <div class="mb-0">
         <div class="row">
             <div class="col-md-2">
                 <label for="Name" class="form-label">TimeIn</label>
@@ -65,40 +103,13 @@
             </div>
         </div>
     </div>
-    @*<div class="mb-0">Emp
-    <div class="row">
-    <div class="col-md-2">
-    <label for="Name" class="form-label">Longitude</label>
-    </div>
-    <div class="col-md-2">
-    <label for="Name" class="form-label">Latitude</label>
-    </div>
-    </div>
-    </div>
-    <div class="mb-2">
-    <div class="row">
-    <div class="col-md-2">
-    <InputNumber class="form-control" @bind-Value="AttendenceDto.Longitude" />
-    <ValidationMessage For="@(() => AttendenceDto.Longitude)" />
-    </div>
-    <div class="col-md-2">
-    <InputNumber class="form-control" @bind-Value="AttendenceDto.Latitude" />
-    <ValidationMessage For="@(() => AttendenceDto.Latitude)" />
-    </div>
-    </div>
-    </div>*@
+    }
+   
     <AuthorizeView Roles="Admin">
         <ChildContent Context="authContext">
             <div class="mb-3">
                 <label class="mb-2">Employee Name</label>
                 <div class="col-md-4">
-                    @*<InputSelect class="form-control" @onchange="(e)=>HandleChange(e)">
-                        <option selected disabled value="0">Employee Name List</option>
-                        @foreach (var employee in EmployeesList)
-                        {
-                            <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
-                        }
-                    </InputSelect>*@
                     <InputSelect class="form-control"
                                    ValueChanged="@((int value) => HandleChange(value))"
                                    ValueExpression="@(() => EmployeeId)"

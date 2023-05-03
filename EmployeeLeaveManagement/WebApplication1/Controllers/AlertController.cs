@@ -14,7 +14,7 @@ namespace EmpLeave.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+   //[Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
     public class AlertController : ControllerBase
     {
         private readonly IAlertService _alertService;
@@ -74,16 +74,24 @@ namespace EmpLeave.Api.Controllers
             return Ok();
         }
         [HttpGet("GetAlertById/{id}")]
-        public IActionResult GetAlertById(int id)
+        public async Task<ActionResult<AlertDto>> GetAlertById(int id)
         {
-            var alert = _alertService.GetAlertById(id);
+            var alert = await Task.FromResult(_alertService.GetAlertById(id));
             return Ok(alert);
         }
-        [HttpPut("UpdateAlert")]
-        public IActionResult UpdateAlert(Alert alert)
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAlert(AlertDto alertDto)
         {
-            _alertService.UpdateAlert(alert);
+            _alertService.UpdateAlert(alertDto);
             return Ok();
+        }
+
+        [HttpGet("GetAlertsHavingEmployeeId")]
+        public IActionResult GetAlertsHavingEmployeeId()
+        {
+            var alerts = _alertService.GetAlertsHavingEmployeeId();
+            return Ok(alerts);
         }
     }
 }

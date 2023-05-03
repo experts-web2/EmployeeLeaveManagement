@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DomainEntity.Models
 {
-    public class Attendence : BaseEntity
+    public class Attendence : EntityBase
     {
         [Required]
         public DateTime AttendenceDate { get; set; }

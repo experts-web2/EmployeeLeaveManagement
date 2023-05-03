@@ -13,18 +13,10 @@ namespace ELM_DAL.Services.ServiceRepo
 {
     public class EmployeeService : ServiceBase, IEmployeeService
     {
-        private HttpClient _httpService;
-        private IConfiguration _configuration;
-        private IJSRuntime _jsruntime;
-        private AuthenticationStateProvider _authenticationStateProvider;
+   
         public EmployeeService(HttpClient httpClient, IConfiguration configuration,IJSRuntime jsRuntime,AuthenticationStateProvider authenticationStateProvider):base(httpClient,configuration,jsRuntime,authenticationStateProvider)
         {
-            _configuration = configuration;
-            _httpService = httpClient;
-            _jsruntime = jsRuntime;
-            _authenticationStateProvider = authenticationStateProvider;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
-
         }
         public async Task AddEmployee(EmployeeDto employeeDto)
         {

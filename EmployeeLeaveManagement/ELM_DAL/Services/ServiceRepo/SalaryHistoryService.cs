@@ -16,20 +16,15 @@ namespace ELM_DAL.Services.ServiceRepo
     public class SalaryHistoryService : ServiceBase,ISalaryHistory
     {
         private HttpClient _httpService;
-        private IConfiguration configuration;
         private IHttpClientFactory _clientFactory;
-        private readonly IJSRuntime _jsRuntime;
-        private AuthenticationStateProvider _authenticationStateProvider;
         public SalaryHistoryService(HttpClient httpService,
             IConfiguration _configuration,
             IHttpClientFactory httpClientFactory,
             IJSRuntime jSRuntime,AuthenticationStateProvider authenticationStateProvider):base(httpService, _configuration, jSRuntime, authenticationStateProvider)
         {
-            configuration = _configuration;
+         
             _httpService = httpService;
             _clientFactory = httpClientFactory;
-            _jsRuntime = jSRuntime;
-            _authenticationStateProvider = authenticationStateProvider;
         }
         public async Task AddSalary(SalaryHistoryDto salaryHistoryDto)
         {

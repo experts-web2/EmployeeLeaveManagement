@@ -15,19 +15,13 @@ namespace ELM_DAL.Services.ServiceRepo
 {
     public class LeaveService :ServiceBase, ILeaveService
     {
-        private HttpClient _httpService;
-        private IConfiguration _configuration;
-        private IJSRuntime _jsRunTime;
-        private AuthenticationStateProvider _authenticationStateProvider;
+       
         public LeaveService(HttpClient httpService,
             IConfiguration configuration,
             IJSRuntime jsRunTime,AuthenticationStateProvider authenticationStateProvider) : base(httpService, configuration, jsRunTime, authenticationStateProvider)
         {
-            _httpService = httpService;
-            _configuration = configuration;
-            _jsRunTime = jsRunTime;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
-            _authenticationStateProvider = authenticationStateProvider;
+         
         }
         public async Task DeleteLeave(int id)
         {

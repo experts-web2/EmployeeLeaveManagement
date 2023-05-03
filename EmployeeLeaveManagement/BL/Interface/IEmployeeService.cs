@@ -13,6 +13,7 @@ namespace BL.Interface
     {
         void AddEmployee(EmployeeDto employee);
         PagedList<EmployeeDto> GetAllEmployee(Pager pager);
+        List<Employee> GetAbsentEmployees();
         void DeleteEmployee(int id);
         EmployeeDto GetById(int id);
         void Update(EmployeeDto employee);

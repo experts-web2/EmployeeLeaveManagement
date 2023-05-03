@@ -12,9 +12,9 @@
           @*<InputText class="form-control" @bind-Value="Pager.search" />*@
             <InputSelect class="form-control-sm" @bind-Value="search">
                 <option selected disabled value="0">Employees</option>
-                @foreach (var alert in Alerts)
+                @foreach (var user in UserDropdown)
                 {
-                    <option value="@alert.EmployeeId">@alert.Employee.FirstName</option>
+                    <option value="@user.Key">@user.Value</option>
                 }
             </InputSelect>
         <button>Search</button>
@@ -47,7 +47,7 @@ else
                     <td>@alert.AlertDate.ToShortDateString()</td>
                     <td>@alert.AlertType</td>
                     <td>@alert.Employee.FirstName</td>
-                    @if(alert.AlertType != "Absent")
+                    @if(alert.AlertType == "TimeOut Missing")
                     {
                         @*int AlertId = @alert.Id;
                         int? EmployeeID = @alert.EmployeeId;*@

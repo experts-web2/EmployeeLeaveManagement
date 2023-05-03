@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    public class AlertDto
+    public class AlertDto : BaseDto
     {
         public DateTime AlertDate { get; set; }
         public string AlertType { get; set; }
         public int? EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        public bool isDeleted { get; set; }
     }
 }

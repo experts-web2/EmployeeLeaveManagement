@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DomainEntity.Models
 {
-    public class SalaryHistory:BaseEntity
+    public class SalaryHistory:EntityBase
     {
         [Required]
         public double NewSalary { get; set; }

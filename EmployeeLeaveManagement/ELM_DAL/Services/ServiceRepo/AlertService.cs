@@ -1,10 +1,12 @@
 ﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 using ELM_DAL.Services.Interface;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
@@ -16,7 +18,6 @@ public sealed class AlertService : ServiceBase, IAlertService
 
     public AlertService(HttpClient httpService, IConfiguration configuration, IJSRuntime jSRuntime, AuthenticationStateProvider authenticationStateProvider) : base(httpService, configuration, jSRuntime, authenticationStateProvider)
     {}
-
     public async Task<Response<Alert>> GetAlerts(Pager paging)
     {
         Response<Alert> responseDto = new();
@@ -90,13 +91,16 @@ public sealed class AlertService : ServiceBase, IAlertService
         }
     }
 
-    public async Task<Alert> GetAlertById(int id)
+    public async Task<AlertDto> GetAlertById(int id)
     {
         try
         {
-            await SetToken();
-            var alert = await _httpService.GetFromJsonAsync<Alert>($"{Apiroute()}Alert/GetAlertById{id}");
-            return alert;
+            if(_httpService.DefaultRequestHeaders.Authorization == null)
+            {
+                await SetToken();
+            }
+            var alertDto = await _httpService.GetFromJsonAsync<AlertDto>($"{Apiroute()}Alert/GetAlertById/{id}");
+            return alertDto;
         }
         catch (Exception)
         {
@@ -105,12 +109,15 @@ public sealed class AlertService : ServiceBase, IAlertService
         }
       
     }
-    public async Task UpdateAlert(Alert alert)
+    public async Task UpdateAlert(AlertDto alert)
     {
         try
         {
-            await SetToken();
-            await  _httpService.PutAsJsonAsync($"{Apiroute()}Alert/UpdateAlert",alert);
+            if (_httpService.DefaultRequestHeaders.Authorization == null)
+            {
+                await SetToken();
+            }
+            var response = await  _httpService.PutAsJsonAsync($"{Apiroute()}Alert",alert);
 
         }
         catch (Exception)
@@ -118,6 +125,13 @@ public sealed class AlertService : ServiceBase, IAlertService
 
             throw;
         }
+    }
+
+    public async Task<IReadOnlyDictionary<int, string>> GetAlertsHavingEmployeeId()
+    {
+        await SetToken() ;
+      var alerts =  await _httpService.GetFromJsonAsync<IReadOnlyDictionary<int, string>>($"{Apiroute()}Alert/GetAlertsHavingEmployeeId");
+        return alerts.ToImmutableSortedDictionary();
     }
 }
 

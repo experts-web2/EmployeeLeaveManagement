@@ -12,23 +12,15 @@ namespace ELM_DAL.Services.ServiceRepo
     public class AuthService : ServiceBase, IAuthService
     {
         private IHttpClientService _httpservice;
-        private IConfiguration _configuration;
-        private AuthenticationStateProvider _authenticationStateProvider;
         private readonly ILocalStorageService _localStorage;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private IJSRuntime _jsrunTime;
-        protected HttpClient _httpService;
         public AuthService(IHttpClientService httpservice, IConfiguration configuration,
                          
                            ILocalStorageService localStorage, IHttpContextAccessor httpContextAccessor,AuthenticationStateProvider authenticationStateProvider,IJSRuntime jSRuntime,HttpClient httpService) : base(httpService, configuration, jSRuntime, authenticationStateProvider)
         {
             _httpservice = httpservice;
-            _configuration = configuration;
-           _jsrunTime = jSRuntime;
             _localStorage = localStorage;
             this.httpContextAccessor = httpContextAccessor;
-            _authenticationStateProvider = authenticationStateProvider;
-            _httpService = httpService;
         }
 
         public async Task<RegisterResult> Register(UserRegistrationModel Userregister)

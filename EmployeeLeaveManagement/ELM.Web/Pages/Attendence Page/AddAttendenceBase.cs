@@ -61,10 +61,20 @@ namespace ELM.Web.Pages.Attendence_Page
             {
                 AlertId = Convert.ToInt32(alertId);
             }
-            var user = await authenticationStateTask;
-            var u = user.User;
-            isAdmin = u.IsInRole("Admin");
-            if(!isAdmin)
+            var authenticationState = await authenticationStateTask;
+            var user = authenticationState.User;
+            isAdmin = user.IsInRole("Admin");
+
+            if (AlertDate != DateTime.MinValue && EmployeeId > 0)
+            {
+                EmployeesList = await EmployeeService.GetAllEmployee();
+                AttendenceDto = await AttendenceService.GetAttendenceByAlertDateAndEmployeeId(AlertDate, EmployeeId);
+                
+                SetUserCheckout();
+                return;
+            }
+
+            if (!isAdmin)
             {
                 Pager.CurrentPage = currentPage;
                 Response<Alert> AlertList = await AlertService.GetAlerts(Pager);
@@ -73,17 +83,10 @@ namespace ELM.Web.Pages.Attendence_Page
                     CheckAttendence = true;
                 }
             }
-            if (AlertDate != DateTime.MinValue && EmployeeId > 0)
-            {
-                AttendenceDto = await AttendenceService.GetAttendenceByAlertDateAndEmployeeId(AlertDate, EmployeeId);
-                SetUserCheckout();
-                return;
-            }
-            else
-            {
+         
                 if (isAdmin)
                     EmployeesList = await EmployeeService.GetAllEmployee();
-                var isUserLogedIn = int.TryParse(u?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
+                var isUserLogedIn = int.TryParse(user?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
                 if (!isUserLogedIn && !ID.HasValue) return;
                 if (ID.HasValue)
                     AttendenceDto = await AttendenceService.GetByID(ID.Value);
@@ -94,23 +97,15 @@ namespace ELM.Web.Pages.Attendence_Page
                 //Reason: If Admin LoggedIn then it use Admin EmployeeID thats why we populate from fetched AttendeceDto
                 EmployeeId = AttendenceDto.EmployeeId.HasValue ? AttendenceDto.EmployeeId.Value : 0;
                 SetUserCheckout();
-            }
+            
         }
         public async Task HandleChange(int value)
         {
             EmployeeId = value;
             AttendenceDto.EmployeeId = value;
             AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(value);
-
             Pager.CurrentPage = currentPage;
-            List<Alert> AlertList = await AlertService.GetAllAlertsByEmployeeId(value);
-            Alerts = AlertList;
-            if (AlertList.Any(x => x.AlertType == "TimeOut Missing"))
-            {
-                CheckAttendence = true;
-            }
             SetUserCheckout();
-
 
         }
         private void SetUserCheckout()
@@ -135,23 +130,11 @@ namespace ELM.Web.Pages.Attendence_Page
             {
                 await AttendenceService.UpdateAttendence(AttendenceDto);
 
-                var user = await authenticationStateTask;
-                var u = user.User;
-                string employeeId = u.FindFirstValue(ClaimTypes.NameIdentifier);
-                var attendences = await AttendenceService.GetAttendencesWithoutPagination(employeeId, u);
-                List<DateTime> attendenceDates = attendences.Where(x => x.Timeout != null).Select(y => y.AttendenceDate.Date).ToList();
-                var alertById = AlertService.GetAlertById(AlertId);
-                Alert alert = new Alert()
-                {
-                   AlertType= alertById.Result.AlertType,
-                   isDeleted = true,
-                   Id = alertById.Result.Id,
-                   EmployeeId = alertById.Result.EmployeeId
-                    
-                };
+               
+                var alert = await AlertService.GetAlertById(AlertId);
+                alert.isDeleted = true;
                  await AlertService.UpdateAlert(alert);
-                if (!string.IsNullOrEmpty(employeeId))
-                    await AlertService.DeleteAlert(int.Parse(employeeId), attendenceDates);
+              
             }
             else
                 await AttendenceService.AddAttendence(AttendenceDto);

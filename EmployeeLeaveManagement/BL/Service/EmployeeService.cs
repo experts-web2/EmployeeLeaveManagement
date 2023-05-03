@@ -1,31 +1,29 @@
 ﻿using BL.Interface;
 using DAL.Interface;
-using DomainEntity.Enum;
+using DAL.Repositories;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Service
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        private readonly IAttendenceRepository _attendenceRepository;
+
+        public EmployeeService(IEmployeeRepository employeeRepository, IAttendenceRepository attendenceRepository)
         {
             _employeeRepository = employeeRepository;
+            _attendenceRepository = attendenceRepository;
         }
         public void AddEmployee(EmployeeDto employee)
         {
             Employee employeeEntity = ToEntity(employee);
             _employeeRepository.Add(employeeEntity);
         }
+
         public List<Employee> GetAllEmployees()
         {
             try
@@ -38,6 +36,19 @@ namespace BL.Service
                 throw;
             }
         }
+
+        public List<Employee> GetAbsentEmployees()
+        {
+            //Querry For getting Employees Whose are Absent
+            return (from Employees in _employeeRepository.GetAll()
+                    join Attendences in _attendenceRepository.Get(x => x.AttendenceDate.Date.Equals(DateTime.Now))
+                    on Employees.Id equals Attendences.EmployeeId
+                    into employeeAtendence
+                    from attendence in employeeAtendence.DefaultIfEmpty()
+                    where attendence == null || attendence.Timeout == null
+                    select Employees).Include(x => x.Attendences).ToList();
+        }
+
         public PagedList<EmployeeDto> GetAllEmployee(Pager pager)
         {
             try
@@ -62,6 +73,7 @@ namespace BL.Service
                 throw;
             }
         }
+
         public void DeleteEmployee(int id)
         {
             try
@@ -74,6 +86,7 @@ namespace BL.Service
                 throw;
             }
         }
+
         public EmployeeDto GetById(int id)
         {
             try
@@ -89,6 +102,7 @@ namespace BL.Service
                 throw;
             }
         }
+
         public void Update(EmployeeDto employeeDto)
         {
             try
@@ -168,12 +182,14 @@ namespace BL.Service
                 throw;
             }
         }
-        private static EmployeeDto SetEmployeeDto(Employee employee)
+
+        private static EmployeeDto? SetEmployeeDto(Employee employee)
         {
             if (employee == null)
             {
                 return null;
             }
+
             try
             {
                 EmployeeDto employeeDto = new EmployeeDto()
@@ -191,7 +207,7 @@ namespace BL.Service
                 };
                 return employeeDto;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

@@ -14,7 +14,7 @@ namespace DTOs
 
 
         [Required]
-        public DateTime AttendenceDate { get; set; }
+        public DateTime AttendenceDate { get; set; } = DateTime.Now;
 
         [Required]
         [DataType(DataType.Time)]

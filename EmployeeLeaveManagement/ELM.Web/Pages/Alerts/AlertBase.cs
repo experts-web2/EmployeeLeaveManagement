@@ -21,6 +21,7 @@ namespace ELM.Web.Pages.Alerts
         Task<AuthenticationState> authenticationStateTask { get; set; }
         public Pager Pager { get; set; } = new();
         public List<DomainEntity.Models.Alert> Alerts { get; set; } = new();
+        public IReadOnlyDictionary<int, string> UserDropdown { get; set; } = new Dictionary<int, string>();
         public DateTime? StartDate { get; set; } = DateTime.Now.Date;
         public DateTime? EndDate { get; set; } = DateTime.Now.Date;
         public string search { get; set; } = string.Empty;
@@ -36,6 +37,7 @@ namespace ELM.Web.Pages.Alerts
             // await  AlertService.DeleteAlert(int.Parse(employeeId), attendenceDates);
 
             await GetAll();
+            UserDropdown = await AlertService.GetAlertsHavingEmployeeId();
         }
        
         public async Task GetAll(int currentPage = 1)

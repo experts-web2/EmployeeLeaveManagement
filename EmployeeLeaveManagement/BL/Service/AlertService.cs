@@ -4,11 +4,16 @@ using DAL.Configrations;
 using DAL.Interface;
 using DAL.Repositories;
 using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
@@ -20,11 +25,12 @@ namespace BL.Service
     public class AlertService : IAlertService
     {
         private readonly IAlertRepository _alertRepository;
-        private readonly AppDbContext _dbContext;
-        public AlertService(IAlertRepository alertRepository, AppDbContext dbContext)
+        private readonly IEmployeeService _employeeService;
+
+        public AlertService(IAlertRepository alertRepository, IEmployeeService employeeService)
         {
             _alertRepository = alertRepository;
-            _dbContext = dbContext;
+            _employeeService = employeeService;
         }
         public PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null)
         {
@@ -35,7 +41,7 @@ namespace BL.Service
                 else
                     predicate = predicate.And(predicate);
 
-                var Alerts = _alertRepository.GetAll().Include(x => x.Employee).AsQueryable();
+                var Alerts = _alertRepository.Get(x =>x.isDeleted == false).Include(x => x.Employee).AsQueryable();
 
 
                 if (!string.IsNullOrEmpty(pager.Search))
@@ -59,7 +65,7 @@ namespace BL.Service
                     Where(predicate);
 
 
-                var paginatedList = PagedList<Alert>.ToPagedList(Alerts, pager.CurrentPage, pager.PageSize);
+                var paginatedList = PagedList<Alert>.ToPagedList(Alerts.OrderByDescending(x => x.AlertDate), pager.CurrentPage, pager.PageSize);
                 return new PagedList<Alert>
                     (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
             }
@@ -73,14 +79,8 @@ namespace BL.Service
         {
             try
             {
-                //Querry For getting Employees Whose are Absent
-                var AbsentEmployees = (from Employees in _dbContext.Employees
-                                       join Attendences in _dbContext.Attendences.Where(x => x.AttendenceDate.Date.Equals(DateTime.Now))
-                                       on Employees.Id equals Attendences.EmployeeId
-                                       into employeeAtendence
-                                       from attendence in employeeAtendence.DefaultIfEmpty()
-                                       where attendence == null || attendence.Timeout == null
-                                       select Employees).Include(x => x.Attendences);
+                List<Employee> AbsentEmployees = _employeeService.GetAbsentEmployees();
+
                 List<Alert> Alerts = new List<Alert>();
 
                 foreach (var Employee in AbsentEmployees)
@@ -92,14 +92,14 @@ namespace BL.Service
                         EmployeeId = Employee.Id,
 
                     };
-                    var alreadyInserted = _dbContext.Alerts.FirstOrDefault(x => x.AlertDate.Date == Alert.AlertDate.Date && x.EmployeeId == Alert.EmployeeId);
+                    var alreadyInserted = _alertRepository.Get(x => x.AlertDate.Date == Alert.AlertDate.Date && x.EmployeeId == Alert.EmployeeId).FirstOrDefault();
                     if (alreadyInserted == null)
-                        Alerts.Add(Alert);
+                       if(!Alert.AlertType.Contains("Attendence Marked"))
+                           Alerts.Add(Alert);
                 }
                 if (Alerts is null || !Alerts.Any())
                     return new List<Alert>();
-                _dbContext.Alerts.AddRange(Alerts);
-                _dbContext.SaveChanges();
+                _alertRepository.AddRange(Alerts);
                 return Alerts;
             }
             catch (Exception)
@@ -120,7 +120,7 @@ namespace BL.Service
                     return "TimeIn Missing";
                 if (toadayAttendence.Timeout == null)
                     return "TimeOut Missing";
-                else return "Attendence Marked";
+                 return "Attendence Marked";
 
             }
             catch (Exception)
@@ -133,7 +133,7 @@ namespace BL.Service
         {
             try
             {
-                var alerts = _alertRepository.Get(x => x.EmployeeId == id, x => x.Employee).ToList();
+                var alerts = _alertRepository.Get(x => x.EmployeeId == id && x.isDeleted ==false, x => x.Employee).ToList();
                 return alerts;
             }
             catch (Exception)
@@ -158,12 +158,15 @@ namespace BL.Service
            
         }
 
-        public Alert GetAlertById(int id)
+        public AlertDto GetAlertById(int id)
         {
             try
             {
                 var alert = _alertRepository.GetByID(id);
-                return alert;
+                if(alert == null)
+                    return new AlertDto();
+                AlertDto alertDto = ToDto(alert);
+                return alertDto;
             }
             catch (Exception)
             {
@@ -172,10 +175,11 @@ namespace BL.Service
             }
           
         }
-        public void UpdateAlert(Alert alert)
+        public void UpdateAlert(AlertDto alertDto)
         {
             try
             {
+                Alert alert = ToEntity(alertDto);
                 _alertRepository.update(alert);
             }
             catch (Exception)
@@ -184,6 +188,57 @@ namespace BL.Service
                 throw;
             }
            
+        }
+
+        public IReadOnlyDictionary<int, string> GetAlertsHavingEmployeeId()
+        {
+            Dictionary<int, string> employeesToReturn = new();
+            IQueryable<Employee> employees = _alertRepository.Get(x => x.AlertDate <= DateTime.Now, y => y.Employee).Select(z => z.Employee);
+            foreach (Employee employee in employees)
+            {
+                if (!employeesToReturn.ContainsKey(employee.Id))
+                {
+                    employeesToReturn.Add(employee.Id, employee.FirstName);
+                }
+            }
+
+            return employeesToReturn;
+        }
+         private AlertDto ToDto(Alert alert)
+         {
+            if(alert == null) 
+                return new AlertDto();
+            AlertDto alertDto = new()
+            {
+                ID = alert.Id,
+                AlertDate = alert.AlertDate,
+                AlertType = alert.AlertType,
+                isDeleted = alert.isDeleted,
+                EmployeeId = alert.EmployeeId,
+                CreatedBy = alert.CreatedBy,
+                CreatedDate = alert.CreatedDate,
+                ModifiedBy = alert.ModifiedBy,
+                ModifiedDate =  alert.ModifiedDate
+            };
+            return alertDto;
+         }
+        private Alert ToEntity(AlertDto alertDto)
+        {
+            if(alertDto == null)
+                return new Alert();
+            Alert alert = new()
+            {
+                Id = alertDto.ID,
+                AlertDate = alertDto.AlertDate,
+                AlertType = alertDto.AlertType,
+                isDeleted = alertDto.isDeleted,
+                EmployeeId = alertDto.EmployeeId,
+                CreatedBy = alertDto.CreatedBy,
+                CreatedDate = alertDto.CreatedDate,
+                ModifiedBy = alertDto.ModifiedBy,
+                ModifiedDate = alertDto.ModifiedDate
+            };
+            return alert;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace DomainEntity.Models
 {
-    public class Alert : BaseEntity
+    public class Alert : EntityBase
     {
         public DateTime AlertDate { get; set; }
         public string AlertType { get; set; }

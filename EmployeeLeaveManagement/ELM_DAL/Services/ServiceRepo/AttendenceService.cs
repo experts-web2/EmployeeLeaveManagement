@@ -24,23 +24,12 @@ namespace ELM.Web.Services.ServiceRepo
     public class AttendenceService : ServiceBase, IAttendenceService
 
     {
-        private HttpClient _httpService;
-        private readonly IJSRuntime _jsRuntime;
-
-
-        private AuthenticationStateProvider _authenticationStateProvider;
-        private IConfiguration _configuration;
         public AttendenceService(HttpClient httpService,
             IConfiguration configuration,
             IHttpClientFactory clientFactory,
             AuthenticationStateProvider authenticationStateProvider,
             IJSRuntime jsRuntime = null) : base(httpService, configuration, jsRuntime, authenticationStateProvider)
         {
-            _httpService = httpService;
-            _configuration = configuration;
-            _authenticationStateProvider=authenticationStateProvider;
-
-            _jsRuntime = jsRuntime;
         }
 
         public async Task<Response<AttendenceDto>> GetAttendences(Pager paging)
