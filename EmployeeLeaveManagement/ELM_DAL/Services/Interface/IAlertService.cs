@@ -12,5 +12,6 @@ namespace ELM_DAL.Services.Interface
         Task<List<Alert>> GetAllAlertsByEmployeeId(int id);
         Task<AlertDto> GetAlertById(int id);
         Task UpdateAlert(AlertDto alert);
+        Task<AlertDto> GetAlertByAttendenceDateAndEmployeeId(DateTime attendenceDate,int employeeId);
     }
 }

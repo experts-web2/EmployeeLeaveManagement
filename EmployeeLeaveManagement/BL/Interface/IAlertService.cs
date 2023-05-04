@@ -14,4 +14,5 @@ public interface IAlertService
     void UpdateAlert(AlertDto alert);
     void DeleteAlertByEmployeeId(int employeeId ,DateTime attendenceDate);
     IReadOnlyDictionary<int, string> GetAlertsHavingEmployeeId();
+    Task<AlertDto> GetAlertByAttendenceDateAndEmployeeId(DateTime attendenceDate,int employeeId); 
 }

@@ -16,7 +16,7 @@ namespace ELM.Web.Pages.Attendence_Page
     public class AddAttendenceBase : ComponentBase
     {
         [Inject]
-        public IAlertService AlertService { get; set; } 
+        public IAlertService AlertService { get; set; }
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
         [Inject]
@@ -24,7 +24,7 @@ namespace ELM.Web.Pages.Attendence_Page
         [Inject]
         public NavigationManager NavigationManager { get; set; }
         public AttendenceDto AttendenceDto { get; set; } = new();
-        public AlertDto AlertDto { get; set; }=new();
+        public AlertDto AlertDto { get; set; } = new();
         public List<Employee> EmployeesList { get; set; } = new();
 
         [Parameter]
@@ -40,6 +40,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public Pager Pager { get; set; } = new();
         public int currentPage { get; set; } = 1;
         public int EmployeeId { get; set; }
+        public DateTime AttendenceDate {get;set;}
         public bool isAdmin { get; set; }
         public bool CheckAttendence { get; set; }
         
@@ -124,17 +125,24 @@ namespace ELM.Web.Pages.Attendence_Page
         }
         protected async Task SaveAttendence()
         {
+            AlertDto alertDto = new AlertDto();
             if (EmployeeId > 0)
                 AttendenceDto.EmployeeId = EmployeeId;
             if (AttendenceDto.ID > 0)
             {
                 await AttendenceService.UpdateAttendence(AttendenceDto);
-
-               
-                var alert = await AlertService.GetAlertById(AlertId);
-                alert.isDeleted = true;
-                 await AlertService.UpdateAlert(alert);
-              
+                if(AlertId > 0)
+                {
+                    alertDto = await AlertService.GetAlertById(AlertId);
+                    alertDto.isDeleted = true;
+                    await AlertService.UpdateAlert(alertDto);
+                }
+                if (AttendenceDto.AttendenceDate != DateTime.MinValue && AttendenceDto.EmployeeId > 0)
+                {
+                    alertDto = await AlertService.GetAlertByAttendenceDateAndEmployeeId(AttendenceDate = AttendenceDto.AttendenceDate.Date, EmployeeId = AttendenceDto.EmployeeId.Value);
+                    alertDto.isDeleted = true;
+                    await AlertService.UpdateAlert(alertDto);
+                }
             }
             else
                 await AttendenceService.AddAttendence(AttendenceDto);

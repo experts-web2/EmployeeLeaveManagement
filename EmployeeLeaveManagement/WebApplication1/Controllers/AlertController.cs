@@ -1,5 +1,6 @@
 ﻿using BL.Interface;
 using DAL.Interface;
+using DAL.Migrations;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
@@ -92,6 +93,13 @@ namespace EmpLeave.Api.Controllers
         {
             var alerts = _alertService.GetAlertsHavingEmployeeId();
             return Ok(alerts);
+        }
+
+        [HttpGet("GetAlertByAttendenceDateAndEmployeeId")]
+        public async Task<IActionResult> GetAlertByAttendenceDateAndEmployeeId([FromQuery] string attendenceDate, [FromQuery] int employeeId)
+        {
+            var alertDto =await  _alertService.GetAlertByAttendenceDateAndEmployeeId(DateTime.Parse(attendenceDate),employeeId);
+            return Ok(alertDto);
         }
     }
 }

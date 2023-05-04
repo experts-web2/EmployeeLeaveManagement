@@ -35,6 +35,7 @@ namespace ELM.Web.Pages.Attendence_Page
         public string Search { get; set; } = string.Empty;
         public Pager Paging { get; set; } = new();
         public bool isAdmin { get; set; }
+        public List<Alert> Alerts { get; set; } = new();
         public void SetAttendenceId(int id)
         {
             SelectedAttendence = AttendenceDtoList.FirstOrDefault(x => x.ID == id);

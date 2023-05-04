@@ -192,53 +192,94 @@ namespace BL.Service
 
         public IReadOnlyDictionary<int, string> GetAlertsHavingEmployeeId()
         {
-            Dictionary<int, string> employeesToReturn = new();
-            IQueryable<Employee> employees = _alertRepository.Get(x => x.AlertDate <= DateTime.Now, y => y.Employee).Select(z => z.Employee);
-            foreach (Employee employee in employees)
+            try
             {
-                if (!employeesToReturn.ContainsKey(employee.Id))
+                Dictionary<int, string> employeesToReturn = new();
+                IQueryable<Employee> employees = _alertRepository.Get(x => x.AlertDate <= DateTime.Now, y => y.Employee).Select(z => z.Employee);
+                foreach (Employee employee in employees)
                 {
-                    employeesToReturn.Add(employee.Id, employee.FirstName);
+                    if (!employeesToReturn.ContainsKey(employee.Id))
+                    {
+                        employeesToReturn.Add(employee.Id, employee.FirstName);
+                    }
                 }
-            }
 
-            return employeesToReturn;
-        }
-         private AlertDto ToDto(Alert alert)
-         {
-            if(alert == null) 
-                return new AlertDto();
-            AlertDto alertDto = new()
+                return employeesToReturn;
+            }
+            catch (Exception)
             {
-                ID = alert.Id,
-                AlertDate = alert.AlertDate,
-                AlertType = alert.AlertType,
-                isDeleted = alert.isDeleted,
-                EmployeeId = alert.EmployeeId,
-                CreatedBy = alert.CreatedBy,
-                CreatedDate = alert.CreatedDate,
-                ModifiedBy = alert.ModifiedBy,
-                ModifiedDate =  alert.ModifiedDate
-            };
-            return alertDto;
+
+                throw;
+            }
+        }
+
+        public async Task<AlertDto> GetAlertByAttendenceDateAndEmployeeId(DateTime attendenceDate, int employeeId)
+        {
+            try
+            {
+                var alert = await _alertRepository.Get(x => x.AlertDate.Date == attendenceDate && x.EmployeeId == employeeId).FirstOrDefaultAsync();
+                if(alert == null)
+                    return new AlertDto();
+                AlertDto alertDto = ToDto(alert);
+                return alertDto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        private AlertDto ToDto(Alert alert)
+         {
+            try
+            {
+                if (alert == null)
+                    return new AlertDto();
+                AlertDto alertDto = new()
+                {
+                    ID = alert.Id,
+                    AlertDate = alert.AlertDate,
+                    AlertType = alert.AlertType,
+                    isDeleted = alert.isDeleted,
+                    EmployeeId = alert.EmployeeId,
+                    CreatedBy = alert.CreatedBy,
+                    CreatedDate = alert.CreatedDate,
+                    ModifiedBy = alert.ModifiedBy,
+                    ModifiedDate = alert.ModifiedDate
+                };
+                return alertDto;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
          }
         private Alert ToEntity(AlertDto alertDto)
         {
-            if(alertDto == null)
-                return new Alert();
-            Alert alert = new()
+            try
             {
-                Id = alertDto.ID,
-                AlertDate = alertDto.AlertDate,
-                AlertType = alertDto.AlertType,
-                isDeleted = alertDto.isDeleted,
-                EmployeeId = alertDto.EmployeeId,
-                CreatedBy = alertDto.CreatedBy,
-                CreatedDate = alertDto.CreatedDate,
-                ModifiedBy = alertDto.ModifiedBy,
-                ModifiedDate = alertDto.ModifiedDate
-            };
-            return alert;
+                if (alertDto == null)
+                    return new Alert();
+                Alert alert = new()
+                {
+                    Id = alertDto.ID,
+                    AlertDate = alertDto.AlertDate,
+                    AlertType = alertDto.AlertType,
+                    isDeleted = alertDto.isDeleted,
+                    EmployeeId = alertDto.EmployeeId,
+                    CreatedBy = alertDto.CreatedBy,
+                    CreatedDate = alertDto.CreatedDate,
+                    ModifiedBy = alertDto.ModifiedBy,
+                    ModifiedDate = alertDto.ModifiedDate
+                };
+                return alert;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
