@@ -18,8 +18,8 @@ namespace BL.Interface
         bool AddAttendence(AttendenceDto attendenceDto);
         bool DeleteAttendence(int id);
         AttendenceDto GetById(int id);
-        List<AttendenceDto> GetAttendencesByEmployeeId(int id);
-        AttendenceDto GetAttendenceByEmployeeId(int employeeId);
+        PagedList<AttendenceDto> GetAttendencesByEmployeeId(int id,Pager paging);
+        AttendenceDto GetAttendenceByEmployeeId(int employeeId, DateTime attendenceDate);
         bool UpdateAttendence(AttendenceDto attendenceDto);
         Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate,int employeeId);
     }

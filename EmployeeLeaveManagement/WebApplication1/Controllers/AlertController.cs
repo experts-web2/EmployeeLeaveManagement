@@ -58,9 +58,19 @@ namespace EmpLeave.Api.Controllers
             return Ok(response);
         }
         [HttpPost("GetAlertsByEmployeeId/{id}")]
-        public IActionResult GetAlertsByEmployeeId(int id)
+        public IActionResult GetAlertsByEmployeeId(int id ,Pager paging)
         {
-            var alerts = _alertService.GetAlertsByEmployeeId(id);
+            var alerts = _alertService.GetAlertsByEmployeeId(id,paging);
+            var metadata = new
+            {
+                alerts.TotalCount,
+                alerts.PageSize,
+                alerts.TotalPages,
+                alerts.CurrentPage,
+                alerts.HasPrevious,
+                alerts.HasNext,
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             return Ok(alerts);
         }
 

@@ -142,11 +142,13 @@ namespace BL.Service
             AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
             return attendenceDto;
         }
-        public List<AttendenceDto> GetAttendencesByEmployeeId(int id)
+        public PagedList<AttendenceDto> GetAttendencesByEmployeeId(int id,Pager paging)
         {
-            var Attendances = _attendenceRepository.Get(x => x.EmployeeId == id, x => x.Employee);
-            var attendenceDto = Attendances.Select(SetAttendenceDto);
-            return attendenceDto.ToList();
+            var attendances = _attendenceRepository.Get(x => x.EmployeeId == id, x => x.Employee).AsQueryable();
+            var paginatedList = PagedList<Attendence>.ToPagedList(attendances.OrderByDescending(x => x.AttendenceDate), paging.CurrentPage, paging.PageSize);
+            var attendenceDto = ToDtos(paginatedList);
+               return new PagedList<AttendenceDto>
+                (attendenceDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
         }
         private static AttendenceDto SetAttendenceDto(Attendence attendence)
         {
@@ -220,11 +222,11 @@ namespace BL.Service
            
         }
 
-        public AttendenceDto GetAttendenceByEmployeeId(int employeeId)
+        public AttendenceDto GetAttendenceByEmployeeId(int employeeId, DateTime attendenceDate)
         {
             try
             {
-                Attendence? FindAttendence = _attendenceRepository.Get(x => x.EmployeeId == employeeId && x.AttendenceDate.Date == DateTime.Now.Date, x => x.Employee).FirstOrDefault();
+                Attendence? FindAttendence = _attendenceRepository.Get(x => x.EmployeeId == employeeId && x.AttendenceDate.Date == attendenceDate.Date, x => x.Employee).FirstOrDefault();
                 if (FindAttendence == null) return new AttendenceDto();
                 AttendenceDto attendenceDto = SetAttendenceDto(FindAttendence);
                 return attendenceDto;

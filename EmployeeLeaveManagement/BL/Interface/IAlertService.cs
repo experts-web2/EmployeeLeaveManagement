@@ -9,7 +9,7 @@ public interface IAlertService
 {
     PagedList<Alert> GetAllAlert(Pager pager, Expression<Func<Alert, bool>> predicate = null);
     List<Alert> AddAbsentEmployeeAlert();
-    List<Alert> GetAlertsByEmployeeId(int id);
+    PagedList<Alert> GetAlertsByEmployeeId(int id,Pager paging);
     AlertDto GetAlertById(int id);
     void UpdateAlert(AlertDto alert);
     void DeleteAlertByEmployeeId(int employeeId ,DateTime attendenceDate);

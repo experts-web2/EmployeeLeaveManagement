@@ -1,24 +1,12 @@
 ﻿using BL.Interface;
-using DAL;
 using DAL.Configrations;
 using DAL.Interface;
-using DAL.Repositories;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Service
 {
@@ -129,12 +117,14 @@ namespace BL.Service
                 throw;
             }
         }
-        public List<Alert> GetAlertsByEmployeeId(int id)
+        public PagedList<Alert> GetAlertsByEmployeeId(int id,Pager paging)
         {
             try
             {
-                var alerts = _alertRepository.Get(x => x.EmployeeId == id && x.isDeleted ==false, x => x.Employee).ToList();
-                return alerts;
+                var alerts = _alertRepository.Get(x => x.EmployeeId == id && x.isDeleted ==false, x => x.Employee).AsQueryable();
+                var paginatedList = PagedList<Alert>.ToPagedList(alerts.OrderByDescending(x => x.AlertDate), paging.CurrentPage, paging.PageSize);
+                return new PagedList<Alert>
+                    (paginatedList, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
             }
             catch (Exception)
             {

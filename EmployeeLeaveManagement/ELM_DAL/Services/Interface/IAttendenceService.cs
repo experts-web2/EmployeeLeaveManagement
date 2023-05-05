@@ -13,7 +13,7 @@ namespace ELM.Web.Services.Interface
         Task DeleteAttendence(int id);
         Task UpdateAttendence(AttendenceDto attendenceDto);
         Task<AttendenceDto> GetByID(int value);
-        Task<AttendenceDto> GetAttendenceByEmployeeId(int employeeId);
+        Task<AttendenceDto> GetAttendenceByEmployeeId(int employeeId ,DateTime attendenceDate);
        Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate, int employeeId);
     }
 }

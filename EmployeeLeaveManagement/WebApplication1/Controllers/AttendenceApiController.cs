@@ -89,10 +89,21 @@ namespace EmpLeave.Api.Controllers
             else
                 return BadRequest("Unable to get Attendence");
         }
-        [HttpGet("GetAttendencesByEmployeeId/{id}")]
-        public IActionResult GetAttendencesByEmployeeId(int id)
+        [HttpPost("GetAttendencesByEmployeeId/{id}")]
+        public IActionResult GetAttendencesByEmployeeId(int id,Pager paging)
         {
-            var attendenceDto = _attendenceService.GetAttendencesByEmployeeId(id);
+            var attendenceDto = _attendenceService.GetAttendencesByEmployeeId(id,paging);
+            var metadata = new
+            {
+                attendenceDto.TotalCount,
+                attendenceDto.PageSize,
+                attendenceDto.TotalPages,
+                attendenceDto.CurrentPage,
+                attendenceDto.HasPrevious,
+                attendenceDto.HasNext,
+                paging.Search
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else
@@ -100,9 +111,9 @@ namespace EmpLeave.Api.Controllers
         }
 
         [HttpGet("GetAttendenceByEmployeeId")]
-        public IActionResult GetAttendenceByEmployeeId([FromQuery] int id)
+        public IActionResult GetAttendenceByEmployeeId([FromQuery] int id , [FromQuery] string attendenceDate)
         {
-            var attendenceDto = _attendenceService.GetAttendenceByEmployeeId(id);
+            var attendenceDto = _attendenceService.GetAttendenceByEmployeeId(id ,DateTime.Parse(attendenceDate));
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else

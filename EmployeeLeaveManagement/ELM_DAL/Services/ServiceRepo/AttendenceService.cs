@@ -48,7 +48,7 @@ namespace ELM.Web.Services.ServiceRepo
                 if (user.IsInRole("Admin"))
                     response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
                 else
-                    response = await _httpService.GetAsync($"{Apiroute()}AttendenceApi/GetAttendencesByEmployeeId/{int.Parse(employeeId)}");
+                    response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAttendencesByEmployeeId/{int.Parse(employeeId)}", Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<AttendenceDto>();
                 if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
@@ -118,12 +118,12 @@ namespace ELM.Web.Services.ServiceRepo
                 throw;
             }
         }
-        public async Task<AttendenceDto> GetAttendenceByEmployeeId(int value)
+        public async Task<AttendenceDto> GetAttendenceByEmployeeId(int value, DateTime attendenceDate)
         {
             try
             {
                 await SetToken();
-                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetAttendenceByEmployeeId?id={value}");
+                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetAttendenceByEmployeeId?id={value}&attendenceDate={attendenceDate}");
                 return result;
             }
             catch (Exception)
