@@ -12,7 +12,5 @@ public interface IAlertService
     PagedList<Alert> GetAlertsByEmployeeId(int id,Pager paging);
     AlertDto GetAlertById(int id);
     void UpdateAlert(AlertDto alert);
-    void DeleteAlertByEmployeeId(int employeeId ,DateTime attendenceDate);
-    IReadOnlyDictionary<int, string> GetAlertsHavingEmployeeId();
     Task<AlertDto> GetAlertByAttendenceDateAndEmployeeId(DateTime attendenceDate,int employeeId); 
 }

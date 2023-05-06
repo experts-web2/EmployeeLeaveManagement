@@ -76,7 +76,7 @@ namespace EmpLeave.Api.Controllers
         public IActionResult DeleteAttendence(int id)
         {
             bool response = _attendenceService.DeleteAttendence(id);
-            if (response == false)
+            if (!response)
                 return BadRequest("Unable to Delete");
             return Ok("Deleted Succesfully");
         }

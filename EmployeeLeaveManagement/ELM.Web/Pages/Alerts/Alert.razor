@@ -9,21 +9,18 @@
           
             <InputDate class="form-control-sm" @bind-Value="StartDate" />
             <InputDate class="form-control-sm" @bind-Value="EndDate" />
-          @*<InputText class="form-control" @bind-Value="Pager.search" />*@
             <InputSelect class="form-control-sm" @bind-Value="search">
                 <option selected disabled value="0">Employees</option>
-                @foreach (var user in UserDropdown)
+                @foreach (var employee in EmployeeList)
                 {
-                    <option value="@user.Key">@user.Value</option>
+                    <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
                 }
+                
             </InputSelect>
         <button>Search</button>
     </EditForm>
 </div>
 </div>
-@*<InputDate class="form-control-sm" @bind-Value="Pager.StartDate" />
-<InputDate class="form-control-sm" @bind-Value="Pager.EndDate" />
-<button class=" btn btn-sm btn-primary" @onclick="()=>GetAll()">Search</button>*@
 @if (Alerts == null)
 {
     <p><em>Loading...</em></p>
@@ -49,8 +46,6 @@ else
                     <td>@alert.Employee.FirstName</td>
                     @if(alert.AlertType == "TimeOut Missing")
                     {
-                        @*int AlertId = @alert.Id;
-                        int? EmployeeID = @alert.EmployeeId;*@
                          <td>
                          <div class="button-container">
                             <a href='/edit/attendence?EmployeeId=@alert.EmployeeId&AlertDate=@alert.AlertDate.Date&AlertId=@alert.Id' style="height:40px;width:70px" class="btn btn-outline-dark" role="button">

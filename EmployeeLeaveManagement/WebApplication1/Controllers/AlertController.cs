@@ -74,16 +74,6 @@ namespace EmpLeave.Api.Controllers
             return Ok(alerts);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteAlert([FromBody] List<DateTime> attendenceDates, [FromRoute] int id)
-        {
-            foreach (var attendenceDate in attendenceDates)
-            {
-                _alertService.DeleteAlertByEmployeeId(id, attendenceDate);
-            }
-            
-            return Ok();
-        }
         [HttpGet("GetAlertById/{id}")]
         public async Task<ActionResult<AlertDto>> GetAlertById(int id)
         {
@@ -96,13 +86,6 @@ namespace EmpLeave.Api.Controllers
         {
             _alertService.UpdateAlert(alertDto);
             return Ok();
-        }
-
-        [HttpGet("GetAlertsHavingEmployeeId")]
-        public IActionResult GetAlertsHavingEmployeeId()
-        {
-            var alerts = _alertService.GetAlertsHavingEmployeeId();
-            return Ok(alerts);
         }
 
         [HttpGet("GetAlertByAttendenceDateAndEmployeeId")]

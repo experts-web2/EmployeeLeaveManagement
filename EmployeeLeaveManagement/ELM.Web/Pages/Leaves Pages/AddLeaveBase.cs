@@ -49,7 +49,7 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
         }
         public async Task GetEmployees()
         {
-            Response<EmployeeDto> listEmployee = await  EmployeeService.GetAllEmployee(Paging);
+            Response<EmployeeDto> listEmployee = await  EmployeeService.GetAllEmployeeWithPagination(Paging);
             EmployeeDtosList = listEmployee.DataList;
         }
     }

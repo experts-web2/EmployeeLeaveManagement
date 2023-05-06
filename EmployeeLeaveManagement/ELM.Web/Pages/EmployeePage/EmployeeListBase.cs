@@ -26,7 +26,7 @@ namespace EmpLeave.Web.Pages.EmployeePage
         public async Task GetAll(int currentPage = 1)
         {
             Paging.CurrentPage = currentPage;
-            var EmployeeDto = await EmployeeService.GetAllEmployee(Paging);
+            var EmployeeDto = await EmployeeService.GetAllEmployeeWithPagination(Paging);
             EmployeeDtoList = EmployeeDto.DataList;
             Paging = EmployeeDto.Pager;
             StateHasChanged();

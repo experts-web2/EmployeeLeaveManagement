@@ -23,7 +23,7 @@ namespace ELM_DAL.Services.ServiceRepo
             await _httpService.PostAsJsonAsync($"{Apiroute()}employee", employeeDto);
             
         }
-        public async Task<Response<EmployeeDto>> GetAllEmployee(Pager paging)
+        public async Task<Response<EmployeeDto>> GetAllEmployeeWithPagination(Pager paging)
         {
             Response<EmployeeDto> responseDto = new();
             try

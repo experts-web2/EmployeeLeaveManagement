@@ -40,12 +40,12 @@ namespace ELM.Web.Pages.Attendence_Page
         public Pager Pager { get; set; } = new();
         public int currentPage { get; set; } = 1;
         public int EmployeeId { get; set; }
-        public DateTime AttendenceDate {get;set;}
+        public DateTime AttendenceDate { get; set; }
         public bool isAdmin { get; set; }
         public bool CheckAttendence { get; set; }
-        
-       
-        
+
+
+
         protected override async Task OnInitializedAsync()
         {
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -58,7 +58,7 @@ namespace ELM.Web.Pages.Attendence_Page
             {
                 EmployeeId = Convert.ToInt32(id);
             }
-            if(queryStrings.TryGetValue("AlertId",out var alertId))
+            if (queryStrings.TryGetValue("AlertId", out var alertId))
             {
                 AlertId = Convert.ToInt32(alertId);
             }
@@ -70,7 +70,7 @@ namespace ELM.Web.Pages.Attendence_Page
             {
                 EmployeesList = await EmployeeService.GetAllEmployee();
                 AttendenceDto = await AttendenceService.GetAttendenceByAlertDateAndEmployeeId(AlertDate, EmployeeId);
-                
+
                 SetUserCheckout();
                 return;
             }
@@ -84,27 +84,27 @@ namespace ELM.Web.Pages.Attendence_Page
                     CheckAttendence = true;
                 }
             }
-         
-                if (isAdmin)
-                    EmployeesList = await EmployeeService.GetAllEmployee();
-                var isUserLogedIn = int.TryParse(user?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
-                if (!isUserLogedIn && !ID.HasValue) return;
+
+            if (isAdmin)
+                EmployeesList = await EmployeeService.GetAllEmployee();
+            var isUserLogedIn = int.TryParse(user?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out int employeeId);
+            if (!isUserLogedIn && !ID.HasValue) return;
             if (ID.HasValue)
                 AttendenceDto = await AttendenceService.GetByID(ID.Value);
             //if (AttendenceDto.TimeIn == null) return;
             else
-                    AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(employeeId,AttendenceDto.AttendenceDate);
-                //When Admin loggedin then we use Edit case so we populate EmployeeID from fetched AttendenceDto
-                //Reason: If Admin LoggedIn then it use Admin EmployeeID thats why we populate from fetched AttendeceDto
-                EmployeeId = AttendenceDto.EmployeeId.HasValue ? AttendenceDto.EmployeeId.Value : 0;
-                SetUserCheckout();
-            
+                AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(employeeId, AttendenceDto.AttendenceDate);
+            //When Admin loggedin then we use Edit case so we populate EmployeeID from fetched AttendenceDto
+            //Reason: If Admin LoggedIn then it use Admin EmployeeID thats why we populate from fetched AttendeceDto
+            EmployeeId = AttendenceDto.EmployeeId.HasValue ? AttendenceDto.EmployeeId.Value : 0;
+            SetUserCheckout();
+
         }
         public async Task HandleChange(int value)
         {
             EmployeeId = value;
             AttendenceDto.EmployeeId = value;
-            AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(value ,AttendenceDto.AttendenceDate);
+            AttendenceDto = await AttendenceService.GetAttendenceByEmployeeId(value, AttendenceDto.AttendenceDate);
             Pager.CurrentPage = currentPage;
             SetUserCheckout();
 
@@ -131,7 +131,7 @@ namespace ELM.Web.Pages.Attendence_Page
             if (AttendenceDto.ID > 0)
             {
                 await AttendenceService.UpdateAttendence(AttendenceDto);
-                if(AlertId > 0)
+                if (AlertId > 0)
                 {
                     alertDto = await AlertService.GetAlertById(AlertId);
                     alertDto.isDeleted = true;

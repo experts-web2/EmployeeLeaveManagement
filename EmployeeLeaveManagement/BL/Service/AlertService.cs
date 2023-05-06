@@ -34,8 +34,7 @@ namespace BL.Service
 
                 if (!string.IsNullOrEmpty(pager.Search))
                 {
-                    predicate = predicate.And(x => x.EmployeeId.ToString().Contains(pager.Search.Trim()) ||
-                               x.Employee.FirstName.Contains(pager.Search.Trim()));
+                    predicate = predicate.And(x => x.EmployeeId.ToString().Equals(pager.Search));
                 }
                 if (pager.StartDate != (DateTime.Now.Date) && pager.EndDate != DateTime.MinValue)
                 {
@@ -82,7 +81,7 @@ namespace BL.Service
                     };
                     var alreadyInserted = _alertRepository.Get(x => x.AlertDate.Date == Alert.AlertDate.Date && x.EmployeeId == Alert.EmployeeId).FirstOrDefault();
                     if (alreadyInserted == null)
-                       if(!Alert.AlertType.Contains("Attendence Marked"))
+                       if(!Alert.AlertType.Equals("Attendence Marked"))
                            Alerts.Add(Alert);
                 }
                 if (Alerts is null || !Alerts.Any())
@@ -134,20 +133,6 @@ namespace BL.Service
 
         }
 
-        public void DeleteAlertByEmployeeId(int employeeId,DateTime attendenceDate)
-        {
-            try
-            {
-                _alertRepository.DeleteAlertByEmployeeId(x => x.EmployeeId == employeeId && x.AlertDate.Date == attendenceDate);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-           
-        }
-
         public AlertDto GetAlertById(int id)
         {
             try
@@ -185,7 +170,8 @@ namespace BL.Service
             try
             {
                 Dictionary<int, string> employeesToReturn = new();
-                IQueryable<Employee> employees = _alertRepository.Get(x => x.AlertDate <= DateTime.Now, y => y.Employee).Select(z => z.Employee);
+                IQueryable<Employee> employees = _alertRepository.Get(x => x.AlertDate <= DateTime.Now, y => y.Employee).Select(z => z.Employee).Distinct();
+                IQueryable<Employee> employees1 = _alertRepository.Get(x => x.AlertDate <= DateTime.Now, y => y.Employee).Select(z => z.Employee);
                 foreach (Employee employee in employees)
                 {
                     if (!employeesToReturn.ContainsKey(employee.Id))

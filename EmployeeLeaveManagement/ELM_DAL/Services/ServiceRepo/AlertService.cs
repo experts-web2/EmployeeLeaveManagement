@@ -70,27 +70,7 @@ public sealed class AlertService : ServiceBase, IAlertService
             throw;
         }
     }
-    public async Task DeleteAlert(int id, List<DateTime> attendenceDates)
-    {
-        try
-        {
-            await SetToken();
-            string data = JsonConvert.SerializeObject(attendenceDates);
-            StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-            var response = await _httpService.SendAsync(new HttpRequestMessage
-            {
-                Content = Content,
-                Method = HttpMethod.Delete,
-                RequestUri = new Uri($"{Apiroute()}Alert/{id}")
-            });
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-
+   
     public async Task<AlertDto> GetAlertById(int id)
     {
         try
@@ -119,21 +99,6 @@ public sealed class AlertService : ServiceBase, IAlertService
             }
             var response = await _httpService.PutAsJsonAsync($"{Apiroute()}Alert", alert);
 
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-    }
-
-    public async Task<IReadOnlyDictionary<int, string>> GetAlertsHavingEmployeeId()
-    {
-        try
-        {
-            await SetToken();
-            var alerts = await _httpService.GetFromJsonAsync<IReadOnlyDictionary<int, string>>($"{Apiroute()}Alert/GetAlertsHavingEmployeeId");
-            return alerts.ToImmutableSortedDictionary();
         }
         catch (Exception)
         {
