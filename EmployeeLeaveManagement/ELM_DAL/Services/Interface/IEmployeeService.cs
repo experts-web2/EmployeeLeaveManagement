@@ -7,11 +7,10 @@ namespace EmpLeave.Web.Services.Interface
     public interface IEmployeeService
     {
         Task AddEmployee(EmployeeDto employeeDto);
-        Task<Response<EmployeeDto>> GetAllEmployee(Pager paging);
+        Task<Response<EmployeeDto>> GetAllEmployeeWithPagination(Pager paging);
         Task UpdateEmployee(EmployeeDto employeeDto);
         Task DeleteEmployeebyId(int id);
         Task<EmployeeDto> GetEmployeebyId(int id);
          Task<List<Employee>> GetAllEmployee();
-
     }
 }

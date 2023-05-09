@@ -26,6 +26,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
+//builder.Services.AddScoped<AuthenticationState>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IHttpClientService, HttpClientService>();
@@ -33,6 +34,7 @@ builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ISalaryHistory, SalaryHistoryService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpClient("api",async o =>
 {

@@ -1,0 +1,106 @@
+﻿@page "/Test"
+@using ELM.Web.Pages.TestPage
+<EditForm Model="@myForm" OnValidSubmit="@HandleValidSubmit">
+     <DataAnnotationsValidator />
+     <div class="mb-3">
+        <label for="Name" class="form-label">First Name</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="@myForm.FirstName" />
+        </div>
+        <ValidationMessage For="@(() =>@myForm.FirstName)" />
+    </div>
+    <div class="mb-3">
+        <label for="Address" class="form-label">Last Name</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="@myForm.LastName" />
+        </div>
+        <ValidationMessage For="@(() =>@myForm.LastName)" />
+    </div>
+    <div class="mb-3">
+        <label for="Phone" class="form-label">Date Of Birth</label>
+        <div class="col-md-4">
+            <InputDate class="form-control" @bind-Value="@myForm.DateOfBirth" />
+        </div>
+        <ValidationMessage For="@(() => @myForm.DateOfBirth)" />
+    </div>
+  <div class="mb-3">
+                <label class="mb-2">Select Your favorite Color</label>
+                <div class="col-md-4">
+                    <InputSelect class="form-control" @bind-Value="@myForm.Color">
+                        <option selected disabled value="0">Select Your favorite Color</option>
+                            <option value="Red">Red</option>
+                            <option value="Green">Green</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Purple">Purple</option>
+                    </InputSelect>
+                </div>
+  </div>
+    <label>
+    Gender
+    </label>
+   <br/>
+    <InputRadioGroup @bind-Value="@myForm.Gender">
+            @foreach(var g in new List<string> { "Male", "Female" })
+            {
+             <div class="form-check">
+                <InputRadio class="form-check-input" Value="@g"/>
+                <label class="form-check-label" for="flexRadioDefault1">@g</label>
+             </div>
+            }
+    </InputRadioGroup>
+    @foreach (var c in new[] { "English", "Math", "Urdu" })
+    {
+    <label>
+        <input type="checkbox" checked="@myForm.SelectedValues.Contains(c)" 
+               @onchange="@((args) => @myForm.HandleCheckboxValueChanged(args, c))" 
+               value="@c" />
+        @c
+    </label>
+    }
+
+</EditForm>
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date Of Birth</th>
+                <th>your favorite color</th>
+                <th>Gender</th>
+                <th>Course(s)</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>@myForm.FirstName</td>
+                    <td>@myForm.LastName</td>
+                    <td>@myForm.DateOfBirth?.ToString("dd/MM/yyyy")</td>
+                    <td>@myForm.Color</td>
+                    <td>@myForm.Gender</td>
+                    <td>
+                        @if (@myForm.SelectedValues.Count > 0)
+                        {
+                          <ul>
+                              @foreach (var value in @myForm.SelectedValues)
+                                {
+                               <li>@value</li>
+                                }
+                          </ul>
+}
+                           else
+                           {
+                           <p>No values select</p>
+                           }
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+@code{
+    public FormControles myForm = new FormControles();
+
+    private void HandleValidSubmit()
+    {
+
+    }
+}

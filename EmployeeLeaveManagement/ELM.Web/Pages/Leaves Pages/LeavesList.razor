@@ -44,12 +44,12 @@ else
                     <td>@leave.Status</td>
                     <td>@leave.LeaveEnum</td>
                     <td>@leave.EmployeeName.ToString()</td>
-                    <td>
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                    <td  style="width:15%;">
+                        <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
                         @onclick="(() => DeleteConfirm(leave.ID))">
                             Delete
                         </button>
-                        <a href='leave/edit/@leave.ID' class="btn btn-outline-dark" role="button">
+                        <a href='leave/edit/@leave.ID' style="width: 58px; height: 40px;" class="btn btn-outline-dark" role="button">
                             Edit
                         </a>
                     </td>

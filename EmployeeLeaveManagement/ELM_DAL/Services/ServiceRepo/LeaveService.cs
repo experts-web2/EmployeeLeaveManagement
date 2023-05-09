@@ -1,26 +1,27 @@
 ﻿using DTOs;
 using ELM.Helper;
 using EmpLeave.Web.Services.Interface;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
-    public class LeaveService : ILeaveService
+    public class LeaveService :ServiceBase, ILeaveService
     {
-        private HttpClient _httpService;
-        private IConfiguration _configuration;
-        private IJSRuntime _jsRunTime;
-        public LeaveService(HttpClient httpService, IConfiguration configuration,IJSRuntime jsRunTime)
+       
+        public LeaveService(HttpClient httpService,
+            IConfiguration configuration,
+            IJSRuntime jsRunTime,AuthenticationStateProvider authenticationStateProvider) : base(httpService, configuration, jsRunTime, authenticationStateProvider)
         {
-            _httpService = httpService;
-            _configuration = configuration;
-            _jsRunTime = jsRunTime;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
+         
         }
         public async Task DeleteLeave(int id)
         {
@@ -31,12 +32,18 @@ namespace ELM_DAL.Services.ServiceRepo
             Response<LeaveDto> responseDto = new();
             try
             {
-                var token = await _jsRunTime.InvokeAsync<string>("localStorage.getItem", "jwt");
-                token = token?.Replace("\"", "");
-                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                await SetToken();
                 string data = JsonConvert.SerializeObject(Paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response = await _httpService.PostAsync($"{Apiroute()}leave/getall", Content);
+
+                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                HttpResponseMessage response;
+                if (user.IsInRole("Admin"))
+                    response = await _httpService.PostAsync($"{Apiroute()}leave/getall", Content);
+                else
+                    response = await _httpService.PostAsync($"{Apiroute()}leave/GetLeavesByEmployeeId/{int.Parse(employeeId)}", Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<LeaveDto>();
 
@@ -59,6 +66,7 @@ namespace ELM_DAL.Services.ServiceRepo
         {
             try
             {
+                await SetToken();
                 var response = await _httpService.GetFromJsonAsync<LeaveDto>($"{Apiroute()}leave/GetById/{id}");
                 return response;
             }
@@ -70,18 +78,13 @@ namespace ELM_DAL.Services.ServiceRepo
         }
         public async Task AddLeave(LeaveDto leaveDto)
         {
+            await SetToken();
             await _httpService.PostAsJsonAsync<LeaveDto>($"{Apiroute()}leave", leaveDto);
         }
         public async Task EditLeave(LeaveDto leaveDto)
         {
+            await SetToken();
             await _httpService.PutAsJsonAsync($"{Apiroute()}leave", leaveDto);
-        }
-        private string Apiroute()
-        {
-            var apiRoute = _configuration["Api:Apiroute"];
-            if (apiRoute == null)
-                return "https://localhost:7150/api/";
-            return apiRoute;
         }
     }
 }

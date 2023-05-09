@@ -7,18 +7,18 @@
 <EditForm Model="@LogIn" OnValidSubmit="OnAfterRenderAsync">
     <DataAnnotationsValidator/>
 <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+    <label style="margin: 10px;" for="staticEmail" class="col-sm-2 col-form-label">Email</label>
     <div class="col-sm-10">
-        <input type="email" class="form-control"  @bind-value="LogIn.Email">
+        <input type="email" style="width: 300px; height: 50px; margin:10px;" class="form-control"  @bind-value="LogIn.Email">
         @if(isInValid){
         <div class="text-danger">Invalid Email or Password</div>
     }
     </div>
 </div>
 <div class="mb-3 row">
-    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+    <label style="margin: 10px;" for="inputPassword" class="col-sm-2 col-form-label">    Password</label>
     <div class="col-sm-10">
-            <input type="password" class="form-control" @bind-value="LogIn.Password">
+            <input type="password"  style="width: 300px; height:50px; margin:10px;" class="form-control" @bind-value="LogIn.Password">
     </div>
 <div class="mt-3">
     <button type="submit" class="btn btn-primary">Login</button>                                                                                                                        

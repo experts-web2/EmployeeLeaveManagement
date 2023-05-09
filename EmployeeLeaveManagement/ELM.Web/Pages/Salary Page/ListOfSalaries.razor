@@ -76,11 +76,11 @@ else
                     <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
                     <td>@salary.FirstName  @salary.LastName</td>
                     <td style="width:15%;">
-                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
+                        <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
                         @onclick="(() => DeleteConfirm(salary.ID))">
-                            Delete
+                          Delete
                         </button>
-                        <a href='/edit/salary/@salary.ID' class="btn btn-outline-dark" role="button">
+                        <a href='/edit/salary/@salary.ID' style="width: 58px; height: 38px;" class="btn btn-outline-dark" role="button">
                             Edit
                         </a>
                     </td>

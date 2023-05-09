@@ -9,7 +9,7 @@ namespace BL.Interface
         LeaveDto GetById(int id);
         LeaveDto Add(LeaveDto leave);
         void Delete(int id);
-        LeaveDto Update(LeaveDto leave);
+        void Update(LeaveDto leave);
         Task<List<LeaveDto>> GetLeavesByEmployeeID(int employeeId);
     }
 }

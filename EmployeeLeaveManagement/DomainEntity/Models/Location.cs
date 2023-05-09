@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DomainEntity.Models
 {
-    public class Location :BaseEntity
+    public class Location :EntityBase
     {
 
     }

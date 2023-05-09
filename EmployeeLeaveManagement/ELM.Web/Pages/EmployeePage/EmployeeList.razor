@@ -62,18 +62,14 @@ else
                         @*<a @onclick="()=>SetEmployeeID(employee.ID)"  class="button" data-bs-toggle="model" data-bs-target="#exampleModal" role="button">details</a>*@
 
                     </td>
-                    <td>
-                        <div class="button-container" style="height:40px;width:40px">
-                        <button class="button" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
+                    <td  style="width:15%;">
+                        <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
                         @onclick="(() => DeleteConfirm(employee.ID))">
                             Delete
                         </button>
-                        </div>
-                        <div class="button-container">
-                        <a  href='/edit/@employee.ID' style="height:40px;width:70px" class="btn btn-outline-dark" role="button" text-align="center" >
+                        <a  href='/edit/@employee.ID' style="height:38px;width:58px" class="btn btn-outline-dark" role="button" text-align="center" >
                             Edit
                         </a>
-                        </div>
                     </td>
                 </tr>
             }

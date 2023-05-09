@@ -53,7 +53,8 @@ namespace BL.Service
         {
             try
             {
-                SalaryHistory salary = ToEntity(salaryDto);
+                var salary = _salaryHistoryRepository.GetByID(salaryDto.ID);
+                 ToEntity(salary,salaryDto);
                 _salaryHistoryRepository.update(salary);
             }
             catch (Exception)
@@ -61,6 +62,22 @@ namespace BL.Service
 
                 throw;
             }
+        }
+
+        private void ToEntity(SalaryHistory salary, SalaryHistoryDto salaryDto)
+        {
+            try
+            {
+                salary.NewSalary = salaryDto.NewSalary;
+                salary.IncrementDate = salaryDto.IncrementDate;
+                salary.EmployeeId = salaryDto.EmployeeId;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+          
         }
 
         public PagedList<SalaryHistoryDto> GetSalaries(Pager pager, Expression<Func<SalaryHistory, bool>> predicate = null)
@@ -76,7 +93,7 @@ namespace BL.Service
                 {
                     predicate = predicate.And(x => x.EmployeeId.ToString() == pager.Search);
                 }
-                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate.Date != DateTime.MinValue)
+                if (pager.StartDate?.Date != DateTime.Now.Date && pager.EndDate?.Date != DateTime.MinValue)
                 {
                     predicate = predicate.And(x => x.IncrementDate.Date >= pager.StartDate && x.IncrementDate.Date <= pager.EndDate);
                 }

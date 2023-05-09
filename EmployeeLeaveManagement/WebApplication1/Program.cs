@@ -27,6 +27,8 @@ builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddScoped<IAttendenceService, AttendenceService>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

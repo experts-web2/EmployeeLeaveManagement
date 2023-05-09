@@ -10,10 +10,36 @@
     <main>
         <div class="top-row px-4">
             <LoginDisplay/>
+            <Add_Attendence/>
+                       
+        @*    <button class="btn btn-primary" @onclick="ShowAlert">Show Alert</button>
+
+@if (showAlert)
+{
+    <div class="alert alert-info">
+        <button type="button" class="close" @onclick="HideAlert">×</button>
+        <h4 class="alert-heading">Alert</h4>
+        <p>@AlertMessage</p>
+    </div>
+}*@
         </div>
 
         <article class="content px-4">
-            @Body
+ @Body
         </article>
     </main>
 </div>
+@*@code {
+    private bool showAlert = false;
+    private string AlertMessage = "This is an alert!";
+
+    private void ShowAlert()
+    {
+        showAlert = true;
+    }
+
+    private void HideAlert()
+    {
+        showAlert = false;
+    }
+*@}

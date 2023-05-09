@@ -1,15 +1,12 @@
-﻿using DAL.Interface.GenericInterface;
+﻿using DAL.Interface;
+using DAL.Interface.GenericInterface;
 using DomainEntity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : EntityBase
     {
         private readonly AppDbContext _DbContext;
         private readonly DbSet<T> _table;
@@ -26,6 +23,13 @@ namespace DAL.Repositories
             return result.Entity;
         }
 
+        public IEnumerable<T> AddRange(IEnumerable<T> items)
+        {
+            _table.AddRange(items);
+            _DbContext.SaveChanges();
+            return items;
+        }
+
         public void deletebyid(int id)
         {
             var DeletedObj = _table.FirstOrDefault(x => x.Id == id);
@@ -33,8 +37,8 @@ namespace DAL.Repositories
                 return;
             _table.Remove(DeletedObj);
             _DbContext.SaveChanges();
-
         }
+
         public IQueryable<T> GetAll()
         {
             return _table.AsQueryable();
@@ -42,7 +46,7 @@ namespace DAL.Repositories
 
         public T GetByID(int id)
         {
-            var Findid = _table.FirstOrDefault(x => x.Id == id);
+            var Findid = _table.Find(id);
             if (Findid != null)
             {
                 return Findid;
@@ -59,7 +63,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return   Query().Includes(includes).Where(predicate);
+                return Query().Where(predicate).Includes(includes);
             }
             catch (Exception)
             {
@@ -67,17 +71,18 @@ namespace DAL.Repositories
             }
 
         }
+
         private IQueryable<T> Query()
         {
             return Entity().AsQueryable<T>();
         }
+
         private DbSet<T> Entity()
         {
             return _DbContext.Set<T>();
         }
-
-
     }
+
     public static class IQueryableExtension
     {
         public static IQueryable<T> Includes<T>(this IQueryable<T> query, params Expression<Func<T, object>>[] includes) where T : class
@@ -92,9 +97,5 @@ namespace DAL.Repositories
 
             return query;
         }
-
-
-
     }
 }
-

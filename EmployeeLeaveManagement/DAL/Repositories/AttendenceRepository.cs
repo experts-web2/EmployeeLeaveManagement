@@ -12,6 +12,5 @@ namespace DAL.Repositories
         {
             _dbContext = dbContext;
         }
-       
     }
 }

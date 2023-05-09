@@ -31,9 +31,9 @@ namespace EmpLeave.Api.Controllers
             if (ModelState.IsValid)
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-                if (attendenceDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
-                    attendenceDto.EmployeeId = RoleID;
+                var ClaimEmployeeId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (attendenceDto.EmployeeId is null && ClaimEmployeeId is not null && int.TryParse(ClaimEmployeeId, out int EmployeeID) && EmployeeID > 0)
+                    attendenceDto.EmployeeId = EmployeeID;
                 var response = _attendenceService.AddAttendence(attendenceDto);
                 return Ok("Added Successfull");
             }
@@ -44,19 +44,13 @@ namespace EmpLeave.Api.Controllers
         [HttpPost("GetAllAttendences")]
         public async Task<IActionResult> GetAllAttendences(Pager paging)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var Role = identity?.FindFirst(ClaimTypes.Role);
-            var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (Role.Value.Contains("Admin"))
-            {
                 return GetAllEmployeeAttendance(paging);
-            }
-
-
-            else
-                return GetAttendencebyId(int.Parse(ClaimRoleId));
-
+        }
+        [HttpGet("GetAllAttendencesWithoutPaging")]
+        public IActionResult GetAllAttendencesWithoutPaging()
+        {
+            var attendences=_attendenceService.GetAllAttendencesWithoutPaging();
+            return Ok(attendences);
         }
         [HttpGet]
         private IActionResult GetAllEmployeeAttendance(Pager paging)
@@ -82,13 +76,12 @@ namespace EmpLeave.Api.Controllers
         public IActionResult DeleteAttendence(int id)
         {
             bool response = _attendenceService.DeleteAttendence(id);
-            if (response == false)
+            if (!response)
                 return BadRequest("Unable to Delete");
             return Ok("Deleted Succesfully");
         }
-        [Authorize(Roles = "Admin")]
-        [HttpGet("GetById/{Id}")]
-        public IActionResult GetById(int id)
+        [HttpGet("GetById")]
+        public IActionResult GetById([FromQuery]int id)
         {
             var attendenceDto = _attendenceService.GetById(id);
             if (attendenceDto != null)
@@ -96,16 +89,36 @@ namespace EmpLeave.Api.Controllers
             else
                 return BadRequest("Unable to get Attendence");
         }
-        [HttpGet]
-        public IActionResult GetAttendencebyId(int id)
+        [HttpPost("GetAttendencesByEmployeeId/{id}")]
+        public IActionResult GetAttendencesByEmployeeId(int id,Pager paging)
         {
-            var attendenceDto = _attendenceService.GetAttendencebyEmployeeId(id);
+            var attendenceDto = _attendenceService.GetAttendencesByEmployeeId(id,paging);
+            var metadata = new
+            {
+                attendenceDto.TotalCount,
+                attendenceDto.PageSize,
+                attendenceDto.TotalPages,
+                attendenceDto.CurrentPage,
+                attendenceDto.HasPrevious,
+                attendenceDto.HasNext,
+                paging.Search
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
             if (attendenceDto != null)
                 return Ok(attendenceDto);
             else
                 return BadRequest("Unable to get Attendence");
         }
-        [Authorize(Roles = "Admin")]
+
+        [HttpGet("GetAttendenceByEmployeeId")]
+        public IActionResult GetAttendenceByEmployeeId([FromQuery] int id , [FromQuery] string attendenceDate)
+        {
+            var attendenceDto = _attendenceService.GetAttendenceByEmployeeId(id ,DateTime.Parse(attendenceDate));
+            if (attendenceDto != null)
+                return Ok(attendenceDto);
+            else
+                return BadRequest("Unable to get Attendence");
+        }
         [HttpPut]
         public IActionResult UpdateAttendence(AttendenceDto attendenceDto)
         {
@@ -113,6 +126,12 @@ namespace EmpLeave.Api.Controllers
             if (response == false)
                 return BadRequest("Unable to Update Attendence");
             return Ok("Update Successfull");
+        }
+        [HttpGet("GetAttendenceByAlertDateAndEmployeeId")]
+        public async Task<IActionResult> GetAttendenceByAlertDateAndEmployeeId([FromQuery] string alertDate,[FromQuery] int employeeId)
+        {
+            var attendenceDto= await _attendenceService.GetAttendenceByAlertDateAndEmployeeId(DateTime.Parse(alertDate),employeeId);
+            return Ok(attendenceDto);
         }
     }
 }

@@ -3,33 +3,33 @@ using DTOs;
 using ELM.Helper;
 using ELM.Shared;
 using ELM.Web.Services.Interface;
+using ELM_DAL.Services;
 using EmpLeave.Api.Controllers;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.NetworkInformation;
+using System.Net.WebSockets;
+using System.Security.Claims;
 using System.Text;
 
 namespace ELM.Web.Services.ServiceRepo
 {
-    public class AttendenceService : IAttendenceService
+    public class AttendenceService : ServiceBase, IAttendenceService
 
     {
-        private HttpClient _httpService;
-        private IHttpClientFactory _clientFactory;
-        private readonly IJSRuntime jsRuntime;
-        
-
-        // private IHttpClientService _httpService;
-        private IConfiguration _configuration;
-        public AttendenceService(HttpClient httpService, IConfiguration configuration, IHttpClientFactory clientFactory, IJSRuntime jsRuntime = null)
+        public AttendenceService(HttpClient httpService,
+            IConfiguration configuration,
+            IHttpClientFactory clientFactory,
+            AuthenticationStateProvider authenticationStateProvider,
+            IJSRuntime jsRuntime = null) : base(httpService, configuration, jsRuntime, authenticationStateProvider)
         {
-            _httpService = httpService;
-            _configuration = configuration;
-            _clientFactory = clientFactory;
-            this.jsRuntime = jsRuntime;
         }
 
         public async Task<Response<AttendenceDto>> GetAttendences(Pager paging)
@@ -37,15 +37,18 @@ namespace ELM.Web.Services.ServiceRepo
             Response<AttendenceDto> responseDto = new();
             try
             {
-
-               
-                _httpService = _clientFactory.CreateClient("api");
-                var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-                token = token?.Replace("\"", "");
-                _httpService.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+                await SetToken();
                 string data = JsonConvert.SerializeObject(paging);
                 StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
-                var response =await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
+
+                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+                string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                HttpResponseMessage response;
+                if (user.IsInRole("Admin"))
+                    response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAllAttendences", Content);
+                else
+                    response = await _httpService.PostAsync($"{Apiroute()}AttendenceApi/GetAttendencesByEmployeeId/{int.Parse(employeeId)}", Content);
                 if (!response.IsSuccessStatusCode)
                     return new Response<AttendenceDto>();
                 if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
@@ -65,26 +68,100 @@ namespace ELM.Web.Services.ServiceRepo
         }
         public async Task AddAttendence(AttendenceDto attendenceDto)
         {
-            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}AttendenceApi/AddAttendence", attendenceDto);
+            try
+            {
+                await SetToken();
+                var response = await _httpService.PostAsJsonAsync($"{Apiroute()}AttendenceApi/AddAttendence", attendenceDto);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task DeleteAttendence(int id)
         {
-            await _httpService.DeleteAsync($"{Apiroute()}AttendenceApi/{id}");
+            try
+            {
+                await _httpService.DeleteAsync($"{Apiroute()}AttendenceApi/{id}");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task UpdateAttendence(AttendenceDto attendenceDto)
         {
-            await _httpService.PutAsJsonAsync($"{Apiroute()}AttendenceApi", attendenceDto);
+            try
+            {
+                await SetToken();
+                await _httpService.PutAsJsonAsync($"{Apiroute()}AttendenceApi", attendenceDto);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         public async Task<AttendenceDto> GetByID(int value)
         {
-            return await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById/{value}");
+            try
+            {
+                await SetToken();
+                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetById?id={value}");
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
-        private string Apiroute()
+        public async Task<AttendenceDto> GetAttendenceByEmployeeId(int value, DateTime attendenceDate)
         {
-            var apiRoute = _configuration["Api:Apiroute"];
-            if (apiRoute == null)
-                return "https://localhost:7150/api/";
-            return apiRoute;
+            try
+            {
+                await SetToken();
+                var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetAttendenceByEmployeeId?id={value}&attendenceDate={attendenceDate}");
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async  Task<AttendenceDto> GetAttendenceByAlertDateAndEmployeeId(DateTime alertDate, int employeeId)
+        {
+            await SetToken();
+             var result = await _httpService.GetFromJsonAsync<AttendenceDto>($"{Apiroute()}AttendenceApi/GetAttendenceByAlertDateAndEmployeeId?alertDate={alertDate}&employeeId={employeeId}");
+            return result;
+
+        }
+
+        public async Task<List<AttendenceDto>> GetAttendencesWithoutPagination(string employeeId,ClaimsPrincipal user)
+        {
+            try
+            {
+                await SetToken();
+                List<AttendenceDto> response = new List<AttendenceDto>();
+                if (user.IsInRole("Admin"))
+                {
+                    response = await _httpService.GetFromJsonAsync<List<AttendenceDto>>($"{Apiroute()}AttendenceApi/GetAllAttendencesWithoutPaging");
+                    return response;
+                }
+                else
+                {
+                    response = await _httpService.GetFromJsonAsync<List<AttendenceDto>>($"{Apiroute()}AttendenceApi/GetAttendencesByEmployeeId/{int.Parse(employeeId)}");
+                    return response;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

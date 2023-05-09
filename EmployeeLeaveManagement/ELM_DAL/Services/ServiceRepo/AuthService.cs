@@ -5,32 +5,28 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.JSInterop;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
-    public class AuthService : IAuthService
+    public class AuthService : ServiceBase, IAuthService
     {
-        private IHttpClientService _httpService;
-        private IConfiguration _configuration;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private IHttpClientService _httpservice;
         private readonly ILocalStorageService _localStorage;
         private readonly IHttpContextAccessor httpContextAccessor;
-        public AuthService(IHttpClientService httpService, IConfiguration configuration,
-                           AuthenticationStateProvider authenticationStateProvider,
-                           ILocalStorageService localStorage, IHttpContextAccessor httpContextAccessor)
+        public AuthService(IHttpClientService httpservice, IConfiguration configuration,
+                         
+                           ILocalStorageService localStorage, IHttpContextAccessor httpContextAccessor,AuthenticationStateProvider authenticationStateProvider,IJSRuntime jSRuntime,HttpClient httpService) : base(httpService, configuration, jSRuntime, authenticationStateProvider)
         {
-            _httpService = httpService;
-            _configuration = configuration;
-            _authenticationStateProvider = authenticationStateProvider;
+            _httpservice = httpservice;
             _localStorage = localStorage;
             this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<RegisterResult> Register(UserRegistrationModel Userregister)
         {
-             var result = await _httpService.Post(Userregister, $"{Apiroute()}Auth/register/");
-            return await _httpService.DeserializeAsync<RegisterResult>(result);
+             var result = await _httpservice.Post(Userregister, $"{Apiroute()}Auth/register/");
+            return await _httpservice.DeserializeAsync<RegisterResult>(result);
 
         }
 
@@ -39,8 +35,8 @@ namespace ELM_DAL.Services.ServiceRepo
             LoginResult result = new();
             try
             {
-               var response = await _httpService.Post(Userlogin, $"{Apiroute()}Auth/login/");
-
+               var response = await _httpservice.Post(Userlogin, $"{Apiroute()}Auth/login/");
+                
                 if (!response.IsSuccessStatusCode) return new();
 
                 result.Token = await response.Content.ReadAsStringAsync();
@@ -59,18 +55,10 @@ namespace ELM_DAL.Services.ServiceRepo
 
             return result;
         }
-
         public async Task Logout()
         {
-            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("jwt");
             ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
-        }
-        private string Apiroute()
-        {
-            var apiRoute = _configuration["Api:Apiroute"];
-            if (apiRoute == null)
-                return "https://localhost:7150/api/";
-            return apiRoute;
         }
     }
 }

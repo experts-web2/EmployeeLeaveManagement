@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DomainEntity.Models
 {
-    public class Employee : BaseEntity
+    public class Employee : EntityBase
     {
 
         [Required]

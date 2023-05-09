@@ -34,11 +34,6 @@ namespace EmpLeave.Api.Controllers
         {
             try
             {
-                var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var Role = identity?.FindFirst(ClaimTypes.Role);
-                var ClaimRoleId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (Role.Value.Contains("Admin"))
-                {
                     var AllLeave = _leaveService.GetAll(pager);
                     var metadata = new
                     {
@@ -50,10 +45,7 @@ namespace EmpLeave.Api.Controllers
                         AllLeave.HasNext,
                     };
                     Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-                    return Ok(AllLeave);
-                }
-                return GetLeavesByEmployeeId(int.Parse(ClaimRoleId));
-                  
+                return Ok(AllLeave);  
             }
             catch (Exception ex)
             {
@@ -63,8 +55,8 @@ namespace EmpLeave.Api.Controllers
         [HttpPut]
         public IActionResult UpdateLeave(LeaveDto leaveDto)
         {
-            var Updated = _leaveService.Update(leaveDto);
-            return Ok(Updated);
+             _leaveService.Update(leaveDto);
+            return Ok();
         }
         [HttpDelete("{id}")]
         public IActionResult Deleteleave(int id)
@@ -78,7 +70,7 @@ namespace EmpLeave.Api.Controllers
             var leaveDto = _leaveService.GetById(id);
             return Ok(leaveDto);
         }
-        [HttpGet("GetLeavesByEmployeeId/{Id}")]
+        [HttpGet("GetLeavesByEmployeeId/{employeeId}")]
         public  IActionResult GetLeavesByEmployeeId(int id)
         {
             var leaves = _leaveService.GetLeavesByEmployeeID(id).GetAwaiter().GetResult();
