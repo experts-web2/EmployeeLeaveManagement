@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DomainEntity\DomainEntity.csproj" />
+    <ProjectReference Include="..\ELM.Helper\ELM.Helper.csproj" />
   </ItemGroup>
 
 </Project>

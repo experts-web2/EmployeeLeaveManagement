@@ -2,12 +2,20 @@
 @page "/edit/{ID:int}"
 @using DomainEntity.Enum
 @using EmpLeave.Web.Pages.EmployeePage;
+@using ELM.Web.Components.TextInput;
+@using ELM.Web.Components.NumberINput;
 @inherits AddEmployeeBase
 <h3>Add Employee</h3>
 
 <EditForm Model="@EmployeeDto" OnValidSubmit="SaveEmployee">
     <DataAnnotationsValidator />
-    <div class="mb-3">
+    <TextInput Type="text" Label="First Name" height="30px" width="200px" ValueChanged="@SetValue" Required="true"  ></TextInput>
+    <TextInput Type="text" Label="First Name" height="30px" width="200px" @bind-Value="EmployeeDto.FirstName" Required="true"  ></TextInput>
+    <TextInput Type="text" Label="Last Name" height="30px" width="200px" @bind-Value="EmployeeDto.LastName" Required="true"  ></TextInput>
+    <TextInput Type="Email" Label="First Name" height="30px" width="200px" @bind-Value="EmployeeDto.Email" Required="true"  ></TextInput>
+     <TextInput Type="text" Label="Address" height="30px" width="200px" @bind-Value="EmployeeDto.Address" Required="true"  ></TextInput>
+     <NumberInput  Label="Current Salary" height="30px" width="200px" @bind-Value="EmployeeDto.CurrentSalary" Required="true"  ></NumberInput>
+   @* <div class="mb-3">
         <label for="Name" class="form-label">First Name</label>
         <div class="col-md-4">
             <InputText class="form-control" @bind-Value="EmployeeDto.FirstName" />
@@ -37,21 +45,22 @@
         </div>
         <ValidationMessage For="@(() => EmployeeDto.Address)" />
     </div>
-
+*@
     <div class="mb-3">
         <label for="Phone" class="form-label">Date Of Birth</label>
         <div class="col-md-4">
-            <InputDate class="form-control" @bind-Value="EmployeeDto.DateOfBrith" />
+            <InputDate style="height:40px; width:200px" class="form-control" @bind-Value="EmployeeDto.DateOfBrith" />
         </div>
         <ValidationMessage For="@(() => EmployeeDto.DateOfBrith)" />
     </div>
-    <div class="mb-3">
+   @* <div class="mb-3">
         <label for="Salary" class="form-label">Current Salary</label>
         <div class="col-md-4">
             <InputNumber class="form-control" @bind-Value="EmployeeDto.CurrentSalary" />
         </div>
         <ValidationMessage For="@(() => EmployeeDto.CurrentSalary)" />
-    </div>
+    </div>*@
+    <div class="mb-3">
      <InputSelect class="form-control-sm" @bind-Value="EmployeeDto.Gender">
         <option selected disabled value="-1">Gender</option>
         @foreach (var gender in Enum.GetValues(typeof(Gender)))
@@ -59,6 +68,7 @@
             <option value="@gender">@gender</option>
         }
     </InputSelect>
+    </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-light" @onclick="Cancel">Cancel</button>

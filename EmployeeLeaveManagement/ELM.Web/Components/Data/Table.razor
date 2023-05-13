@@ -1,0 +1,119 @@
+﻿@typeparam TItem
+@attribute [CascadingTypeParameter(nameof(TItem))]
+
+<CascadingValue Value=@this IsFixed=true>
+	<section class="sa-table">
+		<div class="container" style="@(!ShowBorder? "width:100%" : "")">
+			<div class="dashboard-table @(!ShowBorder ? "no-border" : "")" style=@Style>
+				<table>
+					<thead>
+						<tr>
+							@Columns
+							@if (AllowSelect)
+							{
+								<th></th>
+							}
+							@if (columns is not null)
+							{
+								foreach (var column in columns)
+								{
+									<th style="text-align: @column.TextAlign.ToString().ToLower()">@column.Heading</th>
+								}
+							}
+							@if (AllowEdit || AllowDelete)
+							{
+								<th>Action</th>
+							}
+						</tr>
+					</thead>
+					<tbody>
+						@{
+							var count = Items?.Count(x => RowString(x).ToLower().Contains(filterCriteria.ToLower()));
+							@if (count == 0 && !String.IsNullOrEmpty(filterCriteria))
+							{
+								<tr style="height: 5rem;">
+									<td colspan=@(columns.Count + (AllowEdit || AllowDelete ? 1 : 0))
+									style="text-align:center; font-size: 14px;">
+										No data found
+									</td>
+								</tr>
+							}
+							else
+							{
+								@if (Items is not null & columns is not null)
+								{
+									int index = 0;
+
+									foreach (var item in Items.Where(x => RowString(x).ToLower().Contains(filterCriteria.ToLower())).ToList())
+									{
+										int idx = index;
+										<tr class="@(AllowSelect ? "selectable": "") @(AllowSelect && idx==selectedIndex ? "selected" : "")">
+											@if (AllowSelect)
+											{
+												<td class="checkbox-col">
+													<CheckBox Value=@(Helper.GetPropertyValue<bool>(item, "Selected"))
+																ValueChanged=@(e=> SelectItem(item, true, idx))></CheckBox>
+												</td>
+											}
+											@foreach (var column in columns)
+											{
+												<td style="text-align: @column.TextAlign.ToString().ToLower()">
+													@if (column.GetType() == typeof(TemplateColumn<TItem>))
+													{
+														var col = column as TemplateColumn<TItem>;
+														@col.ChildContent(item)
+													}
+													else
+													{
+														@if (!String.IsNullOrEmpty(column.DataField))
+														{
+															@(
+															Helper.GetPropertyValue<string>(item, column.DataField)
+																)
+														}
+													}
+												</td>
+											}
+											@if (AllowEdit || AllowDelete)
+											{
+												<td class="edit-icons">
+													@if (AllowEdit)
+													{
+														<a href="javascript:void(0)">
+															<img src="images/edit.svg" alt="Edit Icon" width="18" @onclick=@(()=> Edit(item))>
+														</a>
+													}
+													@if (AllowDelete)
+													{
+														<a href="javascript:void(0)">
+															<img src="images/trash.svg" alt="Edit Icon" width="18" @onclick=@(()=> Delete(item))>
+														</a>
+													}
+												</td>
+											}
+										</tr>
+
+										++index;
+									}
+								}
+							}
+						}
+					</tbody>
+				</table>
+				<div class="ns-table-navigation">
+					<a href="#"><img src="images/double-arrow-back.svg" alt="Double Arrow back"></a>
+					<a href="#"><img src="images/arrow-back.svg" alt="Arrow back"></a>
+					<a href="#" class="ns-page-no">@currentPageNumber</a>
+					<a href="#"><img src="images/arrow-forward.svg" alt="Arrow forward"></a>
+					<a href="#"><img src="images/double-arrow-forward.svg" alt="Double Arrow forward"></a>
+				</div>
+			</div>
+		</div>
+	</section>
+</CascadingValue>
+
+
+
+
+
+

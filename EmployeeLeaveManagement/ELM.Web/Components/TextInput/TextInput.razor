@@ -1,0 +1,34 @@
+﻿<div>
+<labek>@Label</labek>
+</div>
+<div>
+<input type="@Type" style="height:@height; width:@width" @oninput="@HandleChange" required="@Required" />
+</div>
+@code {
+    [Parameter]
+    public string Type { get; set; }
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string height { get; set; } = "40px";
+
+    [Parameter]
+    public string width { get; set; } = "170px";
+
+    [Parameter]
+    public bool Required { get; set; }
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    public async Task HandleChange (ChangeEventArgs value)
+    {
+        Value = value.Value.ToString();
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+}

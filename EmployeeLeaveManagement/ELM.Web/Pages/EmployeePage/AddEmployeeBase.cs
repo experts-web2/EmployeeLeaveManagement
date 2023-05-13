@@ -36,6 +36,10 @@ namespace EmpLeave.Web.Pages.EmployeePage
             Cancel();
         }
 
+        public async Task SetValue(string value)
+        {
+            EmployeeDto.FirstName = value;
+        }
         public void Cancel()
         {
             NavigationManager.NavigateTo("ListofEmployee");

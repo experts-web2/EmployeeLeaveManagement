@@ -1,0 +1,34 @@
+﻿<div>
+<labek>@Label</labek>
+</div>
+<div>
+<input type="number"style="height:@height; width:@width" @oninput="@HandleChange" required="@Required" />
+</div>
+
+@code {
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string height { get; set; }
+
+    [Parameter]
+    public string width { get; set; }
+
+    [Parameter]
+    public bool Required { get; set; }
+
+    [Parameter]
+    public double Value { get; set; }
+
+    [Parameter]
+    public EventCallback<double> ValueChanged { get; set; }
+
+    public async Task HandleChange (ChangeEventArgs value)
+    {
+        Value = double.Parse(value.Value.ToString());
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+}

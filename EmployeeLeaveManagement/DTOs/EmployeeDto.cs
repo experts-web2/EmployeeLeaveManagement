@@ -13,7 +13,7 @@ namespace DTOs
         [EmailAddress]
         public string Email { get; set; } = String.Empty;
         [Required]
-        public DateTime DateOfBrith { get; set; }
+        public DateTime DateOfBrith { get; set; } = DateTime.Now;
         [Required]
         public string Address { get; set; }
         public Gender Gender { get; set; }

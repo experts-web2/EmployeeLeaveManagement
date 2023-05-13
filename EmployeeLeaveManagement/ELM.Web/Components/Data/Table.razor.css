@@ -1,0 +1,122 @@
+﻿.dashboard-table {
+    padding: 20px;
+    background: #FFFFFF;
+    border: 0.6px solid #7D90AB;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+}
+
+    .dashboard-table.no-border {
+        padding: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #F7F8FB;
+}
+
+td, th {
+    text-align: left;
+    padding: 8px 12px;
+}
+
+table thead tr th, table tbody tr th {
+    background: #DDE2E9;
+    border-bottom: none;
+    font-weight: 900;
+    font-size: 12px;
+    line-height: 23px;
+    color: #000;
+}
+
+    table thead tr th:last-child {
+        text-align: right;
+    }
+
+.blue-th {
+    background-color: #71D6C4;
+}
+
+.edit-icons {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 7px;
+}
+
+    .edit-icons a img {
+        width: 15px !important;
+    }
+
+table tbody tr td {
+    border-bottom: 1px solid #D6D5D9;
+}
+
+table tbody tr td {
+    font-size: 12px;
+    line-height: 16px;
+    color: #000000;
+    color: inherit;
+}
+
+
+.ns-table-navigation {
+    display: flex;
+}
+
+.ns-table-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+    .ns-table-navigation a {
+        margin: 6px;
+        display: flex;
+        color: #333;
+    }
+
+.ns-page-no {
+    padding: 4px 9px;
+    background: #fff;
+    border: 1px solid #D6D5D9;
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+    color: #222A35 !important;
+}
+
+.back-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+    .back-btn p {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16px;
+        color: #CC6314;
+        margin: 0;
+        margin-left: 5px;
+    }
+
+    .selectable{
+        cursor: pointer;
+    }
+
+.selected {
+    background-color: rgb(255, 220, 220)
+}
+
+.checkbox-col{
+    width: 24px;
+    text-align: center;
+}
