@@ -15,6 +15,10 @@ namespace DomainEntity.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime IncrementDate { get; set; }
+        public double CurrentSalary { get; set; }
+        public int MonthlyWorkingHours { get; set; }
+        public double PerviousSalary { get; set; }
+        public double Deduction { get; set; }
         [ForeignKey(nameof(Employee))]
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }

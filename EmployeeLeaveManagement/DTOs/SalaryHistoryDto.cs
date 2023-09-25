@@ -18,5 +18,9 @@ namespace DTOs
         public int? EmployeeId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public double CurrentSalary { get; set; }
+        public int MonthlyWorkingHours { get; set; }
+        public double PerviousSalary { get; set; }
+        public double Deduction { get; set; }
     }
 }

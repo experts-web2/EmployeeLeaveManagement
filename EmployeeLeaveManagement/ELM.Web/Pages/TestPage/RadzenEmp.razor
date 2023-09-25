@@ -1,0 +1,49 @@
+﻿@page "/Radzenpage"
+@using DomainEntity.Enum;
+@using DomainEntity.Models;
+@using EmpLeave.Web.Services.Interface;
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+          Data="@employees" TItem="Employee" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="Employee" Property="FirstName" Title="First Name" Width="160px" />
+        <RadzenDataGridColumn TItem="Employee" Property="LastName" Title="Last Name" Width="160px" />
+        <RadzenDataGridColumn TItem="Employee" Property="DateOfBrith" Title="Birth Date" FormatString="{0:d}" Width="160px" />
+        <RadzenDataGridColumn TItem="Employee" Property="Email" Title="Email" FormatString="{0:d}" Width="160px" />
+        <RadzenDataGridColumn TItem="Employee" Property="Address" Title="Address" Width="200px" />
+        <RadzenDataGridColumn TItem="Employee" Property="Gender" Title="Gender" Width="160px" />
+        <RadzenDataGridColumn TItem="Employee" Property="CurrentSalary" Title="Salary" Width="160px" />
+        <RadzenDataGridColumn TItem="Employee" Property="Leaves" Title="Leaves" Width="160px" />
+      @*<RadzenDropDown @bind-Value="selectedValue" Data="@leaves" TextProperty="@" ValueProperty="Id" />*@
+@*        <RadzenDropDown @bind-Value="LeaveEnum" Data="@LeaveEnumList" TextProperty="@nameof(LeaveEnum.ToString)" ValueProperty="@nameof(LeaveEnum)" />
+        *@
+    </Columns>
+</RadzenDataGrid>
+
+@code{
+
+    [Inject]
+    public IEmployeeService EmployeeService { get; set; }
+    [Inject]
+    public ILeaveService leaveService { get; set; }
+    List<Employee>? employees { get; set; }
+    List<Leave> leaves { get; set; }
+    public LeaveEnum LeaveEnum { get; set; }
+    public int selectedValue { get; set; }
+    List<object> LeaveEnumList = Enum.GetValues(typeof(LeaveEnum)).Cast<object>().ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetLeaves();
+        await GetEmployees();
+    }
+    public async Task GetEmployees()
+    {
+        employees =await EmployeeService.GetAllEmployee();
+
+    }
+    public async Task GetLeaves()
+    {
+        leaves = await leaveService.GetEmployeeLeaves();
+    }
+}

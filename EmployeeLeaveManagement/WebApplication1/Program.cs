@@ -55,6 +55,7 @@ builder.Services.AddAuthentication(options =>
     {
         options.SaveToken = true;
         options.RequireHttpsMetadata = false;
+        //options.Authority = "https://localhost:7003/";
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -78,7 +79,14 @@ builder.Services.AddAuthentication(options =>
             }
         };
     });
-
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("ApiScope", policy =>
+//    {
+//        policy.RequireAuthenticatedUser();
+//        policy.RequireClaim("scope", "magic");
+//    });
+//});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

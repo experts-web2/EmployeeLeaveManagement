@@ -71,6 +71,10 @@ namespace BL.Service
                 salary.NewSalary = salaryDto.NewSalary;
                 salary.IncrementDate = salaryDto.IncrementDate;
                 salary.EmployeeId = salaryDto.EmployeeId;
+                salary.CurrentSalary = salaryDto.CurrentSalary;
+                salary.PerviousSalary = salaryDto.CurrentSalary - salaryDto.NewSalary;
+                salary.MonthlyWorkingHours= salaryDto.MonthlyWorkingHours;
+                salary.Deduction = salaryDto.Deduction;
             }
             catch (Exception)
             {
@@ -79,7 +83,10 @@ namespace BL.Service
             }
           
         }
+        public void SalaryDeduction()
+        {
 
+        }
         public PagedList<SalaryHistoryDto> GetSalaries(Pager pager, Expression<Func<SalaryHistory, bool>> predicate = null)
         {
             try

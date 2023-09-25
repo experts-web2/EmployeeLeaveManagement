@@ -17,6 +17,7 @@
     </div>
 </div>
 <br />
+<AuthorizeView Roles="Admin">
 @if (LeaveDtosList == null)
 {
     <p><em>Loading...</em></p>
@@ -104,6 +105,6 @@ else
             HasNext="Paging.HasNext"
             HasPrevious="Paging.HasPrevious"
             TotalPages="Paging.TotalPages" />
-
+</AuthorizeView>
 
 

@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,10 @@ namespace ELM_DAL.Services.ServiceRepo
             _configuration = configuration;
             _jsRunTime = jsRunTime;
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
+        }
+        public async Task<List<Leave>> GetEmployeeLeaves()
+        {
+            return await _httpService.GetFromJsonAsync<List<Leave>>($"{Apiroute()}leave/GetLeaves");
         }
         public async Task DeleteLeave(int id)
         {

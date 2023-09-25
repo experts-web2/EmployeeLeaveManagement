@@ -1,6 +1,7 @@
 ﻿using BL.Interface;
 using DAL.Interface;
 using DAL.Interface.GenericInterface;
+using DAL.Repositories;
 using DomainEntity.Enum;
 using DomainEntity.Models;
 using DTOs;
@@ -61,6 +62,18 @@ namespace BL.Service
                 throw;
             }
 
+        }
+        public List<Leave> GetAllEmployeesLeaves()
+        {
+            try
+            {
+                return _leaveRepository.GetAll().ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public LeaveDto GetById(int id)

@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230425154529_first")]
+    partial class first
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,12 +223,6 @@ namespace DAL.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("CurrentSalary")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Deduction")
-                        .HasColumnType("float");
-
                     b.Property<int?>("EmployeeId")
                         .IsRequired()
                         .HasColumnType("int");
@@ -240,13 +236,7 @@ namespace DAL.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MonthlyWorkingHours")
-                        .HasColumnType("int");
-
                     b.Property<double>("NewSalary")
-                        .HasColumnType("float");
-
-                    b.Property<double>("PerviousSalary")
                         .HasColumnType("float");
 
                     b.HasKey("Id");

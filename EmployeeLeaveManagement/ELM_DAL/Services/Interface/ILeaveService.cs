@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 
 namespace EmpLeave.Web.Services.Interface
@@ -10,5 +11,6 @@ namespace EmpLeave.Web.Services.Interface
         Task EditLeave(LeaveDto leaveDto);
         Task DeleteLeave(int id);
         Task<LeaveDto> GetByIdCall(int id);
+        Task<List<Leave>> GetEmployeeLeaves();
     }
 }

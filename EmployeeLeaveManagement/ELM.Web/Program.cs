@@ -7,8 +7,10 @@ using ELM_DAL.Services.Interface;
 using ELM_DAL.Services.ServiceRepo;
 using EmpLeave.Api.Controllers;
 using EmpLeave.Web.Services.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using Radzen;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -35,26 +37,48 @@ builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ISalaryHistory, SalaryHistoryService>();
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddHttpClient("api",async o =>
+
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
+
+builder.Services.AddHttpClient("api", async o =>
 {
 
-    var jsRuntime = builder.Services.BuildServiceProvider().GetRequiredService<IJSRuntime>();
-    o.BaseAddress = new Uri("https://localhost:7150/");
-  //  var jsRuntime = builder.Services.BuildServiceProvider().GetService<IHttpContextAccessor>();
-    //var jsRuntime = builder.Services.BuildServiceProvider().GetService<IJSRuntime>();
+var jsRuntime = builder.Services.BuildServiceProvider().GetRequiredService<IJSRuntime>();
+o.BaseAddress = new Uri("https://localhost:7150/");
+//  var jsRuntime = builder.Services.BuildServiceProvider().GetService<IHttpContextAccessor>();
+//var jsRuntime = builder.Services.BuildServiceProvider().GetService<IJSRuntime>();
 
-   // var token = jsRuntime?.HttpContext?.Request?.Cookies["jwt"];
-    
-    //var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
-    //token = token.Replace("\"", "");
-    //o.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+// var token = jsRuntime?.HttpContext?.Request?.Cookies["jwt"];
 
-    //var jsRuntime = builder.Services.BuildServiceProvider().GetService<IJSRuntime>();
-    //var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
-    //token = token.Replace("\"", "");
-    //o.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( token);
+//var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
+//token = token.Replace("\"", "");
+//o.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token);
+
+//var jsRuntime = builder.Services.BuildServiceProvider().GetService<IJSRuntime>();
+//var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+//token = token.Replace("\"", "");
+//o.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( token);
 
 });
+//builder.Services.AddAuthentication(option =>
+//{
+//    option.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    option.DefaultChallengeScheme = "oidc";
+//}).AddOpenIdConnect("oidc" , options=>
+//{
+//    options.Authority = builder.Configuration["Api:IdentityUrl"];
+//    options.GetClaimsFromUserInfoEndpoint= true;
+//    options.ClientId = "magic";
+//    options.ClientSecret = "secret";
+//    options.ResponseType = "code";
+//    options.TokenValidationParameters.NameClaimType = "name";
+//    options.TokenValidationParameters.RoleClaimType = "role";
+//    options.Scope.Add("magic");
+//    options.SaveTokens = true;
+//});
 var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();

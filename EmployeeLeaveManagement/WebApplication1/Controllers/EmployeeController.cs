@@ -45,6 +45,7 @@ namespace EmpLeave.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost]
         public IActionResult AddEmployee(EmployeeDto employeeDto)
         {

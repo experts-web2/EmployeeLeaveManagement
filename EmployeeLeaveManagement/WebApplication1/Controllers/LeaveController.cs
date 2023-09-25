@@ -29,6 +29,13 @@ namespace EmpLeave.Api.Controllers
                 var response = _leaveService.Add(leaveDto);
             return Ok(response);
         }
+        [AllowAnonymous]
+        [HttpGet("GetLeaves")]
+        public IActionResult GetEmployeeLeaves()
+        {
+            var leaves = _leaveService.GetAllEmployeesLeaves();
+            return Ok(leaves);
+        }
         [HttpPost("getall")]
         public IActionResult GelAllLeaves(Pager pager)
         {

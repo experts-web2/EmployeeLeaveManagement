@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 
 namespace BL.Interface
@@ -11,5 +12,6 @@ namespace BL.Interface
         void Delete(int id);
         void Update(LeaveDto leave);
         Task<List<LeaveDto>> GetLeavesByEmployeeID(int employeeId);
+        List<Leave> GetAllEmployeesLeaves();
     }
 }
