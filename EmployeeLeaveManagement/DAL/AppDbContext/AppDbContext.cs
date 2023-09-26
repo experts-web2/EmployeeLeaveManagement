@@ -25,6 +25,8 @@ namespace DAL
         public DbSet<Attendence> Attendences { get; set; }
         public DbSet<SalaryHistory> SalaryHistories { get; set; }
         public DbSet<Alert> Alerts { get; set; }
+        public DbSet<Salary> Salaries { get; set; }
+        public DbSet<Loan> Loans { get; set; }
         public override int SaveChanges()
         {
 

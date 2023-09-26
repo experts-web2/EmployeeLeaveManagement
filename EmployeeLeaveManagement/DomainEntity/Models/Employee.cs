@@ -1,5 +1,6 @@
 ﻿using DomainEntity.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DomainEntity.Models
 {
@@ -22,6 +23,7 @@ namespace DomainEntity.Models
         public ICollection<Attendence> Attendences { get; set; }
         public ICollection<SalaryHistory> SalaryHistories { get; set; }
         public virtual User User { get; set; }
-
+        public Salary? Salary { get; set; }
+        public ICollection<Loan>? loans { get; set; }
     }
 }

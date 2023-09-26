@@ -12,11 +12,12 @@ namespace BL.Interface
 {
     public interface ISalaryService
     {
-        public void AddSalary(SalaryHistoryDto salaryDto);
-        public PagedList<SalaryHistoryDto> GetSalaries(Pager pager, Expression<Func<SalaryHistory, bool>> predicate = null);
-        public List<SalaryHistoryDto> GetSalary(int id);
-        public SalaryHistoryDto GetSalaryById(int id);
-        public void EditSalary(SalaryHistoryDto salarDto);
-        public void DeleteSalary(int id);
+        void AddSalary(int Id);
+        PagedList<SalaryDto> GetAllSalaries(Pager pager);
+        void DeleteSalary(int id);
+        SalaryDto GetById(int id);
+        void Update(SalaryDto Salary);
+        List<SalaryDto> GetAllSalary();
     }
 }
+

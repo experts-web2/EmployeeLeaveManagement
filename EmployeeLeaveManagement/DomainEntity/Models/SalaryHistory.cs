@@ -10,6 +10,7 @@ namespace DomainEntity.Models
 {
     public class SalaryHistory:EntityBase
     {
+       
         [Required]
         public double NewSalary { get; set; }
         [Required]
@@ -18,7 +19,6 @@ namespace DomainEntity.Models
         [ForeignKey(nameof(Employee))]
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
-       
 
     }
 }

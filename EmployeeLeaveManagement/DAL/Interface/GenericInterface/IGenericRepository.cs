@@ -12,5 +12,6 @@ namespace DAL.Interface.GenericInterface
         void update(T item);
         T GetByID(int id);
         IQueryable<T> Get(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+        T? GetByExpression(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
     }
 }

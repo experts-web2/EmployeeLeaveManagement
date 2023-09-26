@@ -16,8 +16,8 @@ namespace EmpLeave.Api.Controllers
     public class SalaryHistoryController : ControllerBase
     {
         private readonly ISalaryHistoryRepository repositroy;
-        private readonly ISalaryService _salaryService;
-        public SalaryHistoryController(ISalaryHistoryRepository _repository,ISalaryService salaryService)
+        private readonly ISalaryHistoryService _salaryService;
+        public SalaryHistoryController(ISalaryHistoryRepository _repository,ISalaryHistoryService salaryService)
         {
             repositroy= _repository;
             _salaryService=salaryService;

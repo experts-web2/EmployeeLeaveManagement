@@ -72,6 +72,20 @@ namespace DAL.Repositories
 
         }
 
+        public T? GetByExpression(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            try
+            {
+                return Query().Includes(includes).FirstOrDefault(predicate);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+
         private IQueryable<T> Query()
         {
             return Entity().AsQueryable<T>();
