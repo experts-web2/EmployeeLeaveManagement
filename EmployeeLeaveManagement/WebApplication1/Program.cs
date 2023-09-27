@@ -29,8 +29,12 @@ builder.Services.AddScoped<ISalaryHistoryService, SalaryHistoryService>();
 builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertService, AlertService>();
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddScoped<ISalaryRepository, SalaryRepository>();
+builder.Services.AddScoped<ILoanInstallmentHistoryService, LoanInstallmentHistoryService>();
+builder.Services.AddScoped<ILoanInstallmentHistoryRepository, LoanInstallmentHistoryRepository>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

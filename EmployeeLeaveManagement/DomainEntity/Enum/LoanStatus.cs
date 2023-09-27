@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DomainEntity.Enum
 {
-    public enum InstallmentPlanEnum
+    public enum LoanStatus
     {
-        Monthly = 1,
-        ThreeMonth = 3,
-        SixMonth = 6,
-        Annual = 12,
+        Approved =1,
+        Unapproved = 2
     }
 }

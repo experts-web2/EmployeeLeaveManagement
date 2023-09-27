@@ -26,8 +26,8 @@ namespace EmpLeave.Api.Controllers
             var ClaimEmployeeId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (ClaimEmployeeId is not null && int.TryParse(ClaimEmployeeId, out int RoleID) && RoleID > 0)
             {
-                _salaryService.AddSalary(employeeId);
-                return Ok("Added");
+                _salaryService.AddSalaryorUpdate(employeeId);
+                return Ok("AddedorUpdate");
             }
             return BadRequest();
         }

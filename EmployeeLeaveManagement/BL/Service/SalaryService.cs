@@ -16,13 +16,17 @@ namespace BL.Service
     {
         private ISalaryRepository _salaryRepository;
         private ISalaryHistoryService _salaryHistoryService;
+        private ILoanRepository _loanRepository;
+        private ILoanInstallmentHistoryRepository _loanInstallmentHistoryRepository;
 
-        public SalaryService(ISalaryRepository salaryRepository, ISalaryHistoryService salaryHistoryService)
+        public SalaryService(ISalaryRepository salaryRepository, ISalaryHistoryService salaryHistoryService, ILoanRepository loanRepository, ILoanInstallmentHistoryRepository loanInstallmentHistoryRepository)
         {
             _salaryRepository = salaryRepository;
             _salaryHistoryService = salaryHistoryService;
+            _loanRepository = loanRepository;
+            _loanInstallmentHistoryRepository = loanInstallmentHistoryRepository;
         }
-        public void AddSalary(int employeeId)
+        public void AddSalaryorUpdate(int employeeId)
         {
             var salaryOFEmployee = _salaryRepository.GetByExpression(x=>x.EmployeeId == employeeId, x=>x.Employee);
             if (salaryOFEmployee!= null)
@@ -67,27 +71,44 @@ namespace BL.Service
            
             var salaryHistory = _salaryHistoryService.GetSalaryHistoryByEmployeeId(salary.EmployeeId)
                                                      .MaxBy(x => x.IncrementDate);
-            int allowedLeaves = 20, loadDeduction= 500;
+            var loan = _loanRepository.GetAll().Where(x=>x.EmployeeId == salary.EmployeeId).FirstOrDefault();
+
+            LoanInstallmentHistory loanInstallmentHistory = new();
+            int allowedLeaves = 20;
+
             if (salaryHistory!.Employee.Leaves.Count > allowedLeaves)
             {
                 salary.LeaveDeduction = calculateLeaveWithSalaryDedection(salaryHistory, allowedLeaves);  
                 salary.CurrentSalary = (decimal)salaryHistory.NewSalary;
-                salary.LoanDeduction = loadDeduction;
-                salary.TotalDedection = salary.LeaveDeduction + salary.LoanDeduction;
+                salary.LoanDeduction = loan.InstallmentAmount;
                 salary.Perks = 0;
+                salary.TotalDedection = salary.LeaveDeduction + salary.LoanDeduction;
                 salary.TotalSalary = salary.CurrentSalary - salary.TotalDedection + salary.Perks;
+                loan.RemainingAmount = loan.LoanAmount - loan.InstallmentAmount;
+                _loanRepository.update(loan);
+                loanInstallmentHistory.InstallmentAmount = loan.InstallmentAmount;
+                loanInstallmentHistory.LoanId = loan.Id;
+                _loanInstallmentHistoryRepository.Add(loanInstallmentHistory);
 
             }
-            else if(salary.LoanDeduction > 0)
+
+            else if(loan.LoanAmount > 0)
             {
                 salary.CurrentSalary = (decimal)salaryHistory.NewSalary;
                 salary.LeaveDeduction = 0;
                 salary.Perks = 0;
-                salary.TotalDedection = loadDeduction;
-                salary.LoanDeduction = loadDeduction;
+                salary.GeneralDeduction = 0;
+                salary.LoanDeduction = loan!.InstallmentAmount;
+                salary.TotalDedection = salary.LoanDeduction + salary.GeneralDeduction;
                 salary.TotalSalary = salary.CurrentSalary - salary.TotalDedection + salary.Perks;
+                loan.RemainingAmount = loan.LoanAmount - loan!.InstallmentAmount;
+                _loanRepository.update(loan);
+                loanInstallmentHistory.InstallmentAmount = loan.InstallmentAmount;
+                loanInstallmentHistory.LoanId = loan.Id;
+                _loanInstallmentHistoryRepository.Add(loanInstallmentHistory);
 
             }
+
             else 
             {
                 salary.CurrentSalary = (decimal)salaryHistory.NewSalary;
@@ -106,11 +127,12 @@ namespace BL.Service
             //                                 .Attendences
             //.Count(x => x.AttendenceDate.Date.Month == DateTime.Now.Date.Month - 1);
           
+           // var currentMonthWorkingDays = presentDays - absentDays;
+
             var absentDays = salaryHistory.Employee
                                          .Leaves
                                          .Count(x => x.CreatedDate!.Value.Month == DateTime.Now.Date.Month - 1);
 
-           // var currentMonthWorkingDays = presentDays - absentDays;
             var oneDaySalary = salaryHistory.NewSalary / 22;
             var leaves = salaryHistory.Employee.Leaves.Count - allowedLeaves;
             var leaveDedection = leaves * (decimal)oneDaySalary;

@@ -12,7 +12,7 @@ namespace BL.Interface
 {
     public interface ISalaryService
     {
-        void AddSalary(int Id);
+        void AddSalaryorUpdate(int Id);
         PagedList<SalaryDto> GetAllSalaries(Pager pager);
         void DeleteSalary(int id);
         SalaryDto GetById(int id);

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace DAL
@@ -27,6 +28,19 @@ namespace DAL
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<Loan> Loans { get; set; }
+        public DbSet<LoanInstallmentHistory> LoanInstallmentHistories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            //foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            //{
+            //    foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            //}
+        }
+
+
         public override int SaveChanges()
         {
 
