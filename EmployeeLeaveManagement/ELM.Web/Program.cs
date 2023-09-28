@@ -35,6 +35,7 @@ builder.Services.AddScoped<IAttendenceService, AttendenceService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ISalaryHistory, SalaryHistoryService>();
 builder.Services.AddScoped<IAlertService, AlertService>();
+builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpClient("api",async o =>
 {

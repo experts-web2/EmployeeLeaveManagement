@@ -13,7 +13,7 @@ namespace DTOs
     {
         public decimal LoanAmount { get; set; }
         public decimal InstallmentAmount { get; set; }
-        public DateTime LoanDate { get; set; }
+        public DateTime LoanDate { get; set; } = DateTime.Now;
         public int EmployeeId { get; set; }
 
         public bool Active { get; set; }
@@ -21,6 +21,7 @@ namespace DTOs
         public LoanStatus? LoanStatus { get; set; }
         public decimal RemainingAmount { get; set; }
         public InstallmentPlan? InstallmentPlan { get; set; }
-      
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
     }
 }

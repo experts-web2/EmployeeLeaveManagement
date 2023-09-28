@@ -1,0 +1,76 @@
+﻿@page "/AddLoan"
+@*@page "/leave/edit/{id:int}"*@
+@using DomainEntity.Enum;
+
+@inherits AddLoanBase
+
+<h3>AddLoan</h3>
+
+<EditForm Model="@loanDto" OnValidSubmit="SaveLoan">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="LaonDate" class="form-label">Laon Date</label>
+        <div class="col-md-4">
+            <InputDate class="form-control" @bind-Value="loanDto.LoanDate" />
+        </div>
+        <ValidationMessage For="@(() => loanDto.LoanDate)" />
+    </div>
+    <div class="mb-3">
+        <label for="LoanAmount" class="form-label">Loan Amount</label>
+        <div class="col-md-4">
+            <InputNumber class="form-control" @bind-Value="loanDto.LoanAmount" />
+        </div>
+        <ValidationMessage For="@(() => loanDto.LoanAmount)" />
+    </div>
+ @*   <div class="mb-3">
+        <label for="LoanAmount" class="form-label">Loan Actice</label>
+        <div class="col-md-4">
+            <InputCheckbox  class="form-control" @bind-Value="loanDto.Active" />
+        </div>
+        <ValidationMessage For="@(() => loanDto.Active)" />
+    </div>*@
+    <div class="mb-3">
+        <InputSelect class="form-control-sm" @bind-Value="loanDto.InstallmentPlan">
+            <option selected disabled value="-1">Loan InstallmentPlan</option>
+            @foreach (var attr in Enum.GetValues(typeof(InstallmentPlan)))
+            {
+                <option value="@attr">@attr</option>
+            }
+
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+    <InputSelect class="form-control-sm" @bind-Value="loanDto.LoanStatus">
+        <option selected disabled value="-1">Loan Status</option>
+        @foreach (var attr in Enum.GetValues(typeof(LoanStatus)))
+        {
+            <option value="@attr">@attr</option>
+        }
+        
+    </InputSelect>
+    </div>
+    <div class="mb-3">
+    <InputSelect class="form-control-sm" @bind-Value="loanDto.LoanType">
+        <option selected disabled value="-1">Loan Types</option>
+        @foreach (var attr in Enum.GetValues(typeof(LoanType)))
+        {
+            <option value="@attr">@attr</option>
+        }
+    </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label>EMPLOYEE NAME</label>
+        <InputSelect class="form-control" @bind-Value="loanDto.EmployeeId">
+            <option selected disabled value="0">Employee Name List</option>
+            @foreach (var employee in EmployeeDtosList)
+            {
+                <option value="@employee.ID">@employee.FirstName</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>

@@ -1,0 +1,59 @@
+﻿@page "/ListOfLoans"
+
+@inherits ListOfLoansBase
+<h3>ListOfLoans</h3>
+
+<div class="col-md-6">
+    <a href='/AddLoan' class="btn btn-primary" role="button">
+        <i class="fas fa-user-plus"></i>
+        Add Loan
+    </a>
+</div>
+
+@if (loanDtos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Employee Name</th>
+                <th>Loan Amount</th>
+                <th>Installment Amount</th>
+                <th>Remaining Amount</th>
+                <th>Loan Type</th>
+                <th>Loan Status</th>
+                <th>Loan Date</th>
+                <th>Installment Plan</th>
+                <th class="colspan-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var loan in loanDtos)
+            {
+                <tr>
+                    <td>@loan.FirstName</td>
+                    <td>@loan.LoanAmount</td>
+                    <td>@loan.InstallmentAmount</td>
+                    <td>@loan.RemainingAmount</td>
+                    <td>@loan.LoanType</td>
+                    <td>@loan.LoanStatus</td>
+                    <td>@loan.LoanDate.ToShortDateString()</td>
+                    <td>@loan.InstallmentPlan</td>
+                @*    <td style="width:15%;">
+                        <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
+                        @onclick="(() => DeleteConfirm(salary.ID))">
+                          Delete
+                        </button>
+                        <a href='/edit/salary/@salary.ID' style="width: 58px; height: 38px;" class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+   
+}

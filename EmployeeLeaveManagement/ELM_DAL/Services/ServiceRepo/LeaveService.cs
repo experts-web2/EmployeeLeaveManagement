@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
-    public class LeaveService :ServiceBase, ILeaveService
+    public class LeaveService : ServiceBase, ILeaveService
     {
        
         public LeaveService(HttpClient httpService,

@@ -4,6 +4,7 @@ using DAL.Interface.GenericInterface;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace BL.Service
         public List<LoanDto> GetAllLoans()
         {
 
-           var listOfLoans = _loanRepository.GetAll();
+           var listOfLoans = _loanRepository.GetAll().Include(x=>x.Employee);
            return listOfLoans.Select(setLoanDtoEntity).ToList();
         }
 
@@ -58,7 +59,7 @@ namespace BL.Service
                 addedLoanOfEmployee.Active = loanDto.Active;
                 addedLoanOfEmployee.EmployeeId = loanDto.EmployeeId;
                 addedLoanOfEmployee.InstallmentPlan = loanDto.InstallmentPlan;
-                addedLoanOfEmployee.InstallmentAmount = loanDto.LoanAmount / (decimal)loanDto.InstallmentPlan;
+                addedLoanOfEmployee.InstallmentAmount = addedLoanOfEmployee.LoanAmount / (decimal)loanDto.InstallmentPlan;
                 addedLoanOfEmployee.RemainingAmount = addedLoanOfEmployee.LoanAmount;
                 _loanRepository.update(addedLoanOfEmployee);
             }
@@ -90,6 +91,7 @@ namespace BL.Service
         {
             var laonDto = new LoanDto()
             {
+                ID = loan.Id,
                 LoanAmount = loan.LoanAmount,
                 LoanDate = loan.LoanDate,
                 LoanType = loan.LoanType,
@@ -98,6 +100,8 @@ namespace BL.Service
                 InstallmentPlan = loan.InstallmentPlan,
                 EmployeeId = loan.EmployeeId,
                 InstallmentAmount = loan.InstallmentAmount,
+                FirstName = loan.Employee.FirstName,
+                RemainingAmount = loan.RemainingAmount
 
             };
             return laonDto;

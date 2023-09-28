@@ -30,7 +30,7 @@ public abstract class ServiceBase
     }
 
     private protected async Task SetToken()
-    {
+     {
         try
         {
             var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "jwt");
