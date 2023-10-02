@@ -33,7 +33,7 @@ namespace EmpLeave.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetSalaries()
+        public IActionResult GetAllSalaries()
         {
             var allSalaries = _salaryService.GetAllSalary();
             if (allSalaries != null)
@@ -43,5 +43,15 @@ namespace EmpLeave.Api.Controllers
             return BadRequest("No salaries available");
         }
 
+        [HttpGet("GetEmployeeSalary/{employeeId}")]
+        public IActionResult GetSalariesByEmployeeId(int employeeId)
+        {
+            var allSalaries = _salaryService.GetAllSalariesByEmployeeId(employeeId);
+            if (allSalaries != null)
+            {
+                return Ok(allSalaries);
+            }
+            return BadRequest("No salaries available");
+        }
     }
 }

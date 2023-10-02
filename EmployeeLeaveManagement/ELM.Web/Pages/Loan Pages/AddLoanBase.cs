@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 using ELM_DAL.Services.Interface;
 using EmpLeave.Web.Services.Interface;
@@ -17,7 +18,7 @@ namespace ELM.Web.Pages.Loan_Pages
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
 
-        public List<EmployeeDto> EmployeeDtosList { get; set; } = new();
+        public List<Employee> EmployeeList { get; set; } = new();
         public Pager Paging { get; set; } = new();
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
@@ -42,9 +43,10 @@ namespace ELM.Web.Pages.Loan_Pages
                 if (loanDto.LoanAmount > 0)
                     await _loanService.AddLoan(loanDto);
             }
-            else if (loanDto.ID > 0)
+            else if (loanDto.ID == 0)
             {
                 await _loanService.AddLoan(loanDto);
+                NavigationManager.NavigateTo("/ListOfLoans");
             }
 
             Cancel();
@@ -52,8 +54,7 @@ namespace ELM.Web.Pages.Loan_Pages
 
         public async Task GetEmployees()
         {
-            Response<EmployeeDto> listEmployee = await EmployeeService.GetAllEmployeeWithPagination(Paging);
-            EmployeeDtosList = listEmployee.DataList;
+            EmployeeList = await EmployeeService.GetAllEmployee();
         }
 
         protected void Cancel()

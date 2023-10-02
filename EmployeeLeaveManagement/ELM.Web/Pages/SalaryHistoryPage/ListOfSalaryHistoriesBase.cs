@@ -5,9 +5,9 @@ using ELM.Web.Services.Interface;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 
-namespace ELM.Web.Pages.Salary_Page
+namespace ELM.Web.Pages.SalaryHistoryPage
 {
-    public class ListOfSalariesBase :ComponentBase
+    public class ListOfSalaryHistoriesBase :ComponentBase
     {
 
         [Inject]

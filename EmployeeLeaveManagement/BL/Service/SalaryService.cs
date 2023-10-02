@@ -4,6 +4,7 @@ using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace BL.Service
 
         public List<SalaryDto> GetAllSalary()
         {
-           var allSalaries = _salaryRepository.GetAll();
+           var allSalaries = _salaryRepository.GetAll().Include(x=>x.Employee);
             return allSalaries.Select(ToSalaryDto).ToList();                
         }
 
@@ -61,11 +62,16 @@ namespace BL.Service
                  LoanDeduction  = salary.LoanDeduction,
                  TotalDedection = salary.TotalDedection,
                  TotalSalary = salary.TotalSalary,
-                 CurrentSalary = salary.CurrentSalary
+                 CurrentSalary = salary.CurrentSalary,
+                 EmployeeName = salary.Employee.FirstName
             };
             return salaryDto;
         }
-
+        public List<SalaryDto> GetAllSalariesByEmployeeId(int employeeId)
+        {
+           var listOfEmployeeSalary= _salaryRepository.GetAll().Include(y=>y.Employee).Where(x => x.EmployeeId == employeeId);
+            return listOfEmployeeSalary.Select(ToSalaryDto).ToList();
+        }
         public void setSalaryEntity(Salary? salary)
         {
            

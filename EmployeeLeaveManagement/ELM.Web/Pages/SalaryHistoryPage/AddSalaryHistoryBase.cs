@@ -4,9 +4,9 @@ using ELM.Web.Services.Interface;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 
-namespace ELM.Web.Pages.Salary_Page
+namespace ELM.Web.Pages.SalaryHistoryPage
 {
-    public class AddSalaryBase:ComponentBase
+    public class AddSalaryHistoryBase:ComponentBase
     {
         [Inject]
         public ISalaryHistory SalaryHistoryService { get; set; }
@@ -45,7 +45,7 @@ namespace ELM.Web.Pages.Salary_Page
         }
         protected void Cancel()
         {
-            NavigationManager.NavigateTo("ListOfSalaries");
+            NavigationManager.NavigateTo("ListOfSalaryHistory");
         }
     }
 }

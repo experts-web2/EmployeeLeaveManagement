@@ -16,6 +16,7 @@ namespace DTOs
         public decimal TotalDedection { get; set; }
         public decimal Perks { get; set; }
         public decimal TotalSalary { get; set; }
+        public string EmployeeName { get; set; }
         public List<SalaryHistory>? SalaryHistories { get; set; }
     }
 }
