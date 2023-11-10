@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj": {}
+    "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj": {
+    "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj",
+        "projectUniqueName": "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj",
         "projectName": "DomainEntity",
-        "projectPath": "C:\\Projects\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj",
-        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\EmployeeLeaveManagement\\DomainEntity\\obj\\",
+        "projectPath": "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\DomainEntity\\DomainEntity.csproj",
+        "packagesPath": "C:\\Users\\Alpha Master\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\DomainEntity\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Alpha Master\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }

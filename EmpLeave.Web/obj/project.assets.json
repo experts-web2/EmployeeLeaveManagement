@@ -1762,19 +1762,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dell\\.nuget\\packages\\": {}
+    "C:\\Users\\Alpha Master\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\EmployeeLeaveManagement\\EmpLeave.Web\\EmpLeave.Web.csproj",
+      "projectUniqueName": "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\EmpLeave.Web\\EmpLeave.Web.csproj",
       "projectName": "EmpLeave.Web",
-      "projectPath": "C:\\Projects\\EmployeeLeaveManagement\\EmpLeave.Web\\EmpLeave.Web.csproj",
-      "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\EmployeeLeaveManagement\\EmpLeave.Web\\obj\\",
+      "projectPath": "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\EmpLeave.Web\\EmpLeave.Web.csproj",
+      "packagesPath": "C:\\Users\\Alpha Master\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Alpha Master\\source\\repos\\EmployeeLeaveManagement\\EmpLeave.Web\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Alpha Master\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1824,7 +1824,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-            "version": "[6.0.12, 6.0.12]"
+            "version": "[6.0.22, 6.0.22]"
           }
         ],
         "frameworkReferences": {
@@ -1832,7 +1832,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {
