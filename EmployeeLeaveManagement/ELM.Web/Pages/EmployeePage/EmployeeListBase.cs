@@ -3,7 +3,7 @@ using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using ELM.Helper;
-
+using DomainEntity.Models;
 
 namespace EmpLeave.Web.Pages.EmployeePage
 {

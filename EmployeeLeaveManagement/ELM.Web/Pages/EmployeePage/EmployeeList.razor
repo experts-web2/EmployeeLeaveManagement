@@ -1,10 +1,11 @@
 ﻿@page "/listofemployee"
+@using DTOs;
 @using EmpLeave.Web.Pages.EmployeePage;
 @inherits EmployeeListBase
 @attribute [Authorize]
 <h3>Employees List</h3>
 
-<div class="row">
+@* <div class="row">
    
     <div class="input-group mb-3">
         <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
@@ -22,11 +23,33 @@
     </div>
    
 </div>
-<br />
-@if (EmployeeDtoList == null)
+<br /> *@
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@EmployeeDtoList" TItem="EmployeeDto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="ID" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+      @*   <RadzenDataGridColumn TItem="EmployeeDto" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
+       
+        </RadzenDataGridColumn> *@
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="FirstName" Title="First Name" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="LastName" Title="Last Name" Width="160px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="Email" Title="Email" Width="200px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="DateOfBrith" Title="DateOfBrith" Width="120px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="Address" Title="Address" FormatString="{0:d}" Width="160px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="Gender" Title="Gender" FormatString="{0:d}" Width="160px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="Address" Title="Address" Width="200px" />
+        <RadzenDataGridColumn TItem="EmployeeDto" Property="CurrentSalary" Title="CurrentSalary" Width="160px" />
+    </Columns>
+</RadzenDataGrid>
+
+@* @if (EmployeeDtoList == null)
 {
     <p><em>Loading...</em></p>
 }
+
+
+
 else
 {
     <table class="table table-striped align-middle table-bordered">
@@ -61,7 +84,7 @@ else
                         </button>
                         @*<a @onclick="()=>SetEmployeeID(employee.ID)"  class="button" data-bs-toggle="model" data-bs-target="#exampleModal" role="button">details</a>*@
 
-                    </td>
+                   @*  </td>
                     <td  style="width:15%;">
                         <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
                         @onclick="(() => DeleteConfirm(employee.ID))">
@@ -117,10 +140,10 @@ else
         </div>
     </div>
 }
-
+ *@
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -166,4 +189,4 @@ else
             CurrentPage="Paging.CurrentPage"
             HasNext="Paging.HasNext"
             HasPrevious="Paging.HasPrevious"
-            TotalPages="Paging.TotalPages" />
+            TotalPages="Paging.TotalPages" /> *@ 
