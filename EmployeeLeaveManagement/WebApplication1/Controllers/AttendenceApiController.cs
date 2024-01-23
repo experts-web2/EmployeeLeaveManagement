@@ -12,7 +12,7 @@ namespace EmpLeave.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class AttendenceApiController : ControllerBase
     {
         private IAttendenceService _attendenceService;

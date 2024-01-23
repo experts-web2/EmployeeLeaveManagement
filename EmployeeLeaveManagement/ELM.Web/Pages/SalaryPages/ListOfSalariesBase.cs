@@ -19,8 +19,12 @@ namespace ELM.Web.Pages.SalaryPages
 
         protected override async Task OnInitializedAsync()
         {
-            employeeList = await EmployeeService.GetAllEmployee();
             await GetAllSalaries();
+        }
+
+        public async Task PayLoan()
+        {
+            await _salaryService.AddSalary();
         }
 
         public async Task<List<SalaryDto>> GetAllSalaries()

@@ -82,7 +82,7 @@ namespace BL.Service
             LoanInstallmentHistory loanInstallmentHistory = new();
             int allowedLeaves = 20;
 
-            if (salaryHistory!.Employee.Leaves.Count > allowedLeaves)
+            if (salaryHistory != null && salaryHistory!.Employee.Leaves.Count > allowedLeaves)
             {
                 salary.LeaveDeduction = calculateLeaveWithSalaryDedection(salaryHistory, allowedLeaves);  
                 salary.CurrentSalary = (decimal)salaryHistory.NewSalary;
@@ -90,7 +90,7 @@ namespace BL.Service
                 salary.Perks = 0;
                 salary.TotalDedection = salary.LeaveDeduction + salary.LoanDeduction;
                 salary.TotalSalary = salary.CurrentSalary - salary.TotalDedection + salary.Perks;
-                loan.RemainingAmount = loan.LoanAmount - loan.InstallmentAmount;
+                loan.RemainingAmount = loan.RemainingAmount - loan.InstallmentAmount;
                 _loanRepository.update(loan);
                 loanInstallmentHistory.InstallmentAmount = loan.InstallmentAmount;
                 loanInstallmentHistory.LoanId = loan.Id;
@@ -98,7 +98,7 @@ namespace BL.Service
 
             }
 
-            else if(loan.LoanAmount > 0)
+            else if(loan!= null && loan.RemainingAmount > 0 && loan.LoanAmount > 0)
             {
                 salary.CurrentSalary = (decimal)salaryHistory.NewSalary;
                 salary.LeaveDeduction = 0;
@@ -107,7 +107,7 @@ namespace BL.Service
                 salary.LoanDeduction = loan!.InstallmentAmount;
                 salary.TotalDedection = salary.LoanDeduction + salary.GeneralDeduction;
                 salary.TotalSalary = salary.CurrentSalary - salary.TotalDedection + salary.Perks;
-                loan.RemainingAmount = loan.LoanAmount - loan!.InstallmentAmount;
+                loan.RemainingAmount = loan.RemainingAmount - loan!.InstallmentAmount;
                 _loanRepository.update(loan);
                 loanInstallmentHistory.InstallmentAmount = loan.InstallmentAmount;
                 loanInstallmentHistory.LoanId = loan.Id;
@@ -117,7 +117,7 @@ namespace BL.Service
 
             else 
             {
-                salary.CurrentSalary = (decimal)salaryHistory.NewSalary;
+                salary.CurrentSalary = (decimal)salaryHistory.NewSalary > 0 ? (decimal)salaryHistory.NewSalary : 0;
                 salary.LeaveDeduction = 0;
                 salary.LoanDeduction = 0;
                 salary.TotalDedection = 0;

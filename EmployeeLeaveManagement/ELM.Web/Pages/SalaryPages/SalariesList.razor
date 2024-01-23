@@ -4,6 +4,10 @@
 
 <h3>List OF Salaries</h3>
 
+<div>
+    <button type="button" class="btn btn-primary" @onclick="PayLoan">PayLoan</button>
+</div>
+
 @*<div class="row">
     <div class="input-group mb-3">
         <EditForm Model="Paging" OnValidSubmit="()=>GetAllSalaries()">
@@ -69,8 +73,8 @@ else
                 <th>Leave Deduction</th>
                 <th>Loan Deduction</th>
                 <th>Total Dedection</th>
-                <th>Total Salary</th>
                 <th>Perks</th>
+                <th>Total Salary</th>
 
             </tr>
         </thead>
@@ -83,8 +87,8 @@ else
                     <td>@salary.LeaveDeduction</td>
                     <td>@salary.LoanDeduction</td>
                     <td>@salary.TotalDedection</td>
-                    <td>@salary.TotalSalary</td>
                     <td>@salary.Perks</td>
+                    <td>@salary.TotalSalary</td>
 
                 </tr>
             }

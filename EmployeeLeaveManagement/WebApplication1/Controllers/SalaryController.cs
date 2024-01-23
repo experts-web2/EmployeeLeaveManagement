@@ -19,7 +19,7 @@ namespace EmpLeave.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddSalary(int employeeId)
+        public IActionResult AddSalary([FromBody]int employeeId)
         {
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;

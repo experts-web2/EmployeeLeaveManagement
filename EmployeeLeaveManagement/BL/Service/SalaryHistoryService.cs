@@ -7,6 +7,7 @@ using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -17,23 +18,56 @@ namespace BL.Service
     public class SalaryHistoryService:ISalaryHistoryService
     {
         private readonly ISalaryHistoryRepository _salaryHistoryRepository;
-        public SalaryHistoryService(ISalaryHistoryRepository salaryHistoryRepository)
+        private readonly ISalaryRepository _salaryRepository;
+        public SalaryHistoryService(ISalaryHistoryRepository salaryHistoryRepository, ISalaryRepository salaryRepository)
         {
             _salaryHistoryRepository = salaryHistoryRepository;
+            _salaryRepository = salaryRepository;
         }
 
         public void AddSalary(SalaryHistoryDto salaryDto)
         {
             try
             {
+                Salary salaryResponse = new();
                 SalaryHistory salary = ToEntity(salaryDto);
                 _salaryHistoryRepository.Add(salary);
+                var employeeSalaryExisted = _salaryRepository.GetByID(salaryDto.EmployeeId!.Value);
+                if (employeeSalaryExisted != null)
+                {
+                    salaryResponse = AddOrUpdateSalary(salaryDto, employeeSalaryExisted);
+                    _salaryRepository.update(salaryResponse);
+                }
+                else
+                {
+                    salaryResponse = AddOrUpdateSalary(salaryDto);
+                    _salaryRepository.Add(salaryResponse);
+                }
+                //_salaryRepository.Add(new Salary() { CurrentSalary = (decimal)salary.NewSalary, TotalSalary = (decimal)salary.NewSalary, EmployeeId = salary.EmployeeId!.Value});
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+
+        public Salary AddOrUpdateSalary(SalaryHistoryDto salaryDto, Salary? DbSalary = null)
+        {
+            if (DbSalary is null)
+            {
+                DbSalary = new Salary() 
+                { 
+                    CreatedDate = DateTime.Now
+                };
+            }
+            else
+            {
+                DbSalary.ModifiedDate = DateTime.Now;
+            }
+            DbSalary.CurrentSalary = (decimal)salaryDto.NewSalary;
+            DbSalary.TotalSalary = (decimal)salaryDto.NewSalary;
+            return DbSalary;
         }
 
         public void DeleteSalary(int id)

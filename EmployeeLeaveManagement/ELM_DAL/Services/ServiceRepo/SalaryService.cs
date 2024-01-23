@@ -25,6 +25,15 @@ namespace ELM_DAL.Services.ServiceRepo
             _clientFactory = httpClientFactory;
         }
 
+        public async Task AddSalary()
+        {
+            await SetToken();
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}Salary", employeeId);
+        }
+
         public async Task<List<SalaryDto>?> GetSalaries()
         {
 
