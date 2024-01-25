@@ -47,6 +47,12 @@ namespace BL.Service
             return setLoanDtoEntity(Loan);
         }
 
+        public List<LoanDto> GetLoanByEmployeeId(int EmployeeId)
+        {
+            var Loan = _loanRepository.Get(x=>x.EmployeeId == EmployeeId, y=>y.Employee);
+            return Loan.Select(setLoanDtoEntity).ToList();
+        }
+
         public LoanDto Update(LoanDto loanDto)
         {
            var addedLoanOfEmployee = _loanRepository.GetLoanWithEmployeeId(loanDto.EmployeeId);

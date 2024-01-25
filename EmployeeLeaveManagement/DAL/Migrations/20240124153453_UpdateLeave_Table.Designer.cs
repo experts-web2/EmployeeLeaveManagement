@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240124153453_UpdateLeave_Table")]
+    partial class UpdateLeave_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,54 +213,6 @@ namespace DAL.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Leaves");
-                });
-
-            modelBuilder.Entity("DomainEntity.Models.LeaveHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LeaveId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NumberOfLeaves")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("leaveEnum")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LeaveId");
-
-                    b.ToTable("LeaveHistories");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Loan", b =>
@@ -689,17 +643,6 @@ namespace DAL.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("DomainEntity.Models.LeaveHistory", b =>
-                {
-                    b.HasOne("DomainEntity.Models.Leave", "Leave")
-                        .WithMany("LeaveHistories")
-                        .HasForeignKey("LeaveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Leave");
-                });
-
             modelBuilder.Entity("DomainEntity.Models.Loan", b =>
                 {
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
@@ -822,11 +765,6 @@ namespace DAL.Migrations
 
                     b.Navigation("User")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DomainEntity.Models.Leave", b =>
-                {
-                    b.Navigation("LeaveHistories");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Loan", b =>

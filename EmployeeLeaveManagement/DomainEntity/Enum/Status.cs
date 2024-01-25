@@ -8,7 +8,6 @@ namespace DomainEntity.Enum
 {
     public enum Status
     {
-        Applied,
         Under_Approval,
         Cancel,
         Approved

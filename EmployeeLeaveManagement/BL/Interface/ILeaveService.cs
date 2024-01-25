@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 
 namespace BL.Interface
@@ -7,9 +8,10 @@ namespace BL.Interface
     {
         PagedList<LeaveDto> GetAll(Pager pager);
         LeaveDto GetById(int id);
-        LeaveDto Add(LeaveDto leave);
+        //LeaveDto Add(LeaveDto leave);
         void Delete(int id);
-        void Update(LeaveDto leave);
+        Leave Update(LeaveDto leave);
         Task<List<LeaveDto>> GetLeavesByEmployeeID(int employeeId);
+        void AddorUpdate(LeaveDto leaveDto);
     }
 }

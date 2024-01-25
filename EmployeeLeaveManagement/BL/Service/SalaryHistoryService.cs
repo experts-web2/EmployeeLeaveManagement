@@ -65,6 +65,7 @@ namespace BL.Service
             {
                 DbSalary.ModifiedDate = DateTime.Now;
             }
+            DbSalary.EmployeeId = salaryDto.EmployeeId!.Value;
             DbSalary.CurrentSalary = (decimal)salaryDto.NewSalary;
             DbSalary.TotalSalary = (decimal)salaryDto.NewSalary;
             return DbSalary;

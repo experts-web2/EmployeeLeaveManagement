@@ -10,16 +10,26 @@ namespace ELM.Web.Pages.Loan_Pages
     {
         [Inject]
         private ILoanService loanService { get; set; }
+        [Inject]
+        private ILoanInstallmentHistoryService loanInstallmentHistoryService { get; set; }
 
         public List<LoanDto> loanDtos = new List<LoanDto>();
+        public List<LoanInstallmentHistoryDto> loanInstallmentHistoryDtos = new List<LoanInstallmentHistoryDto>();
 
         protected override async Task OnInitializedAsync()
         {
             await GetLoans();
+            loanInstallmentHistoryDtos = await loanInstallmentHistoryService.GetEmployeeLoanInstallmentHistory();
         }
         public async Task GetLoans()
         {
-           loanDtos = await loanService.GetLoans();
+           var response = await loanService.GetLoans();
+            if (response != null)
+            {
+                loanDtos = response;
+            }
+            else
+                loanDtos = new();
         }
 
     }

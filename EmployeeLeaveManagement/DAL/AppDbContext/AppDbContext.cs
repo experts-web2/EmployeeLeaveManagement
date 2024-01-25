@@ -29,6 +29,7 @@ namespace DAL
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanInstallmentHistory> LoanInstallmentHistories { get; set; }
+        public DbSet<LeaveHistory> LeaveHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

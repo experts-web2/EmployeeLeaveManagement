@@ -32,14 +32,15 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
 
         protected async Task SaveLeave()
         {
-            if (ID.HasValue)
-            {
-                await LeaveService.EditLeave(LeaveDto);
-            }
-            else
-            {
-                await LeaveService.AddLeave(LeaveDto);
-            }
+            await LeaveService.AddLeave(LeaveDto);
+            //if (ID.HasValue)
+            //{
+            //    await LeaveService.EditLeave(LeaveDto);
+            //}
+            //else
+            //{
+            //    await LeaveService.AddLeave(LeaveDto);
+            //}
             Cancel();
         }
 

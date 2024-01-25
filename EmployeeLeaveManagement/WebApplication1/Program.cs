@@ -35,6 +35,8 @@ builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddScoped<ISalaryRepository, SalaryRepository>();
 builder.Services.AddScoped<ILoanInstallmentHistoryService, LoanInstallmentHistoryService>();
 builder.Services.AddScoped<ILoanInstallmentHistoryRepository, LoanInstallmentHistoryRepository>();
+builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
+builder.Services.AddScoped<IleaveHistoryService, LeaveHistoryService>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

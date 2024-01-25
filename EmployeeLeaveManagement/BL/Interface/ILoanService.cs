@@ -16,5 +16,6 @@ namespace BL.Interface
         LoanDto GetById(int id);
         LoanDto Update(LoanDto loanDto);
         List<LoanDto> GetAllLoans();
+        List<LoanDto> GetLoanByEmployeeId(int EmployeeId);
     }
 }

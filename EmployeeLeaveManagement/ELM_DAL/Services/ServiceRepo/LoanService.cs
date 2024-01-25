@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,8 +51,15 @@ namespace ELM_DAL.Services.ServiceRepo
 
         public async Task<List<LoanDto>> GetLoans()
         {
-            SetToken();
-           return await _httpService.GetFromJsonAsync<List<LoanDto>>($"{Apiroute()}Loan");
+           await SetToken();
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            
+            if (user.IsInRole("Admin"))
+            {
+                return await _httpService.GetFromJsonAsync<List<LoanDto>>($"{Apiroute()}Loan");
+            }
+            return await _httpService.GetFromJsonAsync<List<LoanDto>>($"{Apiroute()}Loan/GetLoanByEmployeeId");
         }
 
         public Task UpdateLoan(LoanDto loanDto)

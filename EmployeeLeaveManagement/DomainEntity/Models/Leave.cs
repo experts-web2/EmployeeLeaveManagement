@@ -1,7 +1,6 @@
 ﻿
 using DomainEntity.Enum;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata.Ecma335;
 
 namespace DomainEntity.Models
 {
@@ -11,6 +10,7 @@ namespace DomainEntity.Models
         public DateTime EndTime { get; set; }=DateTime.Now.AddDays(1);
         public Status Status { get; set; }
         public LeaveEnum leaveEnum { get; set; }
+        public int NumberOfLeaves { get; set; }
         //public TimeSpan Duration { get; set; }
         //public string? Comment { get; set; }
         //public int RemainingLeaves { get; set; }
@@ -18,6 +18,7 @@ namespace DomainEntity.Models
         [ForeignKey(nameof(Employee))]
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
+        public List<LeaveHistory>? LeaveHistories { get; set; }
      
     }
 }

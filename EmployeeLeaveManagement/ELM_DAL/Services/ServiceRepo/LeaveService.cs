@@ -43,7 +43,7 @@ namespace ELM_DAL.Services.ServiceRepo
                 if (user.IsInRole("Admin"))
                     response = await _httpService.PostAsync($"{Apiroute()}leave/getall", Content);
                 else
-                    response = await _httpService.PostAsync($"{Apiroute()}leave/GetLeavesByEmployeeId/{int.Parse(employeeId)}", Content);
+                    response = await _httpService.GetAsync($"{Apiroute()}leave/GetLeavesByEmployeeId/{employeeId}");
                 if (!response.IsSuccessStatusCode)
                     return new Response<LeaveDto>();
 

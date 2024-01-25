@@ -4,6 +4,7 @@
     {
         Urgent_Work,
         Sick_Leave,
-        Half_leave
+        Half_Leave,
+        Full_Leave
     }
 }

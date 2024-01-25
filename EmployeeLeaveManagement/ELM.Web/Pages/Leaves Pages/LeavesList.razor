@@ -31,6 +31,7 @@ else
                 <th>Status</th>
                 <th>Leave Type</th>
                 <th>Employee</th>
+                <th>Total Leave</th>
                 
                 <th class="colspan-2">Actions</th>
             </tr>
@@ -44,6 +45,7 @@ else
                     <td>@leave.Status</td>
                     <td>@leave.LeaveEnum</td>
                     <td>@leave.EmployeeName.ToString()</td>
+                    <td>@leave.TotalLeaves</td>
                     <td  style="width:15%;">
                         <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpModal"
                         @onclick="(() => DeleteConfirm(leave.ID))">
@@ -98,6 +100,38 @@ else
             </div>
         </div>
     </div>
+    <AuthorizeView Roles="User">
+        <h2>Leave History</h2>
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>CreatedDate</th>
+                <th>Leave Type</th>
+                <th>Employee Id</th>
+                <th>Number of Leave</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var LeaveHistory in leaveHistories)
+            {
+                <tr>
+                    <td>@LeaveHistory.StartTime</td>
+                    <td>@LeaveHistory.EndTime</td>
+                    <td>@LeaveHistory.Status</td>
+                    <td>@LeaveHistory.CreatedDate</td>
+                    <td>@LeaveHistory.leaveEnum</td>
+                    <td>@LeaveHistory.EmployeeId</td>
+                    <td>@LeaveHistory.NumberOfLeaves</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+    </AuthorizeView>
 }
 <Pagination ChangePage="GetAll"
             CurrentPage="Paging.CurrentPage"

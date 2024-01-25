@@ -1,4 +1,6 @@
 using Blazored.LocalStorage;
+using DAL.Interface;
+using DAL.Repositories;
 using ELM.Shared;
 using ELM.Web.Data;
 using ELM.Web.Services.Interface;
@@ -37,6 +39,8 @@ builder.Services.AddScoped<ISalaryHistory, SalaryHistoryService>();
 builder.Services.AddScoped<ISalaryService, SalaryService>();
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<ILoanInstallmentHistoryService, LoanInstallmentHistoryService>();
+builder.Services.AddScoped<ILeaveHistoryService, LeaveHistoryService>();
 builder.Services.AddBlazoredLocalStorage(); 
 builder.Services.AddHttpClient("api",async o =>
 {

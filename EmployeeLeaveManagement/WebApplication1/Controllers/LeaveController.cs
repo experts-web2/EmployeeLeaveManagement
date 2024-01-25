@@ -26,8 +26,9 @@ namespace EmpLeave.Api.Controllers
             var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (leaveDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
                 leaveDto.EmployeeId = RoleID;
-                var response = _leaveService.Add(leaveDto);
-            return Ok(response);
+
+            _leaveService.AddorUpdate(leaveDto);
+            return Ok();
         }
         [HttpPost("getall")]
         public IActionResult GelAllLeaves(Pager pager)
@@ -70,10 +71,11 @@ namespace EmpLeave.Api.Controllers
             var leaveDto = _leaveService.GetById(id);
             return Ok(leaveDto);
         }
+
         [HttpGet("GetLeavesByEmployeeId/{employeeId}")]
-        public  IActionResult GetLeavesByEmployeeId(int id)
+        public  IActionResult GetLeavesByEmployeeId(int employeeId)
         {
-            var leaves = _leaveService.GetLeavesByEmployeeID(id).GetAwaiter().GetResult();
+            var leaves = _leaveService.GetLeavesByEmployeeID(employeeId).GetAwaiter().GetResult();
             if (leaves != null)
                 return Ok(leaves);
             return BadRequest();

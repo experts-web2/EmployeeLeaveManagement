@@ -8,27 +8,20 @@
 <EditForm Model="@LeaveDto" OnValidSubmit="SaveLeave">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label for="Name" class="form-label">Start Date</label>
+        <label for="StartDate" class="form-label">Start Date</label>
         <div class="col-md-4">
             <InputDate class="form-control" @bind-Value="LeaveDto.StartTime" />
         </div>
         <ValidationMessage For="@(() => LeaveDto.StartTime)" />
     </div>
     <div class="mb-3">
-        <label for="Address" class="form-label">End Date</label>
+        <label for="EndDate" class="form-label">End Date</label>
         <div class="col-md-4">
             <InputDate class="form-control" @bind-Value="LeaveDto.EndTime" />
         </div>
         <ValidationMessage For="@(() => LeaveDto.EndTime)" />
     </div>
 
-    <InputSelect class="form-control-sm" @bind-Value="LeaveDto.Status">
-        <option selected disabled value="-1">Leave Status</option>
-        @foreach (var attr in Enum.GetValues(typeof(Status)))
-        {
-            <option value="@attr">@attr</option>
-        }
-    </InputSelect>
     <InputSelect class="form-control-sm" @bind-Value="LeaveDto.LeaveEnum">
         <option selected disabled value="-1">Leave Types</option>
         @foreach (var attr in Enum.GetValues(typeof(LeaveEnum)))
@@ -39,6 +32,14 @@
     <AuthorizeView Roles="Admin">
         <ChildContent Context="authContext">
             <div class="form-group">
+                <label>Leave Status</label>
+                <InputSelect class="form-control-sm" @bind-Value="LeaveDto.Status">
+                    <option selected disabled value="-1">Leave Status</option>
+                    @foreach (var attr in Enum.GetValues(typeof(Status)))
+                    {
+                        <option value="@attr">@attr</option>
+                    }
+                </InputSelect>
                 <label>EMPLOYEE NAME</label>
                 <InputSelect class="form-control" @bind-Value="LeaveDto.EmployeeId">
                     <option selected disabled value="0">Employee Name List</option>

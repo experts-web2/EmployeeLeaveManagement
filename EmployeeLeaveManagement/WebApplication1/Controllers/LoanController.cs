@@ -2,6 +2,7 @@
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EmpLeave.Api.Controllers
 {
@@ -40,6 +41,18 @@ namespace EmpLeave.Api.Controllers
             return Ok(allLoanList);
         }
 
-
+        [HttpGet("GetLoanByEmployeeId")]
+        public IActionResult GetLoanByEmployeeId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var ClaimEmployeeId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(ClaimEmployeeId, out int employeeID)) 
+            {
+                var allLoanList = _loanService.GetLoanByEmployeeId(employeeID);
+                return Ok(allLoanList);
+            }
+            return Ok(null);
+            
+        }
     }
 }
