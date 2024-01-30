@@ -10,7 +10,7 @@ namespace DomainEntity.Models
         public DateTime EndTime { get; set; }=DateTime.Now.AddDays(1);
         public Status Status { get; set; }
         public LeaveEnum leaveEnum { get; set; }
-        public int NumberOfLeaves { get; set; }
+        public float NumberOfLeaves { get; set; }
         //public TimeSpan Duration { get; set; }
         //public string? Comment { get; set; }
         //public int RemainingLeaves { get; set; }

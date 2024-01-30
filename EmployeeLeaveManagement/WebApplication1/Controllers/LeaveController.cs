@@ -24,6 +24,8 @@ namespace EmpLeave.Api.Controllers
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var ClaimRoleId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var ClaimRole = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+           
             if (leaveDto.EmployeeId is null && ClaimRoleId is not null && int.TryParse(ClaimRoleId, out int RoleID) && RoleID > 0)
                 leaveDto.EmployeeId = RoleID;
 

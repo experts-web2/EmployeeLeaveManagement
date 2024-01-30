@@ -1,6 +1,7 @@
 ﻿using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
+using ELM.Shared;
 using ELM.Web.Services.Interface;
 using ELM_DAL.Services.Interface;
 using EmpLeave.Web.Services.Interface;
@@ -23,6 +24,8 @@ namespace ELM.Web.Pages.Attendence_Page
         public IAttendenceService AttendenceService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        [Inject]
+        private IAuthService authService { get; set; }
         public AttendenceDto AttendenceDto { get; set; } = new();
         public AlertDto AlertDto { get; set; } = new();
         public List<Employee> EmployeesList { get; set; } = new();
@@ -64,6 +67,15 @@ namespace ELM.Web.Pages.Attendence_Page
             }
             var authenticationState = await authenticationStateTask;
             var user = authenticationState.User;
+            var res =long.Parse(user.Claims.FirstOrDefault(x => x.Type == "exp").Value);
+
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(res);
+            DateTime dateTime = dateTimeOffset.LocalDateTime;
+            if(dateTime < DateTime.Now)
+            {
+                NavigationManager.NavigateTo("/logout");
+            }
+
             isAdmin = user.IsInRole("Admin");
 
             if (AlertDate != DateTime.MinValue && EmployeeId > 0)

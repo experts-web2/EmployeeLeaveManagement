@@ -27,14 +27,14 @@ namespace ELM_DAL.Services.ServiceRepo
             
         }
 
-        public async Task<List<LeaveHistory>> GetLeaveHistoryByEmployeeId()
+        public async Task<List<LeaveHistoryDto>> GetLeaveHistoryByEmployeeId()
         {
             SetToken();
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
             string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return await _httpService.GetFromJsonAsync<List<LeaveHistory>>($"{Apiroute()}LeaveHistory/LeaveHistoryofEmployee/{employeeId}");
+            return await _httpService.GetFromJsonAsync<List<LeaveHistoryDto>>($"{Apiroute()}LeaveHistory/LeaveHistoryofEmployee/{employeeId}");
         }
     }
 }

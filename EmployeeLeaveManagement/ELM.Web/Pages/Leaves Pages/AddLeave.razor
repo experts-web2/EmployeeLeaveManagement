@@ -32,14 +32,18 @@
     <AuthorizeView Roles="Admin">
         <ChildContent Context="authContext">
             <div class="form-group">
-                <label>Leave Status</label>
-                <InputSelect class="form-control-sm" @bind-Value="LeaveDto.Status">
-                    <option selected disabled value="-1">Leave Status</option>
-                    @foreach (var attr in Enum.GetValues(typeof(Status)))
-                    {
-                        <option value="@attr">@attr</option>
-                    }
-                </InputSelect>
+                <div>
+                    <label>Leave Status</label>
+                    <div>
+                    <InputSelect class="form-control-sm" @bind-Value="LeaveDto.Status">
+                        <option selected disabled value="-1">Leave Status</option>
+                        @foreach (var attr in Enum.GetValues(typeof(Status)))
+                        {
+                            <option value="@attr">@attr</option>
+                        }
+                    </InputSelect>
+                    </div>
+                </div>
                 <label>EMPLOYEE NAME</label>
                 <InputSelect class="form-control" @bind-Value="LeaveDto.EmployeeId">
                     <option selected disabled value="0">Employee Name List</option>

@@ -41,7 +41,7 @@ namespace ELM_DAL.Services.ServiceRepo
 
                 result.Token = await response.Content.ReadAsStringAsync();
                 CookieOptions options = new CookieOptions();
-                options.Expires = DateTime.Now.AddDays(1);
+                options.Expires = DateTime.Now.AddDays(-1);
                 httpContextAccessor?.HttpContext?.Request.Cookies.Append(new KeyValuePair<string, string>("jwt", result.Token ) );
                 await _localStorage.SetItemAsync("jwt", result.Token);
                 ((ApiAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result.Token);

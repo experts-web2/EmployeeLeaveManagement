@@ -25,7 +25,6 @@ namespace EmpLeave.Web.Pages.Leaves_Pages
             await GetEmployees();
             if (ID.HasValue)
             {
-
                 LeaveDto = await LeaveService.GetByIdCall(ID.Value);
             }
         }

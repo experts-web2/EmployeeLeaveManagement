@@ -6,8 +6,11 @@
 
 @code {
 
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
     protected override async Task OnInitializedAsync()
     {
+
         await authService.Logout();
         navigationManager.NavigateTo("/login");
         StateHasChanged();

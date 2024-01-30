@@ -6,6 +6,7 @@ using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.ObjectPool;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq.Expressions;
 
@@ -41,47 +42,61 @@ namespace BL.Service
 
         public void AddorUpdate(LeaveDto leaveDto)
         {
-            if (leaveDto.StartTime != DateTime.Today && leaveDto.EndTime !> DateTime.Today.AddDays(1) )
+            if (!(leaveDto.EndTime >= DateTime.Today))
             {
                 return;
             }
-            if (leaveDto.LeaveEnum == LeaveEnum.Half_Leave)
-            {
-                leaveDto.StartTime = DateTime.Now;
-            }
-            Leave leaveResponse = new Leave();
+            Leave leaveResponse = new();
+            LeaveHistory? DbleaveHistory = new();
+            TimeSpan DayDifference = leaveDto.EndTime - leaveDto.StartTime ;
             try
             {
                 var existedLeavesOfEmployee = _leaveRepository.Get(x => x.EmployeeId == leaveDto.EmployeeId, y=>y.Employee).FirstOrDefault();
+
                 if (existedLeavesOfEmployee != null) 
                 {
                     if (leaveDto.Status == Status.Approved)
                     {
-                        leaveResponse = Update(leaveDto);
-                        var DbleaveHistory = _leaveHistoryRepository.Get(x => x.EmployeeId == leaveDto.EmployeeId && x.LeaveId == leaveResponse.Id, y=>y.Leave).OrderByDescending(x=>x.CreatedDate).FirstOrDefault();
+                        leaveResponse = Update(leaveDto, existedLeavesOfEmployee);
+                        DbleaveHistory = _leaveHistoryRepository.Get(x => x.EmployeeId == leaveDto.EmployeeId && x.LeaveId == leaveResponse.Id, y=>y.Leave).OrderByDescending(x=>x.CreatedDate).FirstOrDefault();
                         if (DbleaveHistory != null)
                         {
                             DbleaveHistory.Status = Status.Approved;
+                           // DbleaveHistory.NumberOfLeaves = leaveResponse.NumberOfLeaves - DbleaveHistory.NumberOfLeaves;
                             _leaveHistoryRepository.update(DbleaveHistory);
                         }
                     }
                     else if (leaveDto.Status == Status.Cancel)
                     {
-
+                        leaveResponse = Update(leaveDto);
+                        DbleaveHistory = _leaveHistoryRepository.Get(x => x.EmployeeId == leaveDto.EmployeeId && x.LeaveId == leaveDto.ID, y => y.Leave).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+                        if (DbleaveHistory != null)
+                        {
+                            DbleaveHistory.Status = Status.Cancel;
+                            _leaveHistoryRepository.update(DbleaveHistory);
+                        }
                     }
                     else
                     {
-                        leaveResponse = setLeaveEntity(leaveDto, existedLeavesOfEmployee);
-                        _leaveRepository.update(leaveResponse);
+                        if (leaveDto.StartTime != existedLeavesOfEmployee.StartTime && leaveDto.EndTime != existedLeavesOfEmployee.EndTime)
+                        {
+                            leaveResponse = setLeaveEntity(leaveDto, existedLeavesOfEmployee);
+                            _leaveRepository.update(leaveResponse);
+                            _leaveHistoryRepository.Add(new LeaveHistory() { StartTime = leaveDto.StartTime, EndTime = leaveDto.EndTime, CreatedDate = leaveDto.CreatedDate, EmployeeId = leaveDto.EmployeeId!.Value, Status = leaveDto.Status, leaveEnum = leaveDto.LeaveEnum, LeaveId = leaveResponse.Id, NumberOfLeaves = FindDayDifference(DayDifference.Days, leaveDto.LeaveEnum) });
+
+                        }
+                        else
+                            return;
                     }
-                    
+
                 }
                 else
                 {
                     leaveResponse = setLeaveEntity(leaveDto);
                     _leaveRepository.Add(leaveResponse);
+                    _leaveHistoryRepository.Add(new LeaveHistory() { StartTime = leaveDto.StartTime, EndTime = leaveDto.EndTime, CreatedDate = leaveDto.CreatedDate, EmployeeId = leaveDto.EmployeeId!.Value, Status = leaveDto.Status, leaveEnum = leaveDto.LeaveEnum, LeaveId = leaveResponse.Id , NumberOfLeaves = FindDayDifference(DayDifference.Days, leaveDto.LeaveEnum) });
+
                 }
-                _leaveHistoryRepository.Add(new LeaveHistory() {StartTime = leaveDto.StartTime, EndTime = leaveDto.EndTime, CreatedDate = leaveDto.CreatedDate, EmployeeId = leaveDto.EmployeeId!.Value , Status = leaveDto.Status, leaveEnum = leaveDto.LeaveEnum, LeaveId = leaveResponse.Id });
             }
             catch (Exception)
             {
@@ -90,6 +105,18 @@ namespace BL.Service
             }
         }
 
+        private float FindDayDifference(int Days , LeaveEnum leaveEnum)
+        {
+            if (Days == 0 && leaveEnum == LeaveEnum.Half_Leave)
+                return 0.5f;
+            else if (Days == 0)
+                return Days + 1;
+            else if( Days < 0)
+                return 0;
+            else
+                return Days + 1;
+        } 
+
         private Leave setLeaveEntity(LeaveDto leaveDto, Leave DbLeave = null)
         {
             TimeSpan DayDifference = leaveDto.EndTime - leaveDto.StartTime; 
@@ -97,15 +124,13 @@ namespace BL.Service
             {
                 DbLeave = new Leave();
                 DbLeave.CreatedDate = DateTime.Now;
-                if (DayDifference.Days >= 1)
-                {
-                    DbLeave.NumberOfLeaves = DayDifference.Days;
-                }
-                else
-                {
-                    //DbLeave.NumberOfLeaves = 0.5f;
-                };
-                
+                //if (DayDifference.Days == 0)
+                //{
+                //    DbLeave.NumberOfLeaves = DayDifference.Days + 1;
+                //}
+                //else
+                //    DbLeave.NumberOfLeaves = DayDifference.Days + 1;
+
             }
             else
             {
@@ -230,10 +255,14 @@ namespace BL.Service
                 throw;
             }
         }
-        public Leave Update(LeaveDto leaveDto)
+        public Leave Update(LeaveDto leaveDto , Leave dbLeave = null)
         {
             try
             {
+                if (leaveDto.ID <= 0)
+                {
+                    leaveDto.ID = dbLeave.Id;
+                }
                 var leave=_leaveRepository.GetByID(leaveDto.ID);
                 ToEntity(leave,leaveDto);
                 _leaveRepository.update(leave);
@@ -249,12 +278,23 @@ namespace BL.Service
         private void ToEntity(Leave leave, LeaveDto leaveDto)
         {
             TimeSpan dayDifference = leave.EndTime - leave.StartTime;
+          
             try
             {
                 leave.StartTime = leaveDto.StartTime;
                 leave.EndTime = leaveDto.EndTime;
                 leave.Status = leaveDto.Status;
-                leave.NumberOfLeaves += dayDifference.Days;
+                if (leaveDto.Status == Status.Cancel)
+                    leave.NumberOfLeaves += 0;
+                else if (LeaveEnum.Half_Leave == leaveDto.LeaveEnum)
+                    leave.NumberOfLeaves += 0.5f;
+                else if (dayDifference.Days == 0)
+                {
+                    leave.NumberOfLeaves += 1;
+                }
+                else
+                    leave.NumberOfLeaves += dayDifference.Days + 1;
+
             }
             catch (Exception)
             {
@@ -268,7 +308,7 @@ namespace BL.Service
             try
             {
                 var leave = _leaveRepository.Get(x => x.EmployeeId == employeeId, x => x.Employee);
-                var dtos = ToDtos( leave.ToList());
+                var dtos = ToDtos(leave.ToList());
                 return dtos;
             }
             catch (Exception)

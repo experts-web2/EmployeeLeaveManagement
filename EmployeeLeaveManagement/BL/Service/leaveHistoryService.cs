@@ -1,6 +1,7 @@
 ﻿using BL.Interface;
 using DAL.Interface;
 using DomainEntity.Models;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,25 @@ namespace BL.Service
         {
             _leaveHistoryRepository = leaveHistoryRepository;
         }
-        public List<LeaveHistory> GetLeaveHistoryByEmployeeId(int EmployeeId)
+        public List<LeaveHistoryDto> GetLeaveHistoryByEmployeeId(int EmployeeId)
         {
-           return _leaveHistoryRepository.Get(x=>x.EmployeeId == EmployeeId).ToList();
+           var response = _leaveHistoryRepository.Get(x=>x.EmployeeId == EmployeeId, y=>y.Leave.Employee).OrderByDescending(x=>x.CreatedDate).ToList();
+            return response.Select(ToSetLeaveDto).ToList();
+        }
+
+        public LeaveHistoryDto ToSetLeaveDto(LeaveHistory leaveHistory)
+        {
+            return new()
+            {
+                StartTime = leaveHistory.StartTime,
+                EndTime = leaveHistory.EndTime,
+                Status = leaveHistory.Status,
+                leaveEnum = leaveHistory.leaveEnum,
+                NumberOfLeaves = leaveHistory.NumberOfLeaves,
+                EmployeeName = leaveHistory.Leave.Employee.FirstName,
+                CreatedDate = leaveHistory.CreatedDate
+            };
+
         }
     }
 }

@@ -40,8 +40,8 @@ else
             @foreach (var leave in LeaveDtosList)
             {
                 <tr>
-                    <td>@leave.StartTime</td>
-                    <td>@leave.EndTime</td>
+                    <td>@leave.StartTime.ToShortDateString()</td>
+                    <td>@leave.EndTime.ToShortDateString()</td>
                     <td>@leave.Status</td>
                     <td>@leave.LeaveEnum</td>
                     <td>@leave.EmployeeName.ToString()</td>
@@ -101,7 +101,7 @@ else
         </div>
     </div>
     <AuthorizeView Roles="User">
-        <h2>Leave History</h2>
+        <h2>@EmployeeName : Leave History</h2>
     <table class="table table-striped align-middle table-bordered">
         <thead class="table-success">
             <tr>
@@ -110,7 +110,6 @@ else
                 <th>Status</th>
                 <th>CreatedDate</th>
                 <th>Leave Type</th>
-                <th>Employee Id</th>
                 <th>Number of Leave</th>
 
             </tr>
@@ -119,18 +118,20 @@ else
             @foreach (var LeaveHistory in leaveHistories)
             {
                 <tr>
-                    <td>@LeaveHistory.StartTime</td>
-                    <td>@LeaveHistory.EndTime</td>
+                    <td>@LeaveHistory.StartTime.ToShortDateString()</td>
+                        <td>@LeaveHistory.EndTime.ToShortDateString()</td>
                     <td>@LeaveHistory.Status</td>
                     <td>@LeaveHistory.CreatedDate</td>
                     <td>@LeaveHistory.leaveEnum</td>
-                    <td>@LeaveHistory.EmployeeId</td>
                     <td>@LeaveHistory.NumberOfLeaves</td>
                     
                 </tr>
             }
         </tbody>
     </table>
+    <div>
+            <h3>Total Leave : @TotalLeave</h3>
+    </div>
     </AuthorizeView>
 }
 <Pagination ChangePage="GetAll"

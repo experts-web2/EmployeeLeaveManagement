@@ -1,4 +1,5 @@
 ﻿using DomainEntity.Models;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace BL.Interface
 {
     public interface IleaveHistoryService
     {
-        List<LeaveHistory> GetLeaveHistoryByEmployeeId(int EmployeeId);
+        List<LeaveHistoryDto> GetLeaveHistoryByEmployeeId(int EmployeeId);
     }
 }

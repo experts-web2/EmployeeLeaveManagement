@@ -1,4 +1,5 @@
 ﻿using DomainEntity.Models;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace ELM_DAL.Services.Interface
 {
     public interface ILeaveHistoryService
     {
-        public Task<List<LeaveHistory>> GetLeaveHistoryByEmployeeId();
+        public Task<List<LeaveHistoryDto>> GetLeaveHistoryByEmployeeId();
     }
 }

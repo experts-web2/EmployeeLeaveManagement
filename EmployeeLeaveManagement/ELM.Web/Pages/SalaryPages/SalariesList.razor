@@ -5,6 +5,14 @@
 <h3>List OF Salaries</h3>
 
 <div>
+    <select @bind="EmployeeId">
+        <option value="">Select an option</option>
+        @foreach (var option in employeeList)
+        {
+            <option value="@option.Id">@option.FirstName</option>
+        }
+    </select>
+  
     <button type="button" class="btn btn-primary" @onclick="PayLoan">PayLoan</button>
 </div>
 

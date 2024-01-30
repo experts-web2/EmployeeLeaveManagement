@@ -17,13 +17,17 @@ namespace ELM.Web.Pages.SalaryPages
         public List<SalaryDto> salaryDtos = new();
         public List<Employee> employeeList = new();
 
+        public int EmployeeId { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
+            employeeList = await EmployeeService.GetAllEmployee();
             await GetAllSalaries();
         }
 
         public async Task PayLoan()
         {
+            int id = EmployeeId;
             await _salaryService.AddSalary();
         }
 

@@ -10,7 +10,7 @@ namespace BL.Interface
         LeaveDto GetById(int id);
         //LeaveDto Add(LeaveDto leave);
         void Delete(int id);
-        Leave Update(LeaveDto leave);
+        Leave Update(LeaveDto leave, Leave DbLeave = null);
         Task<List<LeaveDto>> GetLeavesByEmployeeID(int employeeId);
         void AddorUpdate(LeaveDto leaveDto);
     }
