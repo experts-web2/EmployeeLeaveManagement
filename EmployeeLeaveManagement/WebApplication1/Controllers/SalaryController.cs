@@ -19,7 +19,7 @@ namespace EmpLeave.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddSalary([FromBody]int employeeId)
+        public IActionResult AddorUpdateSalary([FromBody]int employeeId)
         {
 
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -30,6 +30,13 @@ namespace EmpLeave.Api.Controllers
                 return Ok("AddedorUpdate");
             }
             return BadRequest();
+        }
+
+        [HttpPost("UpdateEmployeeSalary")]
+        public IActionResult UpdateEmployeeSalary(SalaryDto salaryDto) 
+        {
+            var response = _salaryService.UpdateEmployeeSalary(salaryDto);
+            return Ok(response);
         }
 
         [HttpGet]

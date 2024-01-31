@@ -67,14 +67,6 @@ namespace ELM.Web.Pages.Attendence_Page
             }
             var authenticationState = await authenticationStateTask;
             var user = authenticationState.User;
-            var res =long.Parse(user.Claims.FirstOrDefault(x => x.Type == "exp").Value);
-
-            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(res);
-            DateTime dateTime = dateTimeOffset.LocalDateTime;
-            if(dateTime < DateTime.Now)
-            {
-                NavigationManager.NavigateTo("/logout");
-            }
 
             isAdmin = user.IsInRole("Admin");
 

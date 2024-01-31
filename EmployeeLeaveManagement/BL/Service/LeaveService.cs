@@ -16,10 +16,12 @@ namespace BL.Service
     {
         private readonly ILeaveRepository _leaveRepository;
         private readonly ILeaveHistoryRepository _leaveHistoryRepository;
-        public LeaveService(ILeaveRepository leaveRepository, ILeaveHistoryRepository leaveHistoryRepository)
+        private readonly IAlertRepository _alertRepository;
+        public LeaveService(ILeaveRepository leaveRepository, ILeaveHistoryRepository leaveHistoryRepository, IAlertRepository alertRepository)
         {
             _leaveRepository = leaveRepository;
             _leaveHistoryRepository = leaveHistoryRepository;
+            _alertRepository = alertRepository;
         }
         //public LeaveDto Add(LeaveDto leaveDto)
         //{
@@ -65,6 +67,7 @@ namespace BL.Service
                            // DbleaveHistory.NumberOfLeaves = leaveResponse.NumberOfLeaves - DbleaveHistory.NumberOfLeaves;
                             _leaveHistoryRepository.update(DbleaveHistory);
                         }
+                        _alertRepository.Add(new Alert() { AlertDate = DateTime.Now, AlertType = "Leave", EmployeeId = leaveDto.EmployeeId, CreatedDate = DateTime.Now });
                     }
                     else if (leaveDto.Status == Status.Cancel)
                     {
@@ -83,7 +86,7 @@ namespace BL.Service
                             leaveResponse = setLeaveEntity(leaveDto, existedLeavesOfEmployee);
                             _leaveRepository.update(leaveResponse);
                             _leaveHistoryRepository.Add(new LeaveHistory() { StartTime = leaveDto.StartTime, EndTime = leaveDto.EndTime, CreatedDate = leaveDto.CreatedDate, EmployeeId = leaveDto.EmployeeId!.Value, Status = leaveDto.Status, leaveEnum = leaveDto.LeaveEnum, LeaveId = leaveResponse.Id, NumberOfLeaves = FindDayDifference(DayDifference.Days, leaveDto.LeaveEnum) });
-
+                            _alertRepository.Add(new Alert() { AlertDate = DateTime.Now, AlertType = "Leave", EmployeeId = leaveDto.EmployeeId, CreatedDate = DateTime.Now });
                         }
                         else
                             return;

@@ -11,6 +11,7 @@ namespace ELM_DAL.Services.Interface
     public interface ISalaryService
     {
         Task<List<SalaryDto>?> GetSalaries();
-        Task AddSalary();   
+        Task PayLoanOfEmployee(int EmployeeId); 
+        Task<string> UpdateEmployeeSalaryAsync(SalaryDto salary);
     }
 }

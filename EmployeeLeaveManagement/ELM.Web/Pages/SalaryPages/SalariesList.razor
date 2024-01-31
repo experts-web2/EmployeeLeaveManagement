@@ -2,9 +2,9 @@
 @using ELM.Web.Pages.SalaryPages;
 @inherits ListOfSalariesBase
 
-<h3>List OF Salaries</h3>
+<h3>Salaries</h3>
 
-<div>
+@* <div>
     <select @bind="EmployeeId">
         <option value="">Select an option</option>
         @foreach (var option in employeeList)
@@ -14,7 +14,7 @@
     </select>
   
     <button type="button" class="btn btn-primary" @onclick="PayLoan">PayLoan</button>
-</div>
+</div> *@
 
 @*<div class="row">
     <div class="input-group mb-3">
@@ -86,21 +86,45 @@ else
 
             </tr>
         </thead>
-        <tbody>
-            @foreach (var salary in salaryDtos)
-            {
-                <tr>
-                    <td>@salary.EmployeeName</td>
-                    <td>@salary.CurrentSalary</td>
-                    <td>@salary.LeaveDeduction</td>
-                    <td>@salary.LoanDeduction</td>
-                    <td>@salary.TotalDedection</td>
-                    <td>@salary.Perks</td>
-                    <td>@salary.TotalSalary</td>
+        <AuthorizeView Roles="Admin">
+            <tbody>
 
-                </tr>
-            }
-        </tbody>
+                @foreach (var salary in salaryDtos)
+                {
+                    <tr>
+                        <td>@salary.EmployeeName</td>
+                        <td><input @bind="salary.CurrentSalary" /></td>
+                        <td><input @bind="salary.LeaveDeduction" /></td>
+                        <td><input @bind="salary.LoanDeduction" /></td>
+                        <td><input @bind="salary.TotalDedection" /></td>
+                        <td><input @bind="salary.Perks" /></td>
+                        <td><input @bind="salary.TotalSalary " /></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" @onclick="async (e) => {var message = await UpdateEmployeeSalary(salary);
+                             ShowAlert(message);}">Save</button></td>
+                    </tr>
+                }
+                <button type="button" class="btn btn-primary" @onclick=" (e) =>   ListOfEmployeeSalaries(salaryDtos)">Save</button>
+            </tbody>
+        </AuthorizeView>
+        <AuthorizeView Roles="User">
+            <tbody>
+
+                @foreach (var salary in salaryDtos)
+                {
+                    <tr>
+                        <td>@salary.EmployeeName</td>
+                        <td>@salary.CurrentSalary</td>
+                        <td>@salary.LeaveDeduction</td>
+                        <td>@salary.LoanDeduction</td>
+                        <td>@salary.TotalDedection</td>
+                        <td>@salary.Perks</td>
+                        <td>@salary.TotalSalary</td>
+                    </tr>
+                }
+
+            </tbody>
+        </AuthorizeView>
     </table>
     }
 

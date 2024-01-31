@@ -1,15 +1,17 @@
 ﻿@page "/ListOfLoans"
 
 @inherits ListOfLoansBase
-<h3>ListOfLoans</h3>
+<h3>Loan</h3>
 
 
+@* <AuthorizeView Roles="Admin">
 <div class="col-md-6">
     <a href='/AddLoan' class="btn btn-primary" role="button">
         <i class="fas fa-user-plus"></i>
         Add Loan
     </a>
 </div>
+</AuthorizeView> *@
 @if (loanDtos == null)
 {
     <p><em>Loading...</em></p>

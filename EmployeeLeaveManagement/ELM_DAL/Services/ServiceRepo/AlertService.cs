@@ -24,7 +24,7 @@ public sealed class AlertService : ServiceBase, IAlertService
         try
         {
             await SetToken();
-            AlertService hjh = new AlertService(_httpService, _configuration, _jsRuntime, _authenticationStateProvider);
+            //AlertService hjh = new AlertService(_httpService, _configuration, _jsRuntime, _authenticationStateProvider);
             string data = JsonConvert.SerializeObject(paging);
             StringContent Content = new StringContent(data, Encoding.UTF8, "application/json");
 

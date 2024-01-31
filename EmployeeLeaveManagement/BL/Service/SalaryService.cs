@@ -48,6 +48,58 @@ namespace BL.Service
             }
         }
 
+        public string UpdateEmployeeSalary(SalaryDto salaryDto)
+        {
+            if (salaryDto != null)
+            {
+                var DbSalaryRecord = _salaryRepository.GetByID(salaryDto.ID);
+                var SalaryResponse = setEntity(salaryDto, DbSalaryRecord);
+                _salaryRepository.update(SalaryResponse);
+                if (salaryDto.LoanDeduction > 0 && salaryDto.EmployeeId != null)
+                {
+                    LoanInstallmentHistory loanInstallmentHistory = new();
+                    var loan = _loanRepository.GetLoanWithEmployeeId(salaryDto.EmployeeId.Value);
+                    if (loan != null && loan.RemainingAmount > 0 && loan.LoanAmount > 0)
+                    {
+                        loan.RemainingAmount = loan.RemainingAmount - loan!.InstallmentAmount;
+                        loan.ModifiedDate = DateTime.Now;
+                        _loanRepository.update(loan);
+                        loanInstallmentHistory.InstallmentAmount = loan.InstallmentAmount;
+                        loanInstallmentHistory.LoanId = loan.Id;
+                        _loanInstallmentHistoryRepository.Add(loanInstallmentHistory);
+                    }
+                }
+                return  "Salary Record Updated";
+            }
+            else
+                return "Record Not Updated";
+
+        }
+
+        private Salary setEntity(SalaryDto salaryDto , Salary DbSalary = null)
+        {
+            if (DbSalary == null)
+            {
+                DbSalary = new Salary()
+                {
+                    CreatedDate = DateTime.Now,
+
+                };
+            }
+            else
+                DbSalary.ModifiedDate = DateTime.Now;
+
+            DbSalary.EmployeeId = salaryDto.EmployeeId.Value != 0 ? salaryDto.EmployeeId.Value : 0;
+            DbSalary.LoanDeduction = salaryDto.LoanDeduction;
+            DbSalary.LeaveDeduction = salaryDto.LeaveDeduction;
+            DbSalary.GeneralDeduction = salaryDto.GeneralDeduction;
+            DbSalary.TotalDedection = salaryDto.TotalDedection;
+            DbSalary.Perks = salaryDto.Perks;
+            DbSalary.CurrentSalary = salaryDto.CurrentSalary;
+            DbSalary.TotalSalary = salaryDto.TotalSalary;
+            return DbSalary;
+        }
+
         public List<SalaryDto> GetAllSalary()
         {
            var allSalaries = _salaryRepository.GetAll().Include(x=>x.Employee);
@@ -58,6 +110,8 @@ namespace BL.Service
         {
             var salaryDto = new SalaryDto()
             {
+                 ID = salary.Id,
+                 EmployeeId = salary.EmployeeId,
                  LeaveDeduction = salary.LeaveDeduction,
                  LoanDeduction  = salary.LoanDeduction,
                  TotalDedection = salary.TotalDedection,

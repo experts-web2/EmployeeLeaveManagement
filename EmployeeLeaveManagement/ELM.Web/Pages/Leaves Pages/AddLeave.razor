@@ -3,40 +3,45 @@
 @using DomainEntity.Enum;
 @using EmpLeave.Web.Pages.Leaves_Pages;
 @inherits AddLeaveBase
-<h3>AddLeave</h3>
+<h3>Leave Form</h3>
 
 <EditForm Model="@LeaveDto" OnValidSubmit="SaveLeave">
     <DataAnnotationsValidator />
     <div class="mb-3">
         <label for="StartDate" class="form-label">Start Date</label>
         <div class="col-md-4">
-            <InputDate class="form-control" @bind-Value="LeaveDto.StartTime" />
+            <InputDate class="form-control" style="width:35%" @bind-Value="LeaveDto.StartTime" />
         </div>
         <ValidationMessage For="@(() => LeaveDto.StartTime)" />
     </div>
     <div class="mb-3">
         <label for="EndDate" class="form-label">End Date</label>
         <div class="col-md-4">
-            <InputDate class="form-control" @bind-Value="LeaveDto.EndTime" />
+            <InputDate class="form-control" style="width:35%" @bind-Value="LeaveDto.EndTime" />
         </div>
         <ValidationMessage For="@(() => LeaveDto.EndTime)" />
     </div>
-
-    <InputSelect class="form-control-sm" @bind-Value="LeaveDto.LeaveEnum">
-        <option selected disabled value="-1">Leave Types</option>
-        @foreach (var attr in Enum.GetValues(typeof(LeaveEnum)))
-        {
-            <option value="@attr">@attr</option>
-        }
-    </InputSelect>
+    <div>
+        <label>Leave Types</label>
+        <div>
+            <InputSelect class="form-control-sm" style="width:12%" @bind-Value="LeaveDto.LeaveEnum">
+            <option selected disabled value="-1">Leave Types</option>
+            @foreach (var attr in Enum.GetValues(typeof(LeaveEnum)))
+            {
+                <option value="@attr">@attr</option>
+            }
+        </InputSelect>
+        </div>
+    </div>
+    <br />
     <AuthorizeView Roles="Admin">
         <ChildContent Context="authContext">
             <div class="form-group">
                 <div>
                     <label>Leave Status</label>
                     <div>
-                    <InputSelect class="form-control-sm" @bind-Value="LeaveDto.Status">
-                        <option selected disabled value="-1">Leave Status</option>
+                        <InputSelect class="form-control-sm" style="width:12%" @bind-Value="LeaveDto.Status">
+                        <option selected disabled value="1">Leave Status</option>
                         @foreach (var attr in Enum.GetValues(typeof(Status)))
                         {
                             <option value="@attr">@attr</option>
@@ -44,9 +49,10 @@
                     </InputSelect>
                     </div>
                 </div>
+                <br />
                 <label>EMPLOYEE NAME</label>
-                <InputSelect class="form-control" @bind-Value="LeaveDto.EmployeeId">
-                    <option selected disabled value="0">Employee Name List</option>
+                <InputSelect class="form-control" style="width:12%" @bind-Value="LeaveDto.EmployeeId">
+                    <option selected disabled value="0">Employee List</option>
                     @foreach (var employee in EmployeeDtosList)
                     {
                         <option value="@employee.ID">@employee.FirstName</option>
@@ -55,6 +61,7 @@
             </div>
         </ChildContent>
     </AuthorizeView>
+    <br />
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Save</button>
         <button class="btn btn-light" @onclick="Cancel">Cancel</button>

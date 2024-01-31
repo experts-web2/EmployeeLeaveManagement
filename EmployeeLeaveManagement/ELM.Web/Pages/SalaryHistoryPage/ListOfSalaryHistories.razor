@@ -1,7 +1,7 @@
 ﻿@page "/ListOfSalaryHistory"
 @using ELM.Web.Pages.SalaryHistoryPage;
 @inherits ListOfSalaryHistoriesBase
-<h3>List Of Salaries</h3>
+<h3> Salary </h3>
 <div class="row">
     <div class="input-group mb-3">
         <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
@@ -32,7 +32,7 @@
                         <label class="mb-2">Employee Name</label>
                         <div class="col-md-10">
                             <InputSelect class="form-control" @bind-Value="Search">
-                                <option selected disabled value="0">Employee Name List</option>
+                                <option selected disabled value="-1">Employee Name List</option>
                                 @foreach (var employee in EmployeesList)
                                 {
                                     <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
@@ -42,15 +42,10 @@
                     </div>
                 </ChildContent>
             </AuthorizeView>
-            <button>Search</button>
+            <button type="submit">Search</button>
         </EditForm>
     </div>
-    <div class="col-md-6">
-        <a href='/Add_Salary' class="btn btn-primary" role="button">
-            <i class="fas fa-user-plus"></i>
-            Add Salary
-        </a>
-    </div>
+   
 </div>
 <br />
 @if (SalaryDtoList == null)
@@ -59,13 +54,30 @@
 }
 else
 {
+    <div>
+        <AuthorizeView Roles="Admin">
+            <ChildContent Context="authContext">
+                <div class="col-md-6">
+                    <a href='/Add_Salary' class="btn btn-primary" role="button">
+                        <i class="fas fa-user-plus"></i>
+                        Add Salary
+                    </a>
+                </div>
+            </ChildContent>
+        </AuthorizeView>
+    </div>
+    <br />
     <table class="table table-striped align-middle table-bordered">
         <thead class="table-success">
             <tr>
                 <th>New Salary</th>
                 <th>Increment Date</th>
                 <th>Employee Name</th>
-                <th class="colspan-2">Actions</th>
+                <AuthorizeView Roles="Admin">
+                    <ChildContent Context="authContext">
+                        <th class="colspan-2">Actions</th>
+                    </ChildContent>
+                </AuthorizeView>
             </tr>
         </thead>
         <tbody>
@@ -75,15 +87,19 @@ else
                     <td>@salary.NewSalary</td>
                     <td>@salary.IncrementDate.ToString("dd/MM/yy")</td>
                     <td>@salary.FirstName  @salary.LastName</td>
-                    <td style="width:15%;">
-                        <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
-                        @onclick="(() => DeleteConfirm(salary.ID))">
-                          Delete
-                        </button>
-                        <a href='/edit/salary/@salary.ID' style="width: 58px; height: 38px;" class="btn btn-outline-dark" role="button">
-                            Edit
-                        </a>
-                    </td>
+                    <AuthorizeView Roles="Admin">
+                        <ChildContent Context="authContext">
+                            <td style="width:15%;">
+                                <button style="width: 65px; height: 40px;" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSalaryModel"
+                                @onclick="(() => DeleteConfirm(salary.ID))">
+                                  Delete
+                                </button>
+                                <a href='/edit/salary/@salary.ID' style="width: 58px; height: 38px;" class="btn btn-outline-dark" role="button">
+                                    Edit
+                                </a>
+                            </td>
+                        </ChildContent>
+                    </AuthorizeView>
                 </tr>
             }
         </tbody>

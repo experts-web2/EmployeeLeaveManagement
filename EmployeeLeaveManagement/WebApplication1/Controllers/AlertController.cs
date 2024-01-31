@@ -46,7 +46,8 @@ namespace EmpLeave.Api.Controllers
         [HttpGet("getAbsent")]
         public ActionResult GetAllAbsentEmployee()
         {
-            RecurringJob.AddOrUpdate("AlertRecurringJob", () => _alertService.AddAbsentEmployeeAlert(), "0 0 * * MON-FRI");
+            //RecurringJob.AddOrUpdate("AlertRecurringJob", () => _alertService.AddAbsentEmployeeAlert(), "0 0 * * MON-FRI");
+
             return Ok(_alertService.AddAbsentEmployeeAlert());
         }
         [HttpGet("GetAlerts")]

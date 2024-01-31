@@ -19,6 +19,7 @@ namespace BL.Interface
         void Update(SalaryDto Salary);
         List<SalaryDto> GetAllSalary();
         List<SalaryDto> GetAllSalariesByEmployeeId(int employeeId);
+        string UpdateEmployeeSalary(SalaryDto salaryDto);
     }
 }
 

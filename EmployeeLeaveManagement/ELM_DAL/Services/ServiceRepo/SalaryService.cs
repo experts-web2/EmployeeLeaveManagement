@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DomainEntity.Models;
+using DTOs;
 using ELM.Helper;
 using ELM_DAL.Services.Interface;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -25,13 +26,13 @@ namespace ELM_DAL.Services.ServiceRepo
             _clientFactory = httpClientFactory;
         }
 
-        public async Task AddSalary()
+        public async Task PayLoanOfEmployee(int EmployeeId)
         {
-            await SetToken();
-            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-            string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}Salary", employeeId);
+            //await SetToken();
+            //var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            //var user = authState.User;
+            //string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}Salary", EmployeeId);
         }
 
         public async Task<List<SalaryDto>?> GetSalaries()
@@ -39,7 +40,6 @@ namespace ELM_DAL.Services.ServiceRepo
 
             try
             {
-               
                 await SetToken();               
                 var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
                 var user = authState.User;
@@ -54,6 +54,13 @@ namespace ELM_DAL.Services.ServiceRepo
             {
                 throw;
             }
+        }
+
+        public async Task<string> UpdateEmployeeSalaryAsync(SalaryDto salary)
+        {
+            await SetToken();
+            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}Salary/UpdateEmployeeSalary", salary);
+            return response.Content.ReadAsStringAsync().Result;
         }
     }
 }

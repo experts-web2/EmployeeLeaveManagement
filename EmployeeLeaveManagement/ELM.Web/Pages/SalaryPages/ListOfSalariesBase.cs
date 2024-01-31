@@ -4,6 +4,7 @@ using ELM_DAL.Services.Interface;
 using EmpLeave.Web.Services.Interface;
 using Microsoft.AspNetCore.Components;
 using DomainEntity.Models;
+using Microsoft.JSInterop;
 
 namespace ELM.Web.Pages.SalaryPages
 {
@@ -13,9 +14,12 @@ namespace ELM.Web.Pages.SalaryPages
         private ISalaryService _salaryService { get; set; }
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
 
         public List<SalaryDto> salaryDtos = new();
         public List<Employee> employeeList = new();
+        public string ResponseMessage = string.Empty;
 
         public int EmployeeId { get; set; }
 
@@ -25,10 +29,23 @@ namespace ELM.Web.Pages.SalaryPages
             await GetAllSalaries();
         }
 
+        public async Task<string> UpdateEmployeeSalary(SalaryDto salaryDto)
+        {
+            return await _salaryService.UpdateEmployeeSalaryAsync(salaryDto);
+        }
+        public async Task ShowAlert(string message)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", message);
+        }
+
+        public void ListOfEmployeeSalaries(List<SalaryDto> salaryDtos)
+        {
+            var res = salaryDtos;
+        }
+
         public async Task PayLoan()
         {
-            int id = EmployeeId;
-            await _salaryService.AddSalary();
+            await _salaryService.PayLoanOfEmployee(EmployeeId);
         }
 
         public async Task<List<SalaryDto>> GetAllSalaries()
