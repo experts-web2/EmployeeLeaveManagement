@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240202120936_UpdateEmployeeTable")]
+    partial class UpdateEmployeeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +61,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Alerts", (string)null);
+                    b.ToTable("Alerts");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Attendence", b =>
@@ -114,7 +116,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Attendences", (string)null);
+                    b.ToTable("Attendences");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Employee", b =>
@@ -164,7 +166,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Leave", b =>
@@ -210,7 +212,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Leaves", (string)null);
+                    b.ToTable("Leaves");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.LeaveHistory", b =>
@@ -258,7 +260,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("LeaveId");
 
-                    b.ToTable("LeaveHistories", (string)null);
+                    b.ToTable("LeaveHistories");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Loan", b =>
@@ -312,7 +314,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Loans", (string)null);
+                    b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.LoanInstallmentHistory", b =>
@@ -345,7 +347,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("LoanId");
 
-                    b.ToTable("LoanInstallmentHistories", (string)null);
+                    b.ToTable("LoanInstallmentHistories");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.Salary", b =>
@@ -396,7 +398,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Salaries", (string)null);
+                    b.ToTable("Salaries");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.SalaryHistory", b =>
@@ -438,7 +440,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("SalaryId");
 
-                    b.ToTable("SalaryHistories", (string)null);
+                    b.ToTable("SalaryHistories");
                 });
 
             modelBuilder.Entity("DomainEntity.Models.User", b =>

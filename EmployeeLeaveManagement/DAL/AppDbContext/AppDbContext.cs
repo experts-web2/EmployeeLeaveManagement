@@ -30,6 +30,8 @@ namespace DAL
         public DbSet<Loan> Loans { get; set; }
         public DbSet<LoanInstallmentHistory> LoanInstallmentHistories { get; set; }
         public DbSet<LeaveHistory> LeaveHistories { get; set; }
+        public DbSet<DailyTask> DailyTasks { get; set; }
+        public DbSet<DailyTimeSheet> DailyTimeSheets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

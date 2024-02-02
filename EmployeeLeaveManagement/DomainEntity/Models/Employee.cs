@@ -23,7 +23,8 @@ namespace DomainEntity.Models
         public ICollection<Attendence> Attendences { get; set; }
         public ICollection<SalaryHistory> SalaryHistories { get; set; }
         public virtual User User { get; set; }
-        public Salary? Salary { get; set; }
+        public List<Salary>? Salaries { get; set; }
         public ICollection<Loan>? Loans { get; set; }
+        public List<DailyTask>? DailyTasks { get; set; }
     }
 }

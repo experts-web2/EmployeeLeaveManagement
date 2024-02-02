@@ -61,9 +61,18 @@ namespace BL.Service
                     {
                         salaryDto.LoanDeduction = 0;
                     }
-                    var DbSalaryRecord = _salaryRepository.GetByID(salaryDto.ID);
-                    var SalaryResponse = setEntity(salaryDto, DbSalaryRecord);
-                    _salaryRepository.update(SalaryResponse);
+                    var DbSalaryRecord = _salaryRepository.GetByExpression(x=>x.Id== salaryDto.ID && x.CreatedDate.Value.Month == DateTime.Now.Month);
+                    
+                    if (DbSalaryRecord != null)
+                    {
+                        var SalaryResponse = setEntity(salaryDto, DbSalaryRecord);
+                        _salaryRepository.update(SalaryResponse);
+                    }
+                    else
+                    {
+                        var SalaryResponse = setEntity(salaryDto, DbSalaryRecord);
+                        _salaryRepository.Add(SalaryResponse);
+                    }
                     if (salaryDto.LoanDeduction > 0 && salaryDto.EmployeeId != null)
                     {
                         LoanInstallmentHistory loanInstallmentHistory = new();
@@ -112,7 +121,13 @@ namespace BL.Service
 
         public List<SalaryDto> GetAllSalary()
         {
-           var allSalaries = _salaryRepository.GetAll().Include(x=>x.Employee).ThenInclude(y=>y.Loans).Include(x => x.Employee.Leaves);
+           var allSalaries = _salaryRepository.GetAll().Where(x=>x.ModifiedDate.Value.Month == DateTime.Now.Month).Include(x=>x.Employee).ThenInclude(y=>y.Loans).Include(x => x.Employee.Leaves);
+            var res = allSalaries.ToList();
+            if (!allSalaries.Any())
+            {
+                 allSalaries = _salaryRepository.GetAll().Where(x => x.CreatedDate.Value.Month == DateTime.Now.Month).Include(x => x.Employee).ThenInclude(y => y.Loans).Include(x => x.Employee.Leaves);
+            }
+
             return allSalaries.Select(ToSalaryDto).ToList();                
         }
 
@@ -131,12 +146,13 @@ namespace BL.Service
                  TotalLeaves = salary.Employee.Leaves.Where(y=>y.StartTime.Year == DateTime.Now.Year).Sum(x=>x.NumberOfLeaves),
                  RemainingLoan = salary.Employee.Loans != null ? salary.Employee.Loans.Sum(x=>x.RemainingAmount) : 0,
                  CreatedDate = salary.CreatedDate,
+                 ModifiedDate = salary.ModifiedDate != null ? salary.ModifiedDate : DateTime.Now ,
             };
             return salaryDto;
         }
         public List<SalaryDto> GetAllSalariesByEmployeeId(int employeeId)
         {
-           var listOfEmployeeSalary= _salaryRepository.GetAll().Include(y=>y.Employee).ThenInclude(x=>x.Loans).Include(x => x.Employee).ThenInclude(x => x.Leaves).Where(x => x.EmployeeId == employeeId);
+           var listOfEmployeeSalary= _salaryRepository.GetAll().Where(x => x.EmployeeId == employeeId).Include(y=>y.Employee).ThenInclude(x=>x.Loans).Include(x => x.Employee).ThenInclude(x => x.Leaves).OrderByDescending(x => x.ModifiedDate);
             return listOfEmployeeSalary.Select(ToSalaryDto).ToList();
         }
         public void setSalaryEntity(Salary? salary)
