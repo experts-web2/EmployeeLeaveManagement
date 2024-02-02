@@ -4,14 +4,17 @@
 <h3>Loan</h3>
 
 
-@* <AuthorizeView Roles="Admin">
-<div class="col-md-6">
-    <a href='/AddLoan' class="btn btn-primary" role="button">
-        <i class="fas fa-user-plus"></i>
-        Add Loan
-    </a>
-</div>
-</AuthorizeView> *@
+ <AuthorizeView Roles="Admin">
+    <ChildContent Context="authContext">
+        <div class="col-md-6">
+            <a href='/AddLoan' class="btn btn-primary" role="button">
+                <i class="fas fa-user-plus"></i>
+                Add Loan
+            </a>
+        </div>
+    </ChildContent>
+</AuthorizeView> 
+<br />
 @if (loanDtos == null)
 {
     <p><em>Loading...</em></p>
@@ -63,7 +66,6 @@ else
             <thead class="table-success">
                 <tr>
                     <th>Installment Amount</th>
-                    <th>LoanId</th>
                     <th>Debit By</th>
                     <th>Debit Date</th>
                    
@@ -74,7 +76,6 @@ else
                 {
                     <tr>
                         <td>@loanInstallment.InstallmentAmount</td>
-                        <td>@loanInstallment.LoanId</td>
                         <td>@loanInstallment.CreatedBy</td>
                         <td>@loanInstallment.CreatedDate</td>
                         

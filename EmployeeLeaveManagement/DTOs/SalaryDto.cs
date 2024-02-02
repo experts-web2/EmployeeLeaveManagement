@@ -19,5 +19,7 @@ namespace DTOs
         public int? EmployeeId { get; set; } 
         public string EmployeeName { get; set; }
         public List<SalaryHistory>? SalaryHistories { get; set; }
+        public float TotalLeaves { get; set; }
+        public decimal RemainingLoan { get; set;}
     }
 }

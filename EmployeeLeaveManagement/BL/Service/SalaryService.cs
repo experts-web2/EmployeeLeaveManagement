@@ -1,5 +1,7 @@
 ﻿using BL.Interface;
 using DAL.Interface;
+using DAL.Repositories;
+using DomainEntity.Enum;
 using DomainEntity.Models;
 using DTOs;
 using ELM.Helper;
@@ -48,28 +50,36 @@ namespace BL.Service
             }
         }
 
-        public string UpdateEmployeeSalary(SalaryDto salaryDto)
+        public string UpdateEmployeeSalary(List<SalaryDto> salaryDtos)
         {
-            if (salaryDto != null)
+            if (salaryDtos != null)
             {
-                var DbSalaryRecord = _salaryRepository.GetByID(salaryDto.ID);
-                var SalaryResponse = setEntity(salaryDto, DbSalaryRecord);
-                _salaryRepository.update(SalaryResponse);
-                if (salaryDto.LoanDeduction > 0 && salaryDto.EmployeeId != null)
+                foreach (var salaryDto in salaryDtos)
                 {
-                    LoanInstallmentHistory loanInstallmentHistory = new();
                     var loan = _loanRepository.GetLoanWithEmployeeId(salaryDto.EmployeeId.Value);
-                    if (loan != null && loan.RemainingAmount > 0 && loan.LoanAmount > 0)
+                    if (loan == null || loan.RemainingAmount <= 0)
                     {
-                        loan.RemainingAmount = loan.RemainingAmount - loan!.InstallmentAmount;
-                        loan.ModifiedDate = DateTime.Now;
-                        _loanRepository.update(loan);
-                        loanInstallmentHistory.InstallmentAmount = loan.InstallmentAmount;
-                        loanInstallmentHistory.LoanId = loan.Id;
-                        _loanInstallmentHistoryRepository.Add(loanInstallmentHistory);
+                        salaryDto.LoanDeduction = 0;
+                    }
+                    var DbSalaryRecord = _salaryRepository.GetByID(salaryDto.ID);
+                    var SalaryResponse = setEntity(salaryDto, DbSalaryRecord);
+                    _salaryRepository.update(SalaryResponse);
+                    if (salaryDto.LoanDeduction > 0 && salaryDto.EmployeeId != null)
+                    {
+                        LoanInstallmentHistory loanInstallmentHistory = new();
+                        
+                        if (loan != null && loan.RemainingAmount > 0 && loan.LoanAmount > 0 && !(salaryDto.LoanDeduction > loan.RemainingAmount))
+                        {
+                            loan.RemainingAmount = loan.RemainingAmount - salaryDto.LoanDeduction;
+                            loan.ModifiedDate = DateTime.Now;
+                            _loanRepository.update(loan);
+                            loanInstallmentHistory.InstallmentAmount = salaryDto.LoanDeduction;
+                            loanInstallmentHistory.LoanId = loan.Id;
+                            _loanInstallmentHistoryRepository.Add(loanInstallmentHistory);
+                        }
                     }
                 }
-                return  "Salary Record Updated";
+                return "Salary Record Updated";
             }
             else
                 return "Record Not Updated";
@@ -93,16 +103,16 @@ namespace BL.Service
             DbSalary.LoanDeduction = salaryDto.LoanDeduction;
             DbSalary.LeaveDeduction = salaryDto.LeaveDeduction;
             DbSalary.GeneralDeduction = salaryDto.GeneralDeduction;
-            DbSalary.TotalDedection = salaryDto.TotalDedection;
+            DbSalary.TotalDedection = salaryDto.LoanDeduction + salaryDto.LeaveDeduction + salaryDto.GeneralDeduction;
             DbSalary.Perks = salaryDto.Perks;
             DbSalary.CurrentSalary = salaryDto.CurrentSalary;
-            DbSalary.TotalSalary = salaryDto.TotalSalary;
+            DbSalary.TotalSalary = DbSalary.CurrentSalary - DbSalary.TotalDedection;
             return DbSalary;
         }
 
         public List<SalaryDto> GetAllSalary()
         {
-           var allSalaries = _salaryRepository.GetAll().Include(x=>x.Employee);
+           var allSalaries = _salaryRepository.GetAll().Include(x=>x.Employee).ThenInclude(y=>y.Loans).Include(x => x.Employee.Leaves);
             return allSalaries.Select(ToSalaryDto).ToList();                
         }
 
@@ -117,13 +127,16 @@ namespace BL.Service
                  TotalDedection = salary.TotalDedection,
                  TotalSalary = salary.TotalSalary,
                  CurrentSalary = salary.CurrentSalary,
-                 EmployeeName = salary.Employee.FirstName
+                 EmployeeName = salary.Employee.FirstName,
+                 TotalLeaves = salary.Employee.Leaves.Where(y=>y.StartTime.Year == DateTime.Now.Year).Sum(x=>x.NumberOfLeaves),
+                 RemainingLoan = salary.Employee.Loans != null ? salary.Employee.Loans.Sum(x=>x.RemainingAmount) : 0,
+                 CreatedDate = salary.CreatedDate,
             };
             return salaryDto;
         }
         public List<SalaryDto> GetAllSalariesByEmployeeId(int employeeId)
         {
-           var listOfEmployeeSalary= _salaryRepository.GetAll().Include(y=>y.Employee).Where(x => x.EmployeeId == employeeId);
+           var listOfEmployeeSalary= _salaryRepository.GetAll().Include(y=>y.Employee).ThenInclude(x=>x.Loans).Include(x => x.Employee).ThenInclude(x => x.Leaves).Where(x => x.EmployeeId == employeeId);
             return listOfEmployeeSalary.Select(ToSalaryDto).ToList();
         }
         public void setSalaryEntity(Salary? salary)

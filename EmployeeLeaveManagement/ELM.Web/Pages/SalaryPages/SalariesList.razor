@@ -76,7 +76,10 @@ else
     <table class="table table-striped align-middle table-bordered">
         <thead class="table-success">
             <tr>
+                <th>Salary Month</th>
                 <th>Employee Name</th>
+                <th>Leaves</th>
+                <th>Remaining Loan</th>
                 <th>Current Salary</th>
                 <th>Leave Deduction</th>
                 <th>Loan Deduction</th>
@@ -92,20 +95,22 @@ else
                 @foreach (var salary in salaryDtos)
                 {
                     <tr>
+                        <td>@salary.CreatedDate.Value.ToString("MMMM")</td>
                         <td>@salary.EmployeeName</td>
-                        <td><input @bind="salary.CurrentSalary" /></td>
-                        <td><input @bind="salary.LeaveDeduction" /></td>
-                        <td><input @bind="salary.LoanDeduction" /></td>
-                        <td><input @bind="salary.TotalDedection" /></td>
-                        <td><input @bind="salary.Perks" /></td>
-                        <td><input @bind="salary.TotalSalary " /></td>
-                        <td>
-                            <button type="button" class="btn btn-primary" @onclick="async (e) => {var message = await UpdateEmployeeSalary(salary);
-                             ShowAlert(message);}">Save</button></td>
+                        <td>@salary.TotalLeaves</td>
+                        <td>@salary.RemainingLoan</td>
+                        <td><input @bind="salary.CurrentSalary"  style="width: 100px"/></td>
+                        <td><input @bind="salary.LeaveDeduction" style="width: 100px" /></td>
+                        <td><input @bind="salary.LoanDeduction" style="width: 100px" /></td>
+                        <td><input @bind="salary.TotalDedection" style="width: 100px" /></td>
+                        <td><input @bind="salary.Perks" style="width: 100px" /></td>
+                        <td><input @bind="salary.TotalSalary " style="width: 100px" /></td>
                     </tr>
                 }
-                <button type="button" class="btn btn-primary" @onclick=" (e) =>   ListOfEmployeeSalaries(salaryDtos)">Save</button>
+                <br/>
+                
             </tbody>
+           
         </AuthorizeView>
         <AuthorizeView Roles="User">
             <tbody>
@@ -113,7 +118,10 @@ else
                 @foreach (var salary in salaryDtos)
                 {
                     <tr>
+                        <td>@salary.CreatedDate.Value.ToString("MMMM")</td>
                         <td>@salary.EmployeeName</td>
+                        <td>@salary.TotalLeaves</td>
+                        <td>@salary.RemainingLoan</td>
                         <td>@salary.CurrentSalary</td>
                         <td>@salary.LeaveDeduction</td>
                         <td>@salary.LoanDeduction</td>
@@ -125,7 +133,22 @@ else
 
             </tbody>
         </AuthorizeView>
+
     </table>
+    <AuthorizeView Roles="Admin">
+        <ChildContent Context="authContext">
+            <div style="display: flex; justify-content:end; width:100%">
+            <div style="display:flex; align-items:center">
+                    <p style="margin-right:8px; margin-bottom:0px;">Total Amount : @TotalAmount.ToString("C",new System.Globalization.CultureInfo("ur-PK"))</p>
+                <button type="button" class="btn btn-primary" @onclick="async (e) => {var message = await UpdateEmployeeSalary(salaryDtos);
+                             ShowAlert(message);}">
+                    Save
+                </button>
+            </div>
+            </div>
+        </ChildContent>
+
+    </AuthorizeView>
     }
 
 

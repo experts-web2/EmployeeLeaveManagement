@@ -56,10 +56,10 @@ namespace ELM_DAL.Services.ServiceRepo
             }
         }
 
-        public async Task<string> UpdateEmployeeSalaryAsync(SalaryDto salary)
+        public async Task<string> UpdateEmployeeSalaryAsync(List<SalaryDto> salaryDtos)
         {
             await SetToken();
-            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}Salary/UpdateEmployeeSalary", salary);
+            var response = await _httpService.PostAsJsonAsync($"{Apiroute()}Salary/UpdateEmployeeSalary", salaryDtos);
             return response.Content.ReadAsStringAsync().Result;
         }
     }

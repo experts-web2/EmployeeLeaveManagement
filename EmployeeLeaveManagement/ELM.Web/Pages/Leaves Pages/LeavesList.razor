@@ -47,7 +47,23 @@ else
                     <tr>
                         <td>@leave.StartTime.ToShortDateString()</td>
                         <td>@leave.EndTime.ToShortDateString()</td>
-                        <td>@leave.Status</td>
+                            @{
+                                Func<Enum, string> GetStatusColor = status =>
+                                {
+                                    switch (status.ToString())
+                                    {
+                                        case "Under_Approval":
+                                            return "red"; 
+                                        case "Approved":
+                                            return "green";
+                                        case "Cancel":
+                                            return "yellow";
+                                        default:
+                                            return "white"; 
+                                    }
+                                };
+                            }
+                        <td style="background-color: @(GetStatusColor(leave.Status))">@leave.Status</td>
                         <td>@leave.LeaveEnum</td>
                         <td>@leave.EmployeeName.ToString()</td>
                         <td>@leave.TotalLeaves</td>
@@ -132,8 +148,24 @@ else
                     {
                         <tr>
                             <td>@LeaveHistory.StartTime.ToShortDateString()</td>
-                                <td>@LeaveHistory.EndTime.ToShortDateString()</td>
-                            <td>@LeaveHistory.Status</td>
+                             <td>@LeaveHistory.EndTime.ToShortDateString()</td>
+                        @{
+                            Func<Enum, string> GetStatusColor = status =>
+                            {
+                                switch (status.ToString())
+                                {
+                                    case "Under_Approval":
+                                        return "red";
+                                    case "Approved":
+                                        return "green";
+                                    case "Cancel":
+                                        return "yellow";
+                                    default:
+                                        return "white";
+                                }
+                            };
+                        } 
+                            <td style="background-color: @(GetStatusColor(LeaveHistory.Status))">@LeaveHistory.Status</td>
                             <td>@LeaveHistory.CreatedDate</td>
                             <td>@LeaveHistory.leaveEnum</td>
                             <td>@LeaveHistory.NumberOfLeaves</td>

@@ -19,8 +19,7 @@ namespace ELM.Web.Pages.SalaryPages
 
         public List<SalaryDto> salaryDtos = new();
         public List<Employee> employeeList = new();
-        public string ResponseMessage = string.Empty;
-
+        public decimal TotalAmount { get; set; }
         public int EmployeeId { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -29,18 +28,13 @@ namespace ELM.Web.Pages.SalaryPages
             await GetAllSalaries();
         }
 
-        public async Task<string> UpdateEmployeeSalary(SalaryDto salaryDto)
+        public async Task<string> UpdateEmployeeSalary(List<SalaryDto> salaryDtos)
         {
-            return await _salaryService.UpdateEmployeeSalaryAsync(salaryDto);
+            return await _salaryService.UpdateEmployeeSalaryAsync(salaryDtos);
         }
         public async Task ShowAlert(string message)
         {
             await JSRuntime.InvokeVoidAsync("alert", message);
-        }
-
-        public void ListOfEmployeeSalaries(List<SalaryDto> salaryDtos)
-        {
-            var res = salaryDtos;
         }
 
         public async Task PayLoan()
@@ -53,10 +47,12 @@ namespace ELM.Web.Pages.SalaryPages
             salaryDtos = await _salaryService.GetSalaries();
             if (salaryDtos != null)
             {
+                TotalAmount = salaryDtos.Sum(x => x.TotalSalary);
                 return salaryDtos;
             }
             else
                 return salaryDtos;
+            
         }
 
 

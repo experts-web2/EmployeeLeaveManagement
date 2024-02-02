@@ -27,7 +27,7 @@ namespace BL.Service
 
         public List<LoanInstallmentHistoryDto> GetAllLoanHistoryofEmployee(int employeeId)
         {
-           var LoanHistoryofEmployee = _LoanInstallmentHistoryRepository.Get(x => x.Loan!.EmployeeId == employeeId, x=>x.Loan);
+           var LoanHistoryofEmployee = _LoanInstallmentHistoryRepository.Get(x => x.Loan!.EmployeeId == employeeId, x=>x.Loan).OrderByDescending(x=>x.CreatedDate);
             return LoanHistoryofEmployee.Select(setLoanInstallmentDto).ToList();
         }
 
@@ -36,7 +36,6 @@ namespace BL.Service
             return new LoanInstallmentHistoryDto() 
             { 
                 InstallmentAmount = loanInstallmentHistory.InstallmentAmount,
-                LoanId = loanInstallmentHistory.LoanId,
                 CreatedDate = loanInstallmentHistory.CreatedDate,
                 CreatedBy = loanInstallmentHistory.CreatedBy
             };

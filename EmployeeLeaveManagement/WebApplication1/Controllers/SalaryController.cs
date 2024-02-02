@@ -33,9 +33,9 @@ namespace EmpLeave.Api.Controllers
         }
 
         [HttpPost("UpdateEmployeeSalary")]
-        public IActionResult UpdateEmployeeSalary(SalaryDto salaryDto) 
+        public IActionResult UpdateEmployeeSalary(List<SalaryDto> salaryDtos) 
         {
-            var response = _salaryService.UpdateEmployeeSalary(salaryDto);
+            var response = _salaryService.UpdateEmployeeSalary(salaryDtos);
             return Ok(response);
         }
 

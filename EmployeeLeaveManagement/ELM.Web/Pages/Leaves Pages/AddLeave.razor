@@ -7,6 +7,7 @@
 
 <EditForm Model="@LeaveDto" OnValidSubmit="SaveLeave">
     <DataAnnotationsValidator />
+    <h4 style="color: red">Can't Apply leaves more than One and Half (1.5) in one Month</h4>
     <div class="mb-3">
         <label for="StartDate" class="form-label">Start Date</label>
         <div class="col-md-4">
