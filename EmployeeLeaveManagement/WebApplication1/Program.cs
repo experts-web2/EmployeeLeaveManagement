@@ -37,6 +37,8 @@ builder.Services.AddScoped<ILoanInstallmentHistoryService, LoanInstallmentHistor
 builder.Services.AddScoped<ILoanInstallmentHistoryRepository, LoanInstallmentHistoryRepository>();
 builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
 builder.Services.AddScoped<IleaveHistoryService, LeaveHistoryService>();
+builder.Services.AddScoped<IDailyTaskRepository, DailyTaskRepository>();
+builder.Services.AddScoped<IDailyTaskService, DailyTaskService>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

@@ -1,0 +1,118 @@
+﻿@page "/DailyTask"
+@inherits DailyTaskBase
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DailyTask" @onclick="ShowModal">Add Task</button>
+<br />
+<div class="modal fade @dailyTaskDto" id="DailyTask" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Daily Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="CloseModal"></button>
+            </div>
+            <div class="modal-body">
+               
+                <EditForm Model="@dailyTaskDto" OnValidSubmit="AddDailyTask">
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label for="TaskName" class="form-label">Task Name</label>
+                        <div class="col-md-4">
+                            <InputText class="form-control" style="width:200%" @bind-Value="dailyTaskDto.TaskName" />
+                        </div>
+                        <ValidationMessage For="@(() => dailyTaskDto.TaskName)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="TaskTime" class="form-label">Task Time</label>
+                        <div class="col-md-4">
+                            <InputNumber class="form-control" style="width:200%" @bind-Value="dailyTaskDto.TaskTime" />
+                        </div>
+                        <ValidationMessage For="@(() => dailyTaskDto.TaskTime)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Description" class="form-label">Task Description</label>
+                        <div class="col-md-4">
+                            <InputTextArea class="form-control" style="width:200%" @bind-Value="dailyTaskDto.Description" />
+                        </div>
+                        <ValidationMessage For="@(() => dailyTaskDto.Description)" />
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button class="btn btn-warning" data-bs-dismiss="modal" @onclick="CloseModal">No</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (dailyTaskDtos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Employee Name</th>
+                <th>Task Name</th>
+                <th>Task Time</th>
+                <th>Description</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in dailyTaskDtos)
+            {
+                <tr>
+
+                    <td>@task.EmployeeName</td>
+                    <td>@task.TaskName</td>
+                    <td>@task.TaskTime</td>
+                    <td>@task.Description</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+
+@* <EditForm Model="@dailyTaskDto" OnValidSubmit="AddDailyTask">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="TaskName" class="form-label">Task Name</label>
+        <div class="col-md-4">
+            <InputText class="form-control" style="width:70%" @bind-Value="dailyTaskDto.TaskName" />
+        </div>
+        <ValidationMessage For="@(() => dailyTaskDto.TaskName)" />
+    </div>
+    <div class="mb-3">
+        <label for="TaskName" class="form-label">Task Name</label>
+        <div class="col-md-4">
+            <InputNumber class="form-control" style="width:70%" @bind-Value="dailyTaskDto.TaskTime" />
+        </div>
+        <ValidationMessage For="@(() => dailyTaskDto.TaskName)" />
+    </div>
+    <div class="mb-3">
+        <label for="Description" class="form-label">Task Description</label>
+        <div class="col-md-4">
+            <InputTextArea class="form-control" style="width:70%" @bind-Value="dailyTaskDto.Description" />
+        </div>
+        <ValidationMessage For="@(() => dailyTaskDto.Description)" />
+    </div>
+    <br />
+    
+    <br />
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</EditForm> *@
+
