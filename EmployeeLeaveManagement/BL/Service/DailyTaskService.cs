@@ -15,15 +15,30 @@ namespace BL.Service
     public class DailyTaskService : IDailyTaskService
     {
         private readonly IDailyTaskRepository _dailyTaskRepository;
-        public DailyTaskService(IDailyTaskRepository dailyTaskRepository)
+        private readonly IDailyTimeSheetRepository _dailyTimeSheetRepository;
+        private readonly IDailyTimeSheetService _dailyTimeSheetService;
+        public DailyTaskService(IDailyTaskRepository dailyTaskRepository, IDailyTimeSheetRepository dailyTimeSheetRepository, IDailyTimeSheetService dailyTimeSheetService)
         {
             _dailyTaskRepository = dailyTaskRepository;
+            _dailyTimeSheetRepository = dailyTimeSheetRepository;
+            _dailyTimeSheetService = dailyTimeSheetService;
         }
 
         public DailyTaskDto AddDailyTask(DailyTaskDto dailyTaskDto)
         {
             var response = setDailyTaskEntity(dailyTaskDto);
-            var dailyTask =  _dailyTaskRepository.Add(response);
+            var dailyTask = _dailyTaskRepository.Add(response);
+            var dbDailyTimeSheet = _dailyTimeSheetService.GetAllDailyTimeSheetByEmployeeId(dailyTaskDto.EmployeeId).FirstOrDefault();
+            if (dbDailyTimeSheet != null)
+            {
+                 _dailyTimeSheetService.UpdateDailyTimeSheet(new DailyTimeSheetDto() {ID = dbDailyTimeSheet.ID, EmployeeId = dailyTaskDto.EmployeeId, TotalTime = dailyTaskDto.TaskTime });
+            }
+            else
+            {
+                 _dailyTimeSheetService.AddDailyTimeSheet(new DailyTimeSheetDto() { EmployeeId = dailyTaskDto.EmployeeId, TotalTime = dailyTaskDto.TaskTime});
+            }
+           
+            
             return setDailyTaskDto(dailyTask);
         }
 
@@ -40,7 +55,7 @@ namespace BL.Service
 
         public List<DailyTaskDto> GetAllDailyTaskByEmployeeId(int employeeId)
         {
-            var EmployeeTask = _dailyTaskRepository.Get(x=>x.EmployeeId == employeeId && x.CreatedDate.Value.Date == DateTime.Today.Date).Includes(x=>x.Employee);
+            var EmployeeTask = _dailyTaskRepository.Get(x=>x.EmployeeId == employeeId && x.CreatedDate.Value.Date == DateTime.Today.Date).Includes(x=>x.DailyTimeSheet).Include(y=>y.Employee);
             return EmployeeTask.Select(setDailyTaskDto).ToList();
         }
 
@@ -51,7 +66,14 @@ namespace BL.Service
 
         public DailyTaskDto Update(DailyTaskDto dailyTaskDto)
         {
-            throw new NotImplementedException();
+            if (dailyTaskDto.ID > 0)
+            {
+                var DbDailyTask = _dailyTaskRepository.GetByID(dailyTaskDto.ID);
+                var response = setDailyTaskEntity(dailyTaskDto, DbDailyTask);
+                _dailyTaskRepository.update(response);
+                return setDailyTaskDto(response);
+            }
+            return new();
         }
 
         private DailyTask setDailyTaskEntity(DailyTaskDto dailyTaskDto, DailyTask DbDailyTask = null)
@@ -72,6 +94,7 @@ namespace BL.Service
             DbDailyTask.TaskName = dailyTaskDto.TaskName;
             DbDailyTask.TaskTime = dailyTaskDto.TaskTime;
             DbDailyTask.Description = dailyTaskDto.Description;
+            DbDailyTask.DailyTimeSheetId = dailyTaskDto.DailyTimeSheetId;
             return DbDailyTask;
         }
 
@@ -83,6 +106,7 @@ namespace BL.Service
                 TaskTime = dailyTask.TaskTime,
                 Description = dailyTask.Description,
                 CreatedDate = dailyTask.CreatedDate,
+                DailyTimeSheetId = dailyTask.DailyTimeSheetId,
                 EmployeeName = dailyTask.Employee != null ? dailyTask.Employee.FirstName : ""
             };
 

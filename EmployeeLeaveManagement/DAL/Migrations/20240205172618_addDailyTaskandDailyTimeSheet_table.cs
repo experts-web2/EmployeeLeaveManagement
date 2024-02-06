@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class addDailyTaskandDailySheetTab : Migration
+    public partial class addDailyTaskandDailyTimeSheet_table : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,8 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TotalTime = table.Column<float>(type: "real", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -23,6 +25,12 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DailyTimeSheets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DailyTimeSheets_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,6 +73,11 @@ namespace DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_DailyTasks_EmployeeId",
                 table: "DailyTasks",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DailyTimeSheets_EmployeeId",
+                table: "DailyTimeSheets",
                 column: "EmployeeId");
         }
 

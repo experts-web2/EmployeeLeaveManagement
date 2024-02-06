@@ -39,6 +39,8 @@ builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
 builder.Services.AddScoped<IleaveHistoryService, LeaveHistoryService>();
 builder.Services.AddScoped<IDailyTaskRepository, DailyTaskRepository>();
 builder.Services.AddScoped<IDailyTaskService, DailyTaskService>();
+builder.Services.AddScoped<IDailyTimeSheetRepository, DailyTimeSheetRepository>();
+builder.Services.AddScoped<IDailyTimeSheetService, DailyTimeSheetService>();
 builder.Services.AddAndConfigureRepositories();
 builder.Services.AddAndConfigureService();
 builder.Services.AddCors(policy =>

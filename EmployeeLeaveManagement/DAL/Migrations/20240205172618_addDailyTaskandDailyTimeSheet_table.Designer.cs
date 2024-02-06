@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240202143708_addDailyTaskandDailySheetTab")]
-    partial class addDailyTaskandDailySheetTab
+    [Migration("20240205172618_addDailyTaskandDailyTimeSheet_table")]
+    partial class addDailyTaskandDailyTimeSheet_table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -179,13 +179,21 @@ namespace DAL.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<float>("TotalTime")
+                        .HasColumnType("real");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("DailyTimeSheets");
                 });
@@ -752,12 +760,25 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DomainEntity.Models.DailyTask", b =>
                 {
-                    b.HasOne("DomainEntity.Models.DailyTimeSheet", null)
+                    b.HasOne("DomainEntity.Models.DailyTimeSheet", "DailyTimeSheet")
                         .WithMany("DailyTasks")
                         .HasForeignKey("DailyTimeSheetId");
 
                     b.HasOne("DomainEntity.Models.Employee", "Employee")
                         .WithMany("DailyTasks")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DailyTimeSheet");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("DomainEntity.Models.DailyTimeSheet", b =>
+                {
+                    b.HasOne("DomainEntity.Models.Employee", "Employee")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
