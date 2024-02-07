@@ -1,6 +1,7 @@
 ﻿using DTOs;
 using ELM_DAL.Services.Interface;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace ELM.Web.Pages.DailTimeSheet
 {
@@ -8,16 +9,27 @@ namespace ELM.Web.Pages.DailTimeSheet
     {
         [Inject]
         public IDailyTimeSheetService dailyTimeSheetService { get; set; }
-        public DailyTimeSheetDto DailyTimeSheetDto { get; set; } = new DailyTimeSheetDto();
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+        public DailyTimeSheetDto DailyTimeSheetDto { get; set; } = new();
+        public List<DailyTimeSheetDto> dailyTimeSheetDtos { get; set; } = new List<DailyTimeSheetDto>();
 
-        protected override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
-            return base.OnInitializedAsync();   
+            dailyTimeSheetDtos = await dailyTimeSheetService.GetAllDailyTimeSheet();
         }
 
-        public async Task AddDailyTimeSheet()
+        public async Task<string> AddDailyTimeSheet()
         {
-          await  dailyTimeSheetService.AddDailyTimeSheet(DailyTimeSheetDto);
+            var response = await dailyTimeSheetService.AddDailyTimeSheet(DailyTimeSheetDto);
+            NavigationManager.NavigateTo("/DailyTask");
+            return response;
+        }
+        public async Task ShowAlert(string message)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", message);
         }
     }
 }

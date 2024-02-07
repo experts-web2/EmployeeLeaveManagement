@@ -16,15 +16,23 @@ namespace ELM_DAL.Services.ServiceRepo
             _httpService.DefaultRequestHeaders.Add("Accept", "Application/json");
 
         }
-        public async Task AddDailyTimeSheet(DailyTimeSheetDto dailyTimeSheetDto)
+        public async Task<string> AddDailyTimeSheet(DailyTimeSheetDto dailyTimeSheetDto)
         {
             await SetToken();
-            await _httpService.PostAsJsonAsync($"{Apiroute()}DailyTimeSheet", dailyTimeSheetDto);
+            var response =  await _httpService.PostAsJsonAsync($"{Apiroute()}DailyTimeSheet", dailyTimeSheetDto);
+            var res = response.Content.ReadAsStringAsync().Result;
+            if (response.Content.ReadAsStringAsync().Result == "")
+            {
+                return "Time Sheet already Created !!!";
+            }
+            else
+                return "Time Sheet created";
         }
 
-        public Task GetAllDailyTimeSheet()
+        public async Task<List<DailyTimeSheetDto>> GetAllDailyTimeSheet()
         {
-            throw new NotImplementedException();
+            await SetToken();
+            return  await _httpService.GetFromJsonAsync<List<DailyTimeSheetDto>>($"{Apiroute()}DailyTimeSheet");
         }
     }
 }

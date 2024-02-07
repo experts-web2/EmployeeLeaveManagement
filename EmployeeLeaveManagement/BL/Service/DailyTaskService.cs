@@ -26,19 +26,26 @@ namespace BL.Service
 
         public DailyTaskDto AddDailyTask(DailyTaskDto dailyTaskDto)
         {
+            var dbDailyTimeSheet = _dailyTimeSheetService.GetAllDailyTimeSheetByEmployeeId(dailyTaskDto.EmployeeId).FirstOrDefault();
+            if (dbDailyTimeSheet != null)
+            {
+                dailyTaskDto.DailyTimeSheetId = dbDailyTimeSheet.ID;
+            }
             var response = setDailyTaskEntity(dailyTaskDto);
             var dailyTask = _dailyTaskRepository.Add(response);
-            var dbDailyTimeSheet = _dailyTimeSheetService.GetAllDailyTimeSheetByEmployeeId(dailyTaskDto.EmployeeId).FirstOrDefault();
             if (dbDailyTimeSheet != null)
             {
                  _dailyTimeSheetService.UpdateDailyTimeSheet(new DailyTimeSheetDto() {ID = dbDailyTimeSheet.ID, EmployeeId = dailyTaskDto.EmployeeId, TotalTime = dailyTaskDto.TaskTime });
             }
             else
             {
-                 _dailyTimeSheetService.AddDailyTimeSheet(new DailyTimeSheetDto() { EmployeeId = dailyTaskDto.EmployeeId, TotalTime = dailyTaskDto.TaskTime});
+                var dailyTimeSheet = _dailyTimeSheetService.AddDailyTimeSheet(new DailyTimeSheetDto() { EmployeeId = dailyTaskDto.EmployeeId, TotalTime = dailyTaskDto.TaskTime });
+                dailyTask.DailyTimeSheetId = dailyTimeSheet.ID;
+                var DbDailyTask = setDailyTaskDto(dailyTask);
+                Update(DbDailyTask);
             }
-           
-            
+
+
             return setDailyTaskDto(dailyTask);
         }
 

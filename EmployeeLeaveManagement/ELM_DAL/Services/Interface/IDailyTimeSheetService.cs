@@ -9,7 +9,7 @@ namespace ELM_DAL.Services.Interface
 {
     public interface IDailyTimeSheetService
     {
-        public Task AddDailyTimeSheet(DailyTimeSheetDto dailyTimeSheetDto);
-        public Task GetAllDailyTimeSheet();
+        public Task<string> AddDailyTimeSheet(DailyTimeSheetDto dailyTimeSheetDto);
+        public Task<List<DailyTimeSheetDto>> GetAllDailyTimeSheet();
     }
 }

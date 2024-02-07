@@ -21,8 +21,13 @@ namespace BL.Service
         }
         public DailyTimeSheetDto AddDailyTimeSheet(DailyTimeSheetDto dailyTaskDto)
         {
+            var existedDailySheet = GetAllDailyTimeSheetByEmployeeId(dailyTaskDto.EmployeeId).FirstOrDefault();
+            if (existedDailySheet != null)
+            {
+                return null;
+            }
             var DailyTimeSheetEntity = setEntity(dailyTaskDto);
-            var response = _dailyTimeSheetRepository.Add(DailyTimeSheetEntity);
+            _dailyTimeSheetRepository.Add(DailyTimeSheetEntity);
             return setDailyTimeSheetDto(DailyTimeSheetEntity);
         }
 
@@ -48,13 +53,13 @@ namespace BL.Service
 
         public List<DailyTimeSheetDto> GetAllDailyTimeSheet()
         {
-           var allDailySheet = _dailyTimeSheetRepository.GetAll().Include(x=>x.DailyTasks);
+           var allDailySheet = _dailyTimeSheetRepository.Get(x => x.CreatedDate.Value.Date == DateTime.Today.Date).Include(x=>x.DailyTasks).Include(x=>x.Employee);
             return allDailySheet.Select(setDailyTimeSheetDto).ToList();
         }
 
         public List<DailyTimeSheetDto> GetAllDailyTimeSheetByEmployeeId(int employeeId)
         {
-            var dbDailyTimeSheet = _dailyTimeSheetRepository.Get(x => x.EmployeeId == employeeId && x.CreatedDate.Value.Date == DateTime.Today.Date).Include(x=>x.DailyTasks);
+            var dbDailyTimeSheet = _dailyTimeSheetRepository.Get(x => x.EmployeeId == employeeId && x.CreatedDate.Value.Date == DateTime.Today.Date).Include(x=>x.DailyTasks).Include(x => x.Employee);
             return dbDailyTimeSheet.Select(setDailyTimeSheetDto).ToList();
         }
 
@@ -90,7 +95,9 @@ namespace BL.Service
                 EmployeeId = dailyTimeSheet.EmployeeId,
                 TotalTime = dailyTimeSheet.TotalTime,
                 ID = dailyTimeSheet.Id,
-                dailyTaskDtos = dailyTimeSheet.DailyTasks.Any() ? dailyTimeSheet.DailyTasks.Select(setDailyTaskDto).ToList() : null,
+                CreatedDate = dailyTimeSheet.CreatedDate,
+                EmployeeName = dailyTimeSheet.Employee != null ? dailyTimeSheet.Employee.FirstName : string.Empty,
+                dailyTaskDtos = dailyTimeSheet.DailyTasks != null ? dailyTimeSheet.DailyTasks!.Select(setDailyTaskDto).ToList() : null,
             };
 
         }

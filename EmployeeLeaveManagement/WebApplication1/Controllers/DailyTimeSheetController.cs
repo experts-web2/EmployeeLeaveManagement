@@ -1,4 +1,5 @@
 ﻿using BL.Interface;
+using BL.Service;
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +21,28 @@ namespace EmpLeave.Api.Controllers
         [HttpGet]
         public IActionResult GetAllDailyTimeSheet()
         {
-           var allDailySheets =  _dailyTimeSheetService.GetAllDailyTimeSheet();
-            if (allDailySheets.Any())
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var claimRole = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+            if (claimRole == "Admin")
             {
-                return Ok(allDailySheets);
+                var allDailySheets = _dailyTimeSheetService.GetAllDailyTimeSheet();
+                if (allDailySheets.Any())
+                {
+                    return Ok(allDailySheets);
+                }
+            }
+            else
+            {
+                var employeeId = identity?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(employeeId, out int EmployeeId))
+                {
+                    var response = _dailyTimeSheetService.GetAllDailyTimeSheetByEmployeeId(EmployeeId);
+                    if (response.Any())
+                    {
+                        return Ok(response);
+                    }
+                }
+
             }
             return Ok(new List<DailyTimeSheetDto>());
         }
@@ -42,7 +61,7 @@ namespace EmpLeave.Api.Controllers
                     return Ok(allDailySheets);
                 }
             }
-            return Ok(new List<DailyTimeSheetDto>());
+            return Ok(null);
         }
     }
 }
