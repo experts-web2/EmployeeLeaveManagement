@@ -1,12 +1,16 @@
 ﻿using BL.Interface;
+using DAL.Configrations;
 using DAL.Interface;
+using DAL.Repositories;
 using DomainEntity.Models;
 using DTOs;
+using ELM.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -68,6 +72,39 @@ namespace BL.Service
             throw new NotImplementedException();
         }
 
+        public PagedList<DailyTimeSheetDto> GetAllDailyTimeSheetWithFilter(Pager paging, string EmployeeId = null, Expression<Func<DailyTimeSheet, bool>> predicate = null)
+        {
+            if (predicate == null)
+                predicate = PredicateBuilder.True<DailyTimeSheet>();
+            else
+                predicate = predicate.And(predicate);
+            IQueryable<DailyTimeSheet> dailyTimeSheet;
+            if (EmployeeId != null)
+            {
+                dailyTimeSheet = _dailyTimeSheetRepository.Get(x=>x.EmployeeId == int.Parse(EmployeeId)).Include(x => x.DailyTasks).Include(x => x.Employee).AsQueryable();
+            }
+            else
+                dailyTimeSheet = _dailyTimeSheetRepository.GetAll().Include(x => x.DailyTasks).Include(x => x.Employee).AsQueryable();
+
+            if (paging.StartDate?.Date != (DateTime.Now.Date) && paging.EndDate?.Date != DateTime.MinValue)
+            {
+                dailyTimeSheet = dailyTimeSheet.Where(x => x.CreatedDate.Value.Date <= paging.EndDate && x.CreatedDate.Value.Date >= paging.StartDate);
+            }
+            else
+                dailyTimeSheet = dailyTimeSheet.Where(x => x.CreatedDate.Value.Date <= paging.EndDate && x.CreatedDate.Value.Date >= DateTime.Now.Date);
+            if (!string.IsNullOrEmpty(paging.Search))
+            {
+                dailyTimeSheet = dailyTimeSheet.Where(x => x.EmployeeId.ToString() == paging.Search);
+            }
+            else
+                dailyTimeSheet = dailyTimeSheet.Where(x => x.CreatedDate.Value.Date <= paging.EndDate);
+
+            var paginatedList = PagedList<DailyTimeSheet>.ToPagedList(dailyTimeSheet.OrderByDescending(x => x.CreatedDate.Value), paging.CurrentPage, paging.PageSize);
+            var dailyTimeSheetDto = paginatedList.Select(setDailyTimeSheetDto).ToList();
+            return new PagedList<DailyTimeSheetDto>
+                (dailyTimeSheetDto, paginatedList.TotalCount, paginatedList.CurrentPage, paginatedList.PageSize);
+        }
+
         private DailyTimeSheet setEntity(DailyTimeSheetDto dailyTimeSheetDto, DailyTimeSheet dbDailyTimeSheet = null)
         {
             if (dbDailyTimeSheet == null)
@@ -98,6 +135,7 @@ namespace BL.Service
                 CreatedDate = dailyTimeSheet.CreatedDate,
                 EmployeeName = dailyTimeSheet.Employee != null ? dailyTimeSheet.Employee.FirstName : string.Empty,
                 dailyTaskDtos = dailyTimeSheet.DailyTasks != null ? dailyTimeSheet.DailyTasks!.Select(setDailyTaskDto).ToList() : null,
+                TotalTasks = dailyTimeSheet.DailyTasks != null ? dailyTimeSheet.DailyTasks!.Count : 0
             };
 
         }

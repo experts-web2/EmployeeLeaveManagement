@@ -3,14 +3,61 @@
 
 <h3>DailyTimeSheet</h3>
 
+<div class="input-group mb-3">
+    <EditForm Model="Paging" OnValidSubmit="()=>GetAll()">
+        <div class="mb-1">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="Name" class="form-label">Starting Date</label>
+                </div>
+                <div class="col-md-6">
+                    <label for="Name" class="form-label">Current Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="mb-2">
+            <div class="row">
+                <div class="col-md-6">
+                    <InputDate Type="InputDateType.Date" class="form-control autocomplete = off" @bind-Value="StartDate" />
+                </div>
+                <div class="col-md-6">
+                    <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="EndDate" />
+                </div>
+            </div>
+        </div>
+        <AuthorizeView Roles="Admin">
+            <ChildContent Context="authContext">
+                <div class="mb-3">
+
+                    <label class="mb-2">Employee Name</label>
+                    <div class="col-md-10">
+                        <InputSelect class="form-control" @bind-Value="Search">
+                            <option selected disabled value="0">Employee Name List</option>
+                            @foreach (var employee in EmployeesList)
+                            {
+                                <option value="@employee.Id">@employee.FirstName @employee.LastName</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                </div>
+            </ChildContent>
+        </AuthorizeView>
+        <br />
+        <button>Search</button>
+    </EditForm>
+</div>
+
 <button type="button" class="btn btn-primary" @onclick="async (e)=> { var message = await AddDailyTimeSheet(); ShowAlert(message);}">Create DailySheet</button>
+
 @if (dailyTimeSheetDtos.Any())
 {
-    <a href="/DailyTask" class="btn btn-success">Add Task</a>
+    <a href="/DailyTask" class="btn btn-success" style="margin: 10px;">Add Task</a>
 }
 
 <br />
 <br />
+
 @if (dailyTimeSheetDtos == null)
 {
     <p><em>Loading...</em></p>
@@ -23,6 +70,7 @@ else
                 <th>Date</th>
                 <th>Employee Name</th>
                 <th>Task Time</th>
+                <th>Total Task</th>
                 <th>Today Tasks</th>
 
             </tr>
@@ -31,18 +79,18 @@ else
             @foreach (var DailySheet in dailyTimeSheetDtos)
             {
                 <tr>
-
                     <td>@DailySheet.CreatedDate.Value.ToShortDateString()</td>
                     <td>@DailySheet.EmployeeName</td>
                     <td>@DailySheet.TotalTime</td>
+                    <td>@DailySheet.TotalTasks</td>
                     <td>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="@DailySheet.ID">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <h2 class="accordion-header" id="heading-@DailySheet.ID">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@DailySheet.ID" aria-expanded="false" aria-controls="collapse-@DailySheet.ID">
                                     DailyTasks
                                 </button>
                             </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="@DailySheet.ID" data-bs-parent="#accordionExample">
+                            <div id="collapse-@DailySheet.ID" class="accordion-collapse collapse" aria-labelledby="heading-@DailySheet.ID" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <table class="table table-striped align-middle table-bordered">
                                         <thead class="table-success">
@@ -51,19 +99,16 @@ else
                                                 <th>Task Name</th>
                                                 <th>Task Time</th>
                                                 <th>Description</th>
-
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach (var task in DailySheet.dailyTaskDtos)
                                             {
                                                 <tr>
-
                                                     <td>@task.EmployeeName</td>
                                                     <td>@task.TaskName</td>
                                                     <td>@task.TaskTime</td>
                                                     <td>@task.Description</td>
-
                                                 </tr>
                                             }
                                         </tbody>
@@ -76,10 +121,12 @@ else
             }
         </tbody>
     </table>
-
-
-   
 }
+<Pagination ChangePage="GetAll"
+            CurrentPage="Paging.CurrentPage"
+            HasNext="Paging.HasNext"
+            HasPrevious="Paging.HasPrevious"
+            TotalPages="Paging.TotalPages" />
 
 
        

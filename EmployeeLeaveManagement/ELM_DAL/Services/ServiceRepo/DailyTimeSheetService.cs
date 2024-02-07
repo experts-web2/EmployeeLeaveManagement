@@ -1,9 +1,12 @@
 ﻿using DTOs;
+using ELM.Helper;
 using ELM_DAL.Services.Interface;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
+using System.Security.Claims;
 
 namespace ELM_DAL.Services.ServiceRepo
 {
@@ -33,6 +36,32 @@ namespace ELM_DAL.Services.ServiceRepo
         {
             await SetToken();
             return  await _httpService.GetFromJsonAsync<List<DailyTimeSheetDto>>($"{Apiroute()}DailyTimeSheet");
+        }
+
+        public async Task<Response<DailyTimeSheetDto>> GetDailyTimeSheetWithFilter(Pager paging)
+        {
+            Response<DailyTimeSheetDto> responseDto = new();
+
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            string employeeId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            HttpResponseMessage response;
+            if (user.IsInRole("Admin"))
+            {
+                 response = await _httpService.PostAsJsonAsync($"{Apiroute()}DailyTimeSheet/DailyTimeSheetwithFilter", paging);
+            }
+            else
+                response = await _httpService.PostAsJsonAsync($"{Apiroute()}DailyTimeSheet/DailyTimeSheetwithFilterByEmpId/{employeeId}", paging);
+            if (response.Headers.TryGetValues("X-Pagination", out IEnumerable<string> keys))
+            {
+                var metadata = keys.FirstOrDefault();
+                responseDto.Pager = JsonConvert.DeserializeObject<Pager>(metadata);
+            }
+
+            var result = await response.Content.ReadAsStringAsync();
+            responseDto.DataList = JsonConvert.DeserializeObject<List<DailyTimeSheetDto>>(result);
+            return responseDto;
+         
         }
     }
 }

@@ -11,6 +11,7 @@ namespace DTOs
         public float TotalTime { get; set; }
         public int EmployeeId { get; set; }
         public string? EmployeeName { get; set; }
+        public int? TotalTasks { get; set; } 
         public List<DailyTaskDto>? dailyTaskDtos { get; set; }
     }
 }

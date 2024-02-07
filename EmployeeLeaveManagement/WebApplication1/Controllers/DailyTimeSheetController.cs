@@ -1,8 +1,10 @@
 ﻿using BL.Interface;
 using BL.Service;
 using DTOs;
+using ELM.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Security.Principal;
 
@@ -62,6 +64,46 @@ namespace EmpLeave.Api.Controllers
                 }
             }
             return Ok(null);
+        }
+
+        [HttpPost("DailyTimeSheetwithFilter")]
+        public IActionResult GetAllDailyTimeSheet(Pager paging)
+        {
+            var allDailyTimeSheets = _dailyTimeSheetService.GetAllDailyTimeSheetWithFilter(paging);
+            var metadata = new
+            {
+                allDailyTimeSheets.TotalCount,
+                allDailyTimeSheets.PageSize,
+                allDailyTimeSheets.TotalPages,
+                allDailyTimeSheets.CurrentPage,
+                allDailyTimeSheets.HasPrevious,
+                allDailyTimeSheets.HasNext,
+                paging.Search
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            if (allDailyTimeSheets != null)
+                return Ok(allDailyTimeSheets);
+            return BadRequest();
+        }
+
+        [HttpPost("DailyTimeSheetwithFilterByEmpId/{EmpId}")]
+        public IActionResult GetAllDailyTimeSheet(Pager paging, string EmpId)
+        {
+            var allDailyTimeSheets = _dailyTimeSheetService.GetAllDailyTimeSheetWithFilter(paging, EmpId);
+            var metadata = new
+            {
+                allDailyTimeSheets.TotalCount,
+                allDailyTimeSheets.PageSize,
+                allDailyTimeSheets.TotalPages,
+                allDailyTimeSheets.CurrentPage,
+                allDailyTimeSheets.HasPrevious,
+                allDailyTimeSheets.HasNext,
+                paging.Search
+            };
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            if (allDailyTimeSheets != null)
+                return Ok(allDailyTimeSheets);
+            return BadRequest();
         }
     }
 }
